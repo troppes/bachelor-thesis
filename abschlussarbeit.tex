@@ -33,10 +33,8 @@
 
 %%-----------------------------------------------------
 \usepackage{color}				% Farbverwaltung
-%\usepackage{ngerman} 			% Neue deutsche Rechtsschreibung
 \usepackage[english, ngerman]{babel}
-\usepackage[latin1]{inputenc} 	% Erm�glicht Umlaute-Darstellung
-%\usepackage[utf8]{inputenc}  	% Erm�glicht Umlaute-Darstellung unter Linux (je nach verwendetem Format)
+\usepackage[utf8]{inputenc}  	% Ermöglicht Umlaute-Darstellung unter Linux (je nach verwendetem Format)
 
 %-----------------------------------------------------
 \usepackage{listings} 			% Code-Darstellung
@@ -78,7 +76,7 @@
 %--------------------------------------------------------------------------
 \supervisor{Professor Christian Schmitz} 		% Betreuer der Arbeit
 \author{Florian Reitz}							% Autor der Arbeit
-\groupid{100}
+\groupid{101}
 \address{Trier, 15.10.2019} 							% Im Zusammenhang mit dem Datum wird hinter dem Ort ein Komma angegeben
 \submitdate{15.3.2020} 				% Abgabedatum
 %\begingroup
@@ -100,10 +98,11 @@
 \mainmatter                        		% Hauptteil (ab hier arab. Seitenzahlen)
 %--------------------------------------------------------------------------
 % Die Kapitel werden in separaten .tex-Dateien abgelegt und hier eingebunden.
-\input{chapters/EinleitungProblemstellung}
-\input{chapters/WeitereKapitel}
-\input{chapters/Bausteine}
-\input{chapters/Beispiel}
+%\input{chapters/EinleitungProblemstellung}
+%\input{chapters/WeitereKapitel}
+%\input{chapters/Bausteine}
+%\input{chapters/Beispiel}
+\input{chapters/Vergleich.tex}
 \input{chapters/ZusammenfassungAusblick}
 % ...
 %--------------------------------------------------------------------------
@@ -114,7 +113,7 @@
 %--------------------------------------------------------------------------
 \printindex 							% Index (optional)
 %--------------------------------------------------------------------------
-\begin{appendix}						% Anh�nge sind i.d.R. optional
+\begin{appendix}						% Anhänge sind i.d.R. optional
    \include{chapters/Glossar}			% Glossar   
 \end{appendix}
 
