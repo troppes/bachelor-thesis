@@ -28,3 +28,4 @@
 *blx.bib 
 *.run.xml
 .fdb_latexmk
+.code-workspace
