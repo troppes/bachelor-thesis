@@ -30,4 +30,4 @@
 *.run.xml
 *.fdb_latexmk
 *.synctex.gz
-.code-workspace
+*.code-workspace
