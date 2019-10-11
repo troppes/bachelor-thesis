@@ -9,7 +9,8 @@
 *.pnd 
 *.bbl 
 *.bcf 
-*.auto 
+*.auto
+*.fls 
 *.blg 
 *.dvi 
 *.glo 
@@ -27,5 +28,6 @@
 *.tps 
 *blx.bib 
 *.run.xml
-.fdb_latexmk
+*.fdb_latexmk
+*.synctex.gz
 .code-workspace
