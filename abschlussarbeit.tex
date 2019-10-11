@@ -1,0 +1,121 @@
+%%%%%%%%%%%%%%%%%%% vorlage.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% LaTeX-Vorlage zur Erstellung von Projekt-Dokumentationen
+% im Fachbereich Informatik der Hochschule Trier
+%
+% Basis: Vorlage svmono des Springer Verlags
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[envcountsame,envcountchap, deutsch]{i-studis}
+
+\usepackage{makeidx}         	% Index
+\usepackage{multicol}        	% Zweispaltiger Index
+%\usepackage[bottom]{footmisc}	% Erzeugung von Fu�noten
+
+%%-----------------------------------------------------
+%\newif\ifpdf
+%\ifx\pdfoutput\undefined
+%\pdffalse
+%\else
+%\pdfoutput=1
+%\pdftrue
+%\fi
+%%--------------------------------------------------------
+%\ifpdf
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\usepackage[pdftex,plainpages=false]{hyperref}
+%\else
+%\usepackage{graphicx}
+%\usepackage[plainpages=false]{hyperref}
+%\fi
+
+%%-----------------------------------------------------
+\usepackage{color}				% Farbverwaltung
+%\usepackage{ngerman} 			% Neue deutsche Rechtsschreibung
+\usepackage[english, ngerman]{babel}
+\usepackage[latin1]{inputenc} 	% Erm�glicht Umlaute-Darstellung
+%\usepackage[utf8]{inputenc}  	% Erm�glicht Umlaute-Darstellung unter Linux (je nach verwendetem Format)
+
+%-----------------------------------------------------
+\usepackage{listings} 			% Code-Darstellung
+\lstset
+{
+	basicstyle=\scriptsize, 	% print whole listing small
+	keywordstyle=\color{blue}\bfseries,
+								% underlined bold black keywords
+	identifierstyle=, 			% nothing happens
+	commentstyle=\color{red}, 	% white comments
+	stringstyle=\ttfamily, 		% typewriter type for strings
+	showstringspaces=false, 	% no special string spaces
+	framexleftmargin=7mm, 
+	tabsize=3,
+	showtabs=false,
+	frame=single, 
+	rulesepcolor=\color{blue},
+	numbers=left,
+	linewidth=146mm,
+	xleftmargin=8mm
+}
+\usepackage{textcomp} 			% Celsius-Darstellung
+\usepackage{amssymb,amsfonts,amstext,amsmath}	% Mathematische Symbole
+\usepackage[german, ruled, vlined]{algorithm2e}
+\usepackage[a4paper]{geometry} % Andere Formatierung
+\usepackage{bibgerm}
+\usepackage{array}
+\hyphenation{Ele-men-tar-ob-jek-te  ab-ge-tas-tet Aus-wer-tung House-holder-Matrix Le-ast-Squa-res-Al-go-ri-th-men} 		% Weitere Silbentrennung bei Bedarf angeben
+\setlength{\textheight}{1.1\textheight}
+\pagestyle{myheadings} 			% Erzeugt selbstdefinierte Kopfzeile
+\makeindex 						% Index-Erstellung
+
+
+%--------------------------------------------------------------------------
+\begin{document}
+%------------------------- Titelblatt -------------------------------------
+\title{Titel der Arbeit}
+\project{Ausarbeitung zur Vorlesung Wissenschaftliches Arbeiten}
+%--------------------------------------------------------------------------
+\supervisor{Titel Vorname Name} 		% Betreuer der Arbeit
+\author{Bearbeiter 1: Vorname Nachname \\Bearbeiter 2: Vorname Nachname \\Bearbeiter 3: Vorname Nachname}							% Autor der Arbeit
+\groupid{GruppenID}
+\address{Ort,} 							% Im Zusammenhang mit dem Datum wird hinter dem Ort ein Komma angegeben
+\submitdate{Abgabedatum} 				% Abgabedatum
+%\begingroup
+%  \renewcommand{\thepage}{title}
+%  \mytitlepage
+%  \newpage
+%\endgroup
+\begingroup
+  \renewcommand{\thepage}{Titel}
+  \mytitlepage
+  \newpage
+\endgroup
+%--------------------------------------------------------------------------
+\frontmatter 
+%--------------------------------------------------------------------------
+\input{chapters/Kurzfassung} 			% Kurzfassung Deutsch/English
+\tableofcontents 						% Inhaltsverzeichnis
+%--------------------------------------------------------------------------
+\mainmatter                        		% Hauptteil (ab hier arab. Seitenzahlen)
+%--------------------------------------------------------------------------
+% Die Kapitel werden in separaten .tex-Dateien abgelegt und hier eingebunden.
+\input{chapters/EinleitungProblemstellung}
+\input{chapters/WeitereKapitel}
+\input{chapters/Bausteine}
+\input{chapters/Beispiel}
+\input{chapters/ZusammenfassungAusblick}
+% ...
+%--------------------------------------------------------------------------
+\backmatter                        		% Anhang
+%-------------------------------------------------------------------------
+\bibliographystyle{geralpha}			% Literaturverzeichnis
+\bibliography{literatur}     			% BibTeX-File literatur.bib
+%--------------------------------------------------------------------------
+\printindex 							% Index (optional)
+%--------------------------------------------------------------------------
+\begin{appendix}						% Anh�nge sind i.d.R. optional
+   \include{chapters/Glossar}			% Glossar   
+\end{appendix}
+
+\end{document}
