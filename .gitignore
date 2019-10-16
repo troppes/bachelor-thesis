@@ -33,3 +33,4 @@
 *.fdb_latexmk
 *.synctex.gz
 *.code-workspace
+.vscode

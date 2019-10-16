@@ -3,7 +3,7 @@
 Der Text wird in bis zu drei Ebenen gegliedert:
 
 \begin{enumerate}
-  \item Kapitel ( \verb \chapter{Kapitel} ), \index{Kapitel}
+  \item Kapitel ( \verb\chapter{Kapitel} ), \index{Kapitel}
   \item Unterkapitel  ( \verb \section{Abschnitt} ) und
   \item Unterunterkapitel  ( \verb \subsection{Unterabschnitte} ).
 \end{enumerate}
@@ -15,7 +15,7 @@ Text der Gliederungsebene 2.
 \subsection{Unterabschnitt} \index{Unterabschnitt}
 Text der Gliederungsebene 3.
 Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-Beispiel für Quelltext\index{Quelltext} \\[2 ex]
+Beispiel fÃ¼r Quelltext \index{Quelltext} \\[2 ex]
 \noindent
 \begin{minipage}{1.0\textwidth} \small
 \begin{lstlisting}
@@ -56,16 +56,16 @@ Beispiel für Quelltext\index{Quelltext} \\[2 ex]
 \end{minipage}
 \vskip 1em
 
-Größere Code-Fragmente sollten im Anhang eingefügt werden.
+GrÃ¶ÃŸere Code-Fragmente sollten im Anhang eingefÃ¼gt werden.
 
 \section{Abbildungen und Tabellen}
 
-Abbildung\index{Abbildung} und Tabellen\index{Tabelle} werden zentriert eingefügt. Grundsätzlich sollen sie
-erst dann erscheinen, nach dem sie im Text angesprochen wurden (siehe Abb. \ref{a1}). Abbildungen und Tabellen (siehe Tabelle \ref{t1}) können
-im (fließenden) Text (\verb here ), am Seitenanfang (\verb top ), am Seitenende
+Abbildung\index{Abbildung} und Tabellen\index{Tabelle} werden zentriert eingefÃ¼gt. GrundsÃ¤tzlich sollen sie
+erst dann erscheinen, nach dem sie im Text angesprochen wurden (siehe Abb. \ref{a1}). Abbildungen und Tabellen (siehe Tabelle \ref{t1}) kÃ¶nnen
+im (flieÃŸenden) Text (\verb here ), am Seitenanfang (\verb top ), am Seitenende
 (\verb bottom ) oder auch gesammelt auf einer nachfolgenden Seite (\verb page )
 oder auch ganz am Ende der Ausarbeitung erscheinen. Letzteres sollte man nur
-dann wählen, wenn die Bilder günstig zusammen zu betrachten sind und die
+dann wÃ¤hlen, wenn die Bilder gÃ¼nstig zusammen zu betrachten sind und die
 Ausarbeitung nicht zu lang ist ($< 20$ Seiten).
 
 \begin{figure} %[hbtp]
@@ -91,9 +91,9 @@ Ausarbeitung nicht zu lang ist ($< 20$ Seiten).
 
 
 \section{Mathematische Formel}\index{Formel}
-Mathematische Formeln bzw. Formulierungen können sowohl im
+Mathematische Formeln bzw. Formulierungen kÃ¶nnen sowohl im
 laufenden Text (z.B. $y=x^2$) oder abgesetzt und zentriert im Text
-erscheinen. Gleichungen sollten für Referenzierungen nummeriert
+erscheinen. Gleichungen sollten fÃ¼r Referenzierungen nummeriert
 werden (siehe Formel \ref{gl-1}).
 \begin{equation}
 \label{gl-1}
@@ -136,9 +136,9 @@ a_{n}\\
 \right)
 \end{equation}
 
-\section{Sätze, Lemmas und Definitionen}\index{Satz}\index{Lemma}\index{Definition}
+\section{SÃ¤tze, Lemmas und Definitionen}\index{Satz}\index{Lemma}\index{Definition}
 
-Sätze, Lemmas, Definitionen, Beweise,\index{Beweis} Beispiele\index{Beispiel} können in speziell dafür vorgesehenen Umgebungen erstellt werden.
+SÃ¤tze, Lemmas, Definitionen, Beweise,\index{Beweis} Beispiele\index{Beispiel} kÃ¶nnen in speziell dafÃ¼r vorgesehenen Umgebungen erstellt werden.
 
 \begin{definition}(Optimierungsproblem)
 
@@ -147,9 +147,9 @@ $(I_\mathcal{P}, sol_\mathcal{P}, m_\mathcal{P}, goal)$ wobei gilt
 
 \begin{enumerate}
 \item $I_\mathcal{P}$ ist die Menge der Instanzen,
-\item $sol_\mathcal{P} : I_\mathcal{P} \longmapsto \mathbb{P}(S_\mathcal{P})$ ist eine Funktion, die jeder Instanz $x \in I_\mathcal{P}$ eine Menge zulässiger Lösungen zuweist,
+\item $sol_\mathcal{P} : I_\mathcal{P} \longmapsto \mathbb{P}(S_\mathcal{P})$ ist eine Funktion, die jeder Instanz $x \in I_\mathcal{P}$ eine Menge zulÃ¤ssiger LÃ¶sungen zuweist,
 \item $m_\mathcal{P} : I_\mathcal{P} \times S_\mathcal{P} \longmapsto \mathbb{N}$ ist eine Funktion, die jedem Paar $(x,y(x))$ mit $x \in I_\mathcal{P}$ und $y(x) \in sol_\mathcal{P}(x)$ eine
-Zahl $m_\mathcal{P}(x,y(x)) \in \mathbb{N}$ zuordnet (= Maß für die Lösung $y(x)$ der Instanz $x$), und
+Zahl $m_\mathcal{P}(x,y(x)) \in \mathbb{N}$ zuordnet (= MaÃŸ fÃ¼r die LÃ¶sung $y(x)$ der Instanz $x$), und
 \item $goal \in \{min,max\}$.
 \end{enumerate}
 
@@ -171,17 +171,17 @@ $\qed$
 Wenn $\mathcal{P} \in$ \textbf{PO}, dann ist \textbf{P} = \textbf{NP}.
 \end{theorem}
 
-\begin{proof} Um zu zeigen, dass \textbf{P} = \textbf{NP} gilt, genügt es
-wegen Satz A.30 zu zeigen, dass ein einziges \textbf{NP}-vollständiges
-Problem in \textbf{P} liegt. Sei also $\mathcal{P}'$ ein beliebiges \textbf{NP}-vollständiges Problem.
+\begin{proof} Um zu zeigen, dass \textbf{P} = \textbf{NP} gilt, genÃ¼gt es
+wegen Satz A.30 zu zeigen, dass ein einziges \textbf{NP}-vollstÃ¤ndiges
+Problem in \textbf{P} liegt. Sei also $\mathcal{P}'$ ein beliebiges \textbf{NP}-vollstÃ¤ndiges Problem.
 
 Weil $\mathcal{P}$ nach Voraussetzung \textbf{NP}-hart ist, gilt insbesondere
-$\mathcal{P}' \leq_T \mathcal{P}_C$. Sei $R$ der zugehörige
+$\mathcal{P}' \leq_T \mathcal{P}_C$. Sei $R$ der zugehÃ¶rige
 Polynomialzeit-Algorithmus dieser Turing-Reduktion.
-Weiter ist $\mathcal{P} \in$ \textbf{PO} vorausgesetzt, etwa vermöge eines
+Weiter ist $\mathcal{P} \in$ \textbf{PO} vorausgesetzt, etwa vermÃ¶ge eines
 Polynomialzeit-Algorithmus $A$. Aus den beiden
-Polynomialzeit-Algorithmen $R$ und $A$ erhält man nun
-leicht einen effizienten Algorithmus für $\mathcal{P}'$: Ersetzt man
+Polynomialzeit-Algorithmen $R$ und $A$ erhÃ¤lt man nun
+leicht einen effizienten Algorithmus fÃ¼r $\mathcal{P}'$: Ersetzt man
 in $R$ das Orakel durch $A$, ergibt dies insgesamt eine polynomielle
 Laufzeit. 
 %\begin{flushright}
@@ -192,23 +192,23 @@ $\qed$
 \begin{lemma} Aus \textbf{PO} $=$ \textbf{NPO} folgt \textbf{P} $=$ \textbf{NP}.
 \end{lemma}
 
-\begin{proof} Es genügt zu zeigen, dass unter der angegeben
+\begin{proof} Es genÃ¼gt zu zeigen, dass unter der angegeben
 Voraussetzung KNAPSACK $\in$ \textbf{P} ist.
 
 Nach Voraussetung ist MAXIMUM KNAPSACK $\in$ \textbf{PO},
-d.h. die Berechnung von $m^*(x)$ für jede Instanz $x$ ist
-in Polynomialzeit möglich. Um KNAPSACK bei Eingabe
-$(x,k)$ zu entscheiden, müssen wir nur noch $m^*(x) \geq k$
-prüfen. Ist das der Fall, geben wir $1$, sonst $0$ aus. Dies
+d.h. die Berechnung von $m^*(x)$ fÃ¼r jede Instanz $x$ ist
+in Polynomialzeit mÃ¶glich. Um KNAPSACK bei Eingabe
+$(x,k)$ zu entscheiden, mÃ¼ssen wir nur noch $m^*(x) \geq k$
+prÃ¼fen. Ist das der Fall, geben wir $1$, sonst $0$ aus. Dies
 bleibt insgesamt ein Polynomialzeit-Algorithmus. 
 \begin{flushright}
 $\qed$
 \end{flushright}
 \end{proof}
 
-\section{Fußnoten}
+\section{FuÃŸnoten}
 
-In einer Fußnote können ergänzende Informationen\footnote{Informationen die für die Arbeit zweitrangig sind, jedoch für den Leser interessant sein könnten.} angegeben werden. Außerdem kann eine Fußnote auch Links enthalten. Wird in der Arbeit eine Software (zum Beispiel Java-API\footnote{\url{http://java.sun.com/}}) eingesetzt, so kann die Quelle, die diese Software zur Verfügung stellt in der Fußnote angegeben werden.
+In einer FuÃŸnote kÃ¶nnen ergÃ¤nzende Informationen\footnote{Informationen die fÃ¼r die Arbeit zweitrangig sind, jedoch fÃ¼r den Leser interessant sein kÃ¶nnten.} angegeben werden. AuÃŸerdem kann eine FuÃŸnote auch Links enthalten. Wird in der Arbeit eine Software (zum Beispiel Java-API\footnote{\url{http://java.sun.com/}}) eingesetzt, so kann die Quelle, die diese Software zur VerfÃ¼gung stellt in der FuÃŸnote angegeben werden.
 
 \section{Literaturverweise}\index{Literatur}
-Alle benutzte Literatur wird im Literaturverzeichnis angegeben\footnote{Dazu wird ein sogennanter bib-File, literatur.bib verwendet.}. Alle angegebene Literatur sollte mindestens einmal im Text referenziert werden\cite{Coulouris:02}.
+Alle benutzte Literatur wird im Literaturverzeichnis angegeben\footnote{Dazu wird ein sogennanter bib-File, literatur.bib verwendet.}. Alle angegebene Literatur sollte mindestens einmal im Text referenziert werden.
