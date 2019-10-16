@@ -23,13 +23,12 @@
 ^^JSpringer Verlag global LaTeX document class for monographs]
 
 % Titelseite des Fachbereichs Informatik der Fachhochschule Trier
-% ï¿½nderung durch Hermann Schloï¿½
+% Änderung durch Hermann Schloß
 
 \def\address#1{\gdef\@address{#1}}
 \def\supervisor#1{\gdef\@supervisor{#1}}
 \def\submitdate#1{\gdef\@submitdate{#1}}
 \def\project#1{\gdef\@project{#1}}
-\def\groupid#1{\gdef\@groupid{#1}}
 
 %\newenvironment{mytitlepage}[6]{
 \def\mytitlepage
@@ -37,7 +36,7 @@
 	\begin{titlepage} 
 		%\begin{figure}[h]
 		%{
-			{\hspace {\fill} {\includegraphics[width=0.7\textwidth]{Logo_Hauptcampus_Informatik.eps}}} 
+			{\hspace {\fill} {\includegraphics[width=0.5\textwidth]{Logo_Hauptcampus_Informatik}}} 
 		%}
 		%\end{figure} 
 		
@@ -57,11 +56,11 @@
 	%{\huge {#1} \par}
 	\end{minipage}
   	\vskip 2em
-%	\noindent  
-%	\begin{minipage}[t]{\textwidth}
- %  		%{\large {#2}\par}
- %  		{\large {\@subtitle}\par}
-% 	\end{minipage}
+	\noindent  
+	\begin{minipage}[t]{\textwidth}
+   		%{\large {#2}\par}
+   		{\large {\@subtitle}\par}
+ 	\end{minipage}
  	\vskip 2em % neu
  	\noindent  
   	\begin{minipage}[t]{\textwidth}
@@ -69,12 +68,6 @@
 		{\large {\@author} \par} 
  	\end{minipage}
  	%\vskip 15em
-	\vskip 2em % neu
- 	\noindent  
-  	\begin{minipage}[t]{\textwidth}
-		%{\large {#5} \par} 
-		{\large {Gruppe: \@groupid} \par} 
- 	\end{minipage}
  	\vskip 10em
  	\noindent  
  	\begin{minipage}[t]{\textwidth}
@@ -82,11 +75,11 @@
  		{\large {\@project} \par} 
   	\end{minipage}
   	\vskip 1em
- % 	\noindent  
-% 	\begin{minipage}[t]{\textwidth}
-% 		%{\large {#4} \par}  
- %		{\large {\@supervisor} \par}  
- % 	\end{minipage}
+  	\noindent  
+ 	\begin{minipage}[t]{\textwidth}
+ 		%{\large {#4} \par}  
+ 		{\large {Betreuer: \@supervisor} \par}  
+  	\end{minipage}
   	%\vskip 3em
  	
  	% author
@@ -103,8 +96,8 @@
 \end{titlepage}
 }
 
-%---------fï¿½r abk. Verz.----
-%Befehl fï¿½r eine Abkï¿½rzung
+%---------für abk. Verz.----
+%Befehl für eine Abkürzung
 \newcommand\abbreviation[2]{
   \noindent% 
   \setlength{\tabcolsep}{0pt}%
@@ -117,8 +110,8 @@
 \RequirePackage{url}
 %\urlstyle{sf}
 
-%---------fï¿½r abk. Verz.----
-%Befehl fï¿½r einen Link
+%---------für abk. Verz.----
+%Befehl für einen Link
 \newcommand\link[2]{
   \noindent% 
   \setlength{\tabcolsep}{0pt}%
@@ -943,9 +936,9 @@ passing it to article class \MessageBreak
  \def\notename{Anmerkung}%
  \def\partname{Teil}%
  \def\prefacename{Vorwort}% 
- \def\kurzfassungname{Kurzfassung} %ï¿½nderung von Hermann Schloss
- \def\kurzfassungENname{Abstract} %ï¿½nderung von Hermann Schloss
- \def\danksagungname{Danksagung} %ï¿½nderung von Hermann Schloss
+ \def\kurzfassungname{Kurzfassung} %Änderung von Hermann Schloss
+ \def\kurzfassungENname{Abstract} %Änderung von Hermann Schloss
+ \def\danksagungname{Danksagung} %Änderung von Hermann Schloss
  \def\proofname{Beweis}%
  \def\propertyname{Eigenschaft}%
 %\def\propositionname{Proposition}%
@@ -1702,8 +1695,8 @@ to\z@{\kern0.55\wd0\vrule\@height0.45\ht0\hss}\box0}}}}
 
 \def\indexspace{\par \vskip 10\p@ \@plus5\p@ \@minus3\p@\relax}
 
-%\def\subtitle#1{\gdef\@subtitle{#1}}
-%\def\@subtitle{}
+\def\subtitle#1{\gdef\@subtitle{#1}}
+\def\@subtitle{}
 
 \def\maketitle{\par
  \begingroup

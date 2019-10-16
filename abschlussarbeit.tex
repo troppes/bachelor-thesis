@@ -33,7 +33,9 @@
 
 %%-----------------------------------------------------
 \usepackage{color}				% Farbverwaltung
+%\usepackage{ngerman} 			% Neue deutsche Rechtsschreibung
 \usepackage[english, ngerman]{babel}
+%\usepackage[latin1]{inputenc} 	% Ermöglicht Umlaute-Darstellung
 \usepackage[utf8]{inputenc}  	% Ermöglicht Umlaute-Darstellung unter Linux (je nach verwendetem Format)
 
 %-----------------------------------------------------
@@ -71,13 +73,19 @@
 %--------------------------------------------------------------------------
 \begin{document}
 %------------------------- Titelblatt -------------------------------------
-\title{Implementierung eines Enterprise Search Systems für das Dietrich Online Projekt}
-\project{Bachelor Abschlussarbeit}
+\title{Implementierung einer Enterprise Search Engine für das \\ Dietrich Online Projekt}
+\subtitle{Implementation of an enterprise search engine for the \\ Dietrich Online project}
+%---- Die Art der Dokumentation kann hier ausgewählt werden---------------
+%\project{Bachelor-Projektarbeit}
+\project{Bachelor-Abschlussarbeit}
+%\project{Master-Projektstudium}
+%\project{Master-Abschlussarbeit}
+%\project{Seminar zur Vorlesung ...}
+%\project{Hausarbeit zur Vorlesung ...}
 %--------------------------------------------------------------------------
-\supervisor{Professor Christian Schmitz} 		% Betreuer der Arbeit
-\author{Florian Reitz}							% Autor der Arbeit
-\groupid{101}
-\address{Trier, 15.10.2019} 							% Im Zusammenhang mit dem Datum wird hinter dem Ort ein Komma angegeben
+\supervisor{Titel Vorname Name} 		% Betreuer der Arbeit
+\author{Florian Reitz} 							% Autor der Arbeit
+\address{Trier, den 15.10.2019} 							% Im Zusammenhang mit dem Datum wird hinter dem Ort ein Komma angegeben
 \submitdate{15.3.2020} 				% Abgabedatum
 %\begingroup
 %  \renewcommand{\thepage}{title}
@@ -92,8 +100,11 @@
 %--------------------------------------------------------------------------
 \frontmatter 
 %--------------------------------------------------------------------------
+\input{chapters/Vorwort}				% Vorwort (optional)
 \input{chapters/Kurzfassung} 			% Kurzfassung Deutsch/English
 \tableofcontents 						% Inhaltsverzeichnis
+\listoffigures 							% Abbildungsverzeichnis (optional)
+\listoftables 							% Tabellenverzeichnis (optional)
 %--------------------------------------------------------------------------
 \mainmatter                        		% Hauptteil (ab hier arab. Seitenzahlen)
 %--------------------------------------------------------------------------
@@ -102,8 +113,8 @@
 %\input{chapters/WeitereKapitel}
 %\input{chapters/Bausteine}
 %\input{chapters/Beispiel}
-\input{chapters/Vergleich.tex}
-\input{chapters/ZusammenfassungAusblick}
+%\input{chapters/ZusammenfassungAusblick}
+\input {chapters/Vergleich}
 % ...
 %--------------------------------------------------------------------------
 \backmatter                        		% Anhang
@@ -115,6 +126,7 @@
 %--------------------------------------------------------------------------
 \begin{appendix}						% Anhänge sind i.d.R. optional
    \include{chapters/Glossar}			% Glossar   
+   \include{chapters/Selbststaendigkeitserklaerung}	% Selbstständigkeitserklärung
 \end{appendix}
 
 \end{document}

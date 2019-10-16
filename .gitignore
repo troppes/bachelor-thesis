@@ -26,6 +26,8 @@
 *.tcp 
 *.toc 
 *.tps 
+*.lot
+*.lof
 *blx.bib 
 *.run.xml
 *.fdb_latexmk
