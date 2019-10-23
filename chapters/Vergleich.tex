@@ -3,12 +3,75 @@
 In diesem ersten Schritt werden sich diverse Enterprise Search Engine Systeme angeschaut und evaluiert. Dafür wurde eine Liste mit Anforderungen an das System erstellt. Die Anforderungen sehen wie folgt aus:
 Das System muss Open-Source und kostenlos sein. Es müssen Facetten unterstützt werden, um eine einfache Möglichkeit zu bieten die Ergebnisse zu Filtern.
 
+\section{Lucene Core}
+
 \section{Solr}
 
-Apache Solr ist eine viel eingesetzte Search Engine von der Apache Foundation. Es wird unter anderem von DuckDuckGo und Best Buy eingesetzt. \cite{TheApacheSoftwareFoundation.2019}
+Apache Solr ist eine viel eingesetzte Search Engine von der Apache Foundation. Sie basiert auf Apache Lucene und erweitert dieses um ein einfacheres Interface. Es wird unter anderem von DuckDuckGo und Best Buy eingesetzt. Durch die Apache Foundation ist ein stabiler Langzeitpartner gegeben. 
+Solr arbeitet auf einer REST-like API, welches es ermöglicht eine einfache Schnittstelle für das Dietrich Projekt bereitzustellen. Darüber hinaus bietet es Support für Facetten.
+Als Bonus hat es noch Support für Suchvorschläge, was für das Dietrich Projekt auf von Interesse wäre.
 
+Apache Solr hat keinen bezahlten Support, sondern einen kostenfreien Community Support.
+
+\cite{TheApacheSoftwareFoundation.2019}
+
+\section{ElasticSearch}
+
+Eine weitere großes Enterprise Search Engine ist ElasticSearch. Auch dieses Projekt arbeitet auf der Basis von Lucene. Zwei der bekannten Kunden sind Adobe und Ebay. Auch ElasticSearch stellt eine REST-API bereit, allerdings gibt es auch Klienten für viele Programmiersprachen, darunter PHP. Dabei kann auch eine SQL-like Sprache verwendet werden, insofern auf Open-Source verzichtet wird und der Basic Plan genommen wird. \cite{ElasticSearchSub.2019}
+
+Sollte man einen höheren Plan auswählen kriegt man auch Support.
+
+Zu ElasticSearch kann noch Kibana installiert werden, um eine Visualisierung der Daten zu bekommen und den Elastic Stack zu navigieren.
+
+\cite{Elasticsearch.2019}
+
+\section{Manticore Search}
+
+Manticore Search ist eine Open-Source Option ESE, welche unter anderem Craigslist zu seinen Kunden zählen kann. Sie basiert auf Sphinx, spaltet sich jedoch immer weiter davon ab, da Sphinx vom Open Source Modell weg gegangen ist.
+
+Sie bietet auch eine Auto-Korrektur und Support für Suchvorschläge. Auch wird SQL und JSON zur Anfragenstellung unterstützt.
+
+\cite{ManticoreSoftwareLtd.2019}
+
+
+\section{Xapian}
+
+Xapian ist eine Open-Source ESE, welche unter der GPL Lizenz verfügbar ist. Sie basiert auf Open Muscat. Eine Search Engine mit Wurzeln an der Cambridge University in den 1980ern. Nachdem Muscat umbenannt wurde und closed Source gegangen ist, haben einige Entwickler die letzte öffentlich zugängliche Version übernommen und weiterentwickelt.
+Sie bietet Support für Facetten, Wildcard Suche und Ranked Suche. Auto-Korrektur ist auch verfügbar.
 
 \section {Vorauswahl}
+
+Einen genaueren Feature-Vergleich sehen sie hier in Tabellenform.
+
+\begin{table} %[hbtp]
+	\centering
+		\begin{tabular}{l | l | l | l | l | l}
+		& \textbf{Lucene Core} & \textbf{Solr} & \textbf{Manticore} & \textbf{ElasticSearch}  & \textbf{Xapian} \\
+        \hline
+        Volltext-Suche                  & x & x & x & x  & x \\
+        Facetten                        & x & x & x & x  & x \\
+        Open Source                     & x & x & x & x* & x \\
+        Ranked Suche                    & x & x & x & x  & x \\
+        Auto-Korrektur                  & x & x & x & x  & x \\
+        Wildcard Suche                  & x & x & x & x  & x \\
+        Query Vorschläge                & x & x & x & x  & x \\
+        Synonym Support                 & x & x & x & x  & x \\
+        Boolesche Operatoren            & x & x & x & x  & x \\
+        PHP Support                     & - & x & x & x  & x \\
+        (Fast) Echtzeit Indizierung     & x & x & x & x  & x \\
+        Web-Interface                   & - & x & - & x* & - \\
+        Monitoring / Logging            & - & x & x & x* & - \\
+        Plugin Support                  & x & x & x & x  & - \\
+        JSON Interface                  & x & x & x & x  & - \\
+        SQL-Like Query Support          & x & - & x & x  & - \\
+
+		\end{tabular}
+	\caption{Feature-Vergleich der verschiedenen Enterprise Search Engines}
+	\label{vglTable}
+\end{table}
+
+
+
 
 Nach einem ersten Überblick wurden nun Aufgrund der Auswahlkriterien diese Systeme zum genaueren Vergleich ausgewählt:
 
