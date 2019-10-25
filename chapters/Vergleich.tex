@@ -22,14 +22,23 @@ Des Weiteren sind folgende Features ein Bonus:
     \item bezahlter Support
 \end{itemize}
 
+\section{Apache Lucene Core}
 
-Das System muss Open-Source und kostenlos sein. Es müssen Facetten unterstützt werden, um eine einfache Möglichkeit zu bieten die Ergebnisse zu Filtern.
+Lucene Core ist eine Open Source Enterprise Search Engine von der Apache Foundation geschrieben in Java. Sie bildet die Basis für Solr, auf welches später noch eingegangen wird. Dabei bietet Lucene Core allerdings auch schon einige interessante Features, unter anderem eine Ranked Suche und Facettierung. \ref{vglTable}
 
-\section{Lucene Core}
+Das Lucene Projekt wurde im Jahre 1999 vom Entwicker Doug Cutting gestartet. Es ist im September 2001 der Apache Foundation beigetreten, als ein der Jakarta Familie. 2005 wurde es dann zu einen eigenen Top-Level Projekt. 
 
-\section{Solr}
+\cite{TheApacheSoftwareFoundation.2019b}
 
-Apache Solr ist eine viel eingesetzte Search Engine von der Apache Foundation. Sie basiert auf Apache Lucene und erweitert dieses um ein einfacheres Interface. Es wird unter anderem von DuckDuckGo und Best Buy eingesetzt. Durch die Apache Foundation ist ein stabiler Langzeitpartner gegeben. 
+\section{Terrier}
+
+
+\section{Sphinx}
+
+
+\section{Apache Solr}
+
+Apache Solr ist eine viel eingesetzte Search Engine von der Apache Foundation. Sie basiert auf Apache Lucene Core und erweitert dieses um ein Interface. Die Entwicklung dafür begann 2004 als ein internes Projekt von CNET. Im Jahre 2006 hat CNET den Source Code an die Apache Foundation weitergegeben und es wurde zu einem großen Part des Lucene Projektes. Es wird unter anderem von DuckDuckGo und Best Buy eingesetzt. Durch die Apache Foundation ist ein stabiler Langzeitpartner gegeben. 
 Solr arbeitet auf einer REST-like API, welches es ermöglicht eine einfache Schnittstelle für das Dietrich Projekt bereitzustellen. Darüber hinaus bietet es Support für Facetten.
 Als Bonus hat es noch Support für Suchvorschläge, was für das Dietrich Projekt auf von Interesse wäre.
 
@@ -41,9 +50,7 @@ Apache Solr hat keinen bezahlten Support, sondern einen kostenfreien Community S
 
 Eine weitere großes Enterprise Search Engine ist ElasticSearch. Auch dieses Projekt arbeitet auf der Basis von Lucene. Zwei der bekannten Kunden sind Adobe und Ebay. Auch ElasticSearch stellt eine REST-API bereit, allerdings gibt es auch Klienten für viele Programmiersprachen, darunter PHP. Dabei kann auch eine SQL-like Sprache verwendet werden, insofern auf Open-Source verzichtet wird und der Basic Plan genommen wird. \cite{ElasticSearchSub.2019}
 
-Sollte man einen höheren Plan auswählen kriegt man auch Support.
-
-Zu ElasticSearch kann noch Kibana installiert werden, um eine Visualisierung der Daten zu bekommen und den Elastic Stack zu navigieren.
+Sie bietet den Vorteil, dass Support dazugebucht werden kann. Für eine grafische Oberfläche gibt es Kibana. Dies bietet nicht nur eine Oberfläche für Elastic Search, sondern lässt sich auch mit den Logstash einer Logging-Engine verbinden. Da aktuell auch noch nach einer Logging Lösung gesucht wird, ist dies ein nicht zu unterschätzender Pluspunkt. 
 
 \cite{Elasticsearch.2019}
 
@@ -61,45 +68,54 @@ Sie bietet auch eine Auto-Korrektur und Support für Suchvorschläge. Auch wird 
 Xapian ist eine Open-Source ESE, welche unter der GPL Lizenz verfügbar ist. Sie basiert auf Open Muscat. Eine Search Engine mit Wurzeln an der Cambridge University in den 1980ern. Nachdem Muscat umbenannt wurde und closed Source gegangen ist, haben einige Entwickler die letzte öffentlich zugängliche Version übernommen und weiterentwickelt.
 Sie bietet Support für Facetten, Wildcard Suche und Ranked Suche. Auto-Korrektur ist auch verfügbar.
 
-\section {Vorauswahl}
+\cite{XAP.2019}
 
-Einen genaueren Feature-Vergleich sehen sie hier in Tabellenform.
+\section {Vorauswahl}
 
 \begin{table} %[hbtp]
 	\centering
 		\begin{tabular}{l | l | l | l | l | l}
-		& \textbf{Lucene Core} & \textbf{Solr} & \textbf{Manticore} & \textbf{ElasticSearch}  & \textbf{Xapian} \\
+		& \textbf{LC} & \textbf{AS} & \textbf{MC} & \textbf{ES}  & \textbf{XP} \\
         \hline
-        Volltext-Suche                  & x & x & x & x  & x \\
-        Facetten                        & x & x & x & x  & x \\
-        Open Source                     & x & x & x & x* & x \\
-        Ranked Suche                    & x & x & x & x  & x \\
-        Auto-Korrektur                  & x & x & x & x  & x \\
-        Wildcard Suche                  & x & x & x & x  & x \\
-        Query Vorschläge                & x & x & x & x  & x \\
-        Synonym Support                 & x & x & x & x  & x \\
-        Boolesche Operatoren            & x & x & x & x  & x \\
-        PHP Support                     & - & x & x & x  & x \\
-        (Fast) Echtzeit Indizierung     & x & x & x & x  & x \\
-        Web-Interface                   & - & x & - & x* & - \\
-        Monitoring / Logging            & - & x & x & x* & - \\
-        Plugin Support                  & x & x & x & x  & - \\
-        JSON Interface                  & x & x & x & x  & - \\
-        SQL-Like Query Support          & x & - & x & x  & - \\
+        Open Source                                 & x & x & x & x* & x \\
+        Unterstützung von Facetten                  & x & x & x & x  & x \\
+        Ranking der Suchergebnisse                  & x & x & x & x  & x \\
+        statistische Auswertung (Metriken)          & - & x & x & x  & - \\
+        Volltextsuche                               & x & x & x & x  & x \\
+        Support für PDF, SQL, XML                   & x & x & x & x  & x \\
+        Monitoring / Logging                        & - & x & x & x* & - \\
+        Support für PostgreSQL                      & x & x & x & x  & x \\
+        Backup                                      & - & x & - & x* & - \\
+        Auto-Korrektur                              & x & x & x & x  & x \\
+        Auto-Vervollständigung                      & x & x & x & x  & x \\
+        Login System und Security                   & - & x & - & x* & - \\
+        bezahlter Support                           & - & - & x & x  & - \\
+        Wildcard Suche                              & x & x & x & x  & x \\
+        Query Vorschläge                            & x & x & x & x  & x \\
+        Synonym Support                             & x & x & x & x  & x \\
+        PHP Support                                 & - & x & x & x  & x \\
+        (Fast) Echtzeit Indizierung                 & x & x & x & x  & x \\
+        Web-Interface                               & - & x & - & x  & - \\
+        Plugin Support                              & x & x & x & x  & - \\
+        JSON Interface                              & x & x & x & x  & - \\
+        SQL-Like Query Support                      & x & - & x & x  & - \\
 		\end{tabular}
 	\caption{Feature-Vergleich der verschiedenen Enterprise Search Engines}
-	\label{vglTable}
+    \label{vglTable}
+
+    Die Tabelle vergleicht einige Features der ausgewählten Search Engines. Dabei wurden die Namen aus Platzgründen wie folgt abgekürzt:
+
+    \begin{itemize}
+        \item LC = Lucene Core
+        \item AS = Apache Solr
+        \item MC = Manticore Search
+        \item ES = Elastic Search
+        \item XP = Xapian
+    \end{itemize} 
+
+    Der Stern bedeutet, dass ein Feature nur in der Kostenlosen und nicht der Open Source Variante verfügbar ist.
+
 \end{table}
 
 
-
-
-Nach einem ersten Überblick wurden nun Aufgrund der Auswahlkriterien diese Systeme zum genaueren Vergleich ausgewählt:
-
-\begin{itemize}
-    \item Apache Solr
-    \item Manticore Search
-    \item ElasticSearch
-    \item Sphinx
-\end{itemize}
-
+Nach einem ersten Überblick wurden nun Aufgrund der Auswahlkriterien diese Systeme zum genaueren Vergleich ausgewählt: Apache Solr, Manticore Search, ElasticSearch (in der kostenlosen Version) und Xapian. Lucene Core wird nicht genauer untersucht, da Solr ein umfassenderes Paket bietet, welches den gestellten Anforderungen mehr entspricht.
