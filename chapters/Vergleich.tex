@@ -1,6 +1,6 @@
 \chapter{Vergleich der Enterprise Search Engines}
 
-In diesem ersten Schritt werden sich diverse Enterprise Search Engine Systeme angeschaut und evaluiert. Dafür wurde eine Liste mit Anforderungen an das System erstellt. Die Anforderungen sehen wie folgt aus:
+In ersten Schritt werden diverse Enterprise Search Engines evaluiert. Dafür wurde eine Anforderungsliste mit den Mitarbeitern erstellt. Die Systeme welche bei diesen Vergleich nach Features am besten abschneiden werden anschließend aufgesetzt, getestet und genauer verglichen.
 
 \begin{itemize}
     \item Open Source oder Kostenlos
@@ -11,44 +11,68 @@ In diesem ersten Schritt werden sich diverse Enterprise Search Engine Systeme an
     \item Logging-Möglichkeit
 \end{itemize}
 
-Des Weiteren sind folgende Features ein Bonus:
+Des Weiteren sind die folgenden Funktionen auch wichtig, allerdings keine K.O. Kriterien:
 
 \begin{itemize}
     \item Support für PostgreSQL
-    \item Backup
-    \item statistische Auswertung
+    \item Backup Funktionen
     \item Auto-Korrektur und Auto-Vervollständigung
-    \item Login System mit Security
+    \item Security Features
+    \item PHP-Support
     \item bezahlter Support
 \end{itemize}
 
+Durch die begrenzten finanziellen Mittel und die lange Projektlaufzeit besteht die Notwendigkeit eine kostenfreie, im besten Fall sogar Open Source Suchmaschine zu finden. Auch äußerst wichtig ist der Support für Facetten, da viele Dietrich-Online als Suchmaschine den Nutzer einige Tools zum Verfeinern seiner Suchergebnisse zur Verfügung stellen will. Das Ranking der Suchergebnisse ist vor allem für die Transparenz wichtig, da hier mit vielen Daten gearbeitet wird, welche allerdings nicht alle gleichzeitig dargestellt werden können. Dieses Problem kann mit einer Gewichtung der Suchergebnisse behoben werden, welches dann auf der Seite für Transparenz veröffentlicht wird. Die Volltextsuche wird es möglich machen auch nach Schlüsselwörtern im Titel zu suchen. Der Support von den verschiedenen Dateiformaten ergibt sich dadurch, dass dieses Projekt stark gewachsen ist. Es gibt viele Prozessschritte, welche auf denselben Daten in verschiedenen Formen arbeiten. Darunter werden alle Einträge im XML Format bearbeitet, es gibt alle Scans als PDF und für die Webseite sind alle Daten nochmals in der Datenbank vorhanden. Dadurch gibt sich auch das Problem, dass Daten mehrfach vorliegen welches sicherlich Später von größerer Bedeutung sein wird. Als letztes ist es noch wichtig, dass eine Logging-Möglichkeit geboten wird, damit schnell und effizient Probleme mit dem System erkannt und gelöst werden können.
+
+Ein Support für PostgreSQL ist für dieses Projekt nicht so wichtig, allerdings könnte es sein, dass der Server später auch andere Datenbanken verwaltet. Der Server wird sowieso täglich durch einen Automatismus gesichert. Allerdings ist eine manuelle Backup-Lösung wünschenswert, um die Suchmaschine losgelöst von den Server zu sichern und gegebenenfalls auch einfach auf einen anderen Server umzuziehen. Auto-Korrektur und Auto-Vervollständigung sind beide sehr interessant, um den Nutzer mehr Komfort-Funktionen bieten zu können. Der Server sollte ja generell nur intern Ansprechbar sein. Allerdings gibt es für manche der Suchmaschinen eine Web-Oberfläche, da wäre es wichtig eine sichere Verbindung dorthin und gegebenenfalls eine Möglichkeit der Mehrfaktor-Authentifizierung zu haben. Einen PHP-Connector, welcher Objekte zum Umgang mit der Suchmaschine bietet, wäre wünschenswert. Allerdings bieten einige Suchmaschinen auch die Möglichkeit über JSON Anfragen an die Suchmaschine zu stellen. Allerdings sollte zumindest eine der beiden Möglichkeiten gegeben sein. Zuletzt wäre für akute Probleme ein bezahlter Support, der dafür schneller reagiert wünschenswert. 
+
 \section{Apache Lucene Core}
+\label{lucenecore}
 
-Lucene Core ist eine Open Source Enterprise Search Engine von der Apache Foundation geschrieben in Java. Sie bildet die Basis für Solr, auf welches später noch eingegangen wird. Dabei bietet Lucene Core allerdings auch schon einige interessante Features, unter anderem eine Ranked Suche und Facettierung. \ref{vglTable}
+Lucene Core ist eine Open Source Enterprise Search Engine von der Apache Foundation geschrieben in Java.
 
-Das Lucene Projekt wurde im Jahre 1999 vom Entwicker Doug Cutting gestartet. Es ist im September 2001 der Apache Foundation beigetreten, als ein der Jakarta Familie. 2005 wurde es dann zu einen eigenen Top-Level Projekt. 
+Das Lucene Projekt wurde im Jahre 1997 vom Entwickler Doug Cutting gestartet. 2001 ist es dann der Apache Foundation als Teil des Jakarta-Projekts beigetreten und wurde 2005 ein eigenes Hauptprojekt der Foundation. \cite{Wikipedia.2019c}
 
+Lucene Core erfüllt alle der Grundanforderungen. Für das Monitoring gibt es eine Klasse, die es auch ermöglicht, dass langsame Query’s geloggt werden. Zudem bietet es Support für PostgreSQL und Auto-Korrektur/Auto-Vervollständigung. Da es keine Web-Oberfläche besitzt, gibt es auch keine weiteren Sicherheitsfunktionen. Einen PHP-Connector gibt es leider auch nicht, man müsste daher mit PHP direkte Systemaufrufe an Java machen. Bezahlten Support gibt es hier nicht, da dieses Projekt zur Apache Foundation gehört. 
 \cite{TheApacheSoftwareFoundation.2019b}
 
 \section{Terrier}
 
+Terrier ist eine Open Source Enterprise Search Engine geschrieben in Java. Entwickelt und gepflegt wird diese von der University of Glasgow. Sie existiert bereit seit 10 Jahren und hat eine breite Nutzerbasis laut Webseite. 
+Terrier erfüllt leider nicht alle Grundanforderungen, da es keine direkte Möglichkeit gibt SQL zu indexieren. Es gibt allerdings eine Möglichkeit das SQL in JSON zu konvertieren und dieses dann in die Suchmaschine einzupflegen. Auch ist kein Support für Facetten gegeben.
+
+
+\cite{McCreadie.2019}
+
+TERRIER HAT LOGGING
+KEIN SUPPORT FÜR SQL -> SQLXML??
 
 \section{Sphinx}
 
+Sphinx ist eine Suchmaschine entwickelt von Andrew Aksyonoff. Bis zur Version 2 wurde sie aktiv Open Source entwickelt. Ab Version 3 wurde die Entwicklung closed Source. Auf der Github-Seite steht: „The sources for 3.0 will also be posted here when we decide to make those publicly available.“ \cite{sphinxserach.2019}, also gibt es kein genaues Datum ob und wann die Version 3 Open Source geht. Version 3.1.1 wurde im Oktober 2018 veröffentlicht und seitdem lässt sich auch nichts mehr über das Projekt finden. Von daher ist davon auszugehen, dass das Projekt nicht mehr weitergeführt wird. 
+
+Zu den Features ist festzuhalten, dass es keinen nativen PDF-Support gibt. Allerdings werden die anderen Anforderungen alle erfüllt. Es existiert, laut Webseite, sogar ein bezahlter Support, allerdings ist fraglich, ob man mit der Firma noch in Kontakt treten kann. Da es auch für Sphinx kein Frontend gibt, ist eine Authentifizierung nicht notwendig.
+\cite{SphinxTechnologiesInc.2019}
 
 \section{Apache Solr}
 
-Apache Solr ist eine viel eingesetzte Search Engine von der Apache Foundation. Sie basiert auf Apache Lucene Core und erweitert dieses um ein Interface. Die Entwicklung dafür begann 2004 als ein internes Projekt von CNET. Im Jahre 2006 hat CNET den Source Code an die Apache Foundation weitergegeben und es wurde zu einem großen Part des Lucene Projektes. Es wird unter anderem von DuckDuckGo und Best Buy eingesetzt. Durch die Apache Foundation ist ein stabiler Langzeitpartner gegeben. 
-Solr arbeitet auf einer REST-like API, welches es ermöglicht eine einfache Schnittstelle für das Dietrich Projekt bereitzustellen. Darüber hinaus bietet es Support für Facetten.
-Als Bonus hat es noch Support für Suchvorschläge, was für das Dietrich Projekt auf von Interesse wäre.
+Apache Solr ist eine, auf Lucene Core \ref{lucenecore} viel eingesetzte Search Engine von der Apache Foundation. Sie basiert auf Apache Lucene Core und erweitert dieses um ein grafische Benutzeroberfläche und einige Features. 
+Die Entwicklung dafür begann 2004 als ein internes Projekt von CNET um eine bessere Suche für die eigene Webseite zu bieten. Später im Jahre 2006 hat CNET dann den Source Code an die Apache Foundation weitergegeben. Dadurch wurde  es zu einem eigenen Projekt bei der Apache Foundation. Im Jahre 2009 wurden Solr dann in das Apache Lucene Projekt eingefügt. Dort wird es auch aktuell noch weiterentwickelt.
+\cite{Wikipedia.2019b}
 
-Apache Solr hat keinen bezahlten Support, sondern einen kostenfreien Community Support.
+Solr wird unter anderem von DuckDuckGo und Best Buy eingesetzt. Durch die Unterstützung von der Apache Foundation längerfristige Weiterentwicklung abzusehen. 
+
+Da Solr zur Apache Foundation gehört ist es Open Source. Es bietet viele Funktionen von Haus und hat zudem auch noch Support für Plugins. Es erfüllt alle Grundanforderungen und besitzt darüber hinaus auch Support für fast alle Bonus-Features. Einzig und allein gibt es keinen bezahlten Support, dafür allerdings eine große Community, welche man durch einen Mailing Liste oder IRC erreichen kann.
 
 \cite{TheApacheSoftwareFoundation.2019}
 
 \section{ElasticSearch}
 
-Eine weitere großes Enterprise Search Engine ist ElasticSearch. Auch dieses Projekt arbeitet auf der Basis von Lucene. Zwei der bekannten Kunden sind Adobe und Ebay. Auch ElasticSearch stellt eine REST-API bereit, allerdings gibt es auch Klienten für viele Programmiersprachen, darunter PHP. Dabei kann auch eine SQL-like Sprache verwendet werden, insofern auf Open-Source verzichtet wird und der Basic Plan genommen wird. \cite{ElasticSearchSub.2019}
+Eine weitere großes Enterprise Search Engine ist ElasticSearch. Auch dieses Projekt arbeitet auf der Basis von Lucene. Zu den bekanntesten Kunden zählen Ebay und Adobe. Gestartet wurde das Projekt in den jungen 2000ern von Shay Banon, um eine Verwaltung für die Rezepte seiner Frau zu schaffen. Im Juni 2012 haben sich dann Logstash, ein Logging Dienst, Kibana, ein UI für ElasticSearch, und ElasticSearch zusammengetan. Alle kamen zusammen in der ElasticSearch Incorporated. Seitdem wurden der Produktkatalog stetig erweitert und die Produkte weiterentwickelt. Viele der weiteren Produkte sind allerdings nicht mehr Open-Source oder kostenlos. Der ELK-Stack ist allerdings weiterhin kostenlos und ElasticSearch zudem auch als Open-Source Variante zu haben. Für den Vergleich wird hier nun die Kostenfreie und nicht die Open-Source Variante beleuchtet. Eine genauere Aussage, welche Features nur in der kostenlosen und nicht in der Open-Source Variante zu finden sind, finden sich in der Tabelle \ref{vglTable}.
+
+// HIER WEITERMACHEN!!
+
+Auch ElasticSearch stellt eine REST-API bereit, allerdings gibt es auch Klienten für viele Programmiersprachen, darunter PHP. Dabei kann auch eine SQL-like Sprache verwendet werden, insofern auf Open-Source verzichtet wird und der Basic Plan genommen wird. \cite{ElasticSearchSub.2019}
 
 Sie bietet den Vorteil, dass Support dazugebucht werden kann. Für eine grafische Oberfläche gibt es Kibana. Dies bietet nicht nur eine Oberfläche für Elastic Search, sondern lässt sich auch mit den Logstash einer Logging-Engine verbinden. Da aktuell auch noch nach einer Logging Lösung gesucht wird, ist dies ein nicht zu unterschätzender Pluspunkt. 
 
@@ -93,7 +117,7 @@ Sie bietet Support für Facetten, Wildcard Suche und Ranked Suche. Auto-Korrektu
         Wildcard Suche                              & x & x & x & x  & x \\
         Query Vorschläge                            & x & x & x & x  & x \\
         Synonym Support                             & x & x & x & x  & x \\
-        PHP Support                                 & - & x & x & x  & x \\
+        PHP Support                                 & - & x & - & x  & x \\
         (Fast) Echtzeit Indizierung                 & x & x & x & x  & x \\
         Web-Interface                               & - & x & - & x  & - \\
         Plugin Support                              & x & x & x & x  & - \\
