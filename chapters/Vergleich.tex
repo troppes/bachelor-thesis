@@ -48,10 +48,11 @@ TERRIER HAT LOGGING
 KEIN SUPPORT FÜR SQL -> SQLXML??
 
 \section{Sphinx}
+\label{sphinx}
 
 Sphinx ist eine Suchmaschine entwickelt von Andrew Aksyonoff. Bis zur Version 2 wurde sie aktiv Open Source entwickelt. Ab Version 3 wurde die Entwicklung closed Source. Auf der Github-Seite steht: „The sources for 3.0 will also be posted here when we decide to make those publicly available.“ \cite{sphinxserach.2019}, also gibt es kein genaues Datum ob und wann die Version 3 Open Source geht. Version 3.1.1 wurde im Oktober 2018 veröffentlicht und seitdem lässt sich auch nichts mehr über das Projekt finden. Von daher ist davon auszugehen, dass das Projekt nicht mehr weitergeführt wird. 
 
-Zu den Features ist festzuhalten, dass es keinen nativen PDF-Support gibt. Allerdings werden die anderen Anforderungen alle erfüllt. Es existiert, laut Webseite, sogar ein bezahlter Support, allerdings ist fraglich, ob man mit der Firma noch in Kontakt treten kann. Da es auch für Sphinx kein Frontend gibt, ist eine Authentifizierung nicht notwendig.
+Zu den Features ist festzuhalten, dass es keinen nativen PDF-Support in der Open-Source Version existiert, ab der Version 3 jedoch wurde ein Document Storage eingebaut. Allerdings werden die anderen Anforderungen alle erfüllt. Es existiert, laut Webseite, sogar ein bezahlter Support, allerdings ist fraglich, ob man mit der Firma noch in Kontakt treten kann. Da es auch für Sphinx kein Frontend gibt, ist eine Authentifizierung nicht notwendig.
 \cite{SphinxTechnologiesInc.2019}
 
 \section{Apache Solr}
@@ -80,17 +81,20 @@ Sie bietet den Vorteil, dass Support dazugebucht werden kann. Für eine grafisch
 
 \section{Manticore Search}
 
-Manticore Search ist eine Open-Source Option ESE, welche unter anderem Craigslist zu seinen Kunden zählen kann. Sie basiert auf Sphinx, spaltet sich jedoch immer weiter davon ab, da Sphinx vom Open Source Modell weg gegangen ist.
+Manticore Search Engine ist eine Open-Source Solution basierend auf Sphinx \ref{sphinx}. Nachdem Sphinx Closed-Source gegangen ist, wurde auf der letzten offenen Version die erste Version von Manticore Search entwickelt. Zu den großen Kunden zählen unter anderem Craigslist und Boardreader.
 
-Sie bietet auch eine Auto-Korrektur und Support für Suchvorschläge. Auch wird SQL und JSON zur Anfragenstellung unterstützt.
+Manticore erfüllt fast alle Grund Anforderungen, allerdings ist kein nativer PDF-Support gegeben. Es muss daher auf eine Konvertierung der Daten auf XML gesetzt werden. Es findet sich außerdem eine Unterstützung von PostgreSQL, sowie Auto-Korrektur und Vervollständigung. Es gibt auch einen Query-Log. Zuletzt gibt es noch eine Option auf bezahlten Support. Die Supportkosten sind dabei direkt auf der Webseite angegeben und belaufen sich auf 3000 Dollar im Jahr für den Standard Support. 
 
 \cite{ManticoreSoftwareLtd.2019}
 
 
 \section{Xapian}
 
-Xapian ist eine Open-Source ESE, welche unter der GPL Lizenz verfügbar ist. Sie basiert auf Open Muscat. Eine Search Engine mit Wurzeln an der Cambridge University in den 1980ern. Nachdem Muscat umbenannt wurde und closed Source gegangen ist, haben einige Entwickler die letzte öffentlich zugängliche Version übernommen und weiterentwickelt.
-Sie bietet Support für Facetten, Wildcard Suche und Ranked Suche. Auto-Korrektur ist auch verfügbar.
+Xapian ist eine Open-Source Enterprise Suchmaschine, welche von Zeit-Online, der Universitätsbibliothek Köln und der Debian Webseite genutzt wird. Die Suchmaschine basiert auf Open Muscat, einer Suchmaschine, welche an der Cambridge Universität in den 1980ern von Dr. Martin Porter entwickelt wurde. In 2001, als Open Muscat Closed-Source ging, haben sich einige Entwickler die letzte offene Version geladen und diese weiterentwickelt.
+
+Sie erfüllt alle der Grundanforderungen, wenn auch Logging nur im Grundsinne erfüllt wird, da nur Errors geschmissen werden. Des Weiteren bietet die Suchmaschine Support für PostgreSQL. Auch eine Replikations-Funktion wird mitgeliefert. Sie bietet auch Auto-Korrektur und Auto-Vervollständigung. Ein Login-System mit Sicherheitsfunktionen gibt es durch das Fehlende Frontend Administration nicht. Es gibt allerdings die Möglichkeit mit Omega eine CGI-Suche zu nutzen. Diese Suche bietet allerdings keine Administration, sondern nur eine grafische Oberfläche für Suchanfragen.
+
+Auch gibt es eine Möglichkeit für bezahlten Support. Auf der Webseite werden zwei Firmen angegeben, welche bezahlten Support bieten. Allerdings funktioniert der Link aktuell nur für eine der beiden Firmen aktuell. Zudem ist ein PHP-Connector für die Suchmaschine vorhanden, was die Einbindung ist das Projekt vereinfacht.
 
 \cite{XAP.2019}
 
