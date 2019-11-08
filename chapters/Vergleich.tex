@@ -33,8 +33,7 @@ Lucene Core ist eine Open Source Enterprise Search Engine von der Apache Foundat
 
 Das Lucene Projekt wurde im Jahre 1997 vom Entwickler Doug Cutting gestartet. 2001 ist es dann der Apache Foundation als Teil des Jakarta-Projekts beigetreten und wurde 2005 ein eigenes Hauptprojekt der Foundation. \cite{Wikipedia.2019c}
 
-Lucene Core erfüllt alle der Grundanforderungen. Für das Monitoring gibt es eine Klasse, die es auch ermöglicht, dass langsame Query’s geloggt werden. Zudem bietet es Support für PostgreSQL und Auto-Korrektur/Auto-Vervollständigung. Da es keine Web-Oberfläche besitzt, gibt es auch keine weiteren Sicherheitsfunktionen. Einen PHP-Connector gibt es leider auch nicht, man müsste daher mit PHP direkte Systemaufrufe an Java machen. Bezahlten Support gibt es hier nicht, da dieses Projekt zur Apache Foundation gehört. 
-\cite{TheApacheSoftwareFoundation.2019b}
+Lucene Core erfüllt alle der Grundanforderungen. Für das Monitoring gibt es eine Klasse, die es auch ermöglicht, dass langsame Query’s geloggt werden. Zudem bietet es Support für PostgreSQL und Auto-Korrektur/Auto-Vervollständigung. Da es keine Web-Oberfläche besitzt, gibt es auch keine weiteren Sicherheitsfunktionen. Einen PHP-Connector gibt es leider auch nicht, man müsste daher mit PHP direkte Systemaufrufe an Java machen. Bezahlten Support gibt es hier nicht, da dieses Projekt zur Apache Foundation gehört. \cite{TheApacheSoftwareFoundation.2019b}
 
 \section{Terrier}
 \label{terrier}
@@ -58,9 +57,7 @@ Die Entwicklung dafür begann 2004 als ein internes Projekt von CNET um eine bes
 
 Solr wird unter anderem von DuckDuckGo und Best Buy eingesetzt. Durch die Unterstützung von der Apache Foundation längerfristige Weiterentwicklung abzusehen. 
 
-Da Solr zur Apache Foundation gehört, ist es Open Source. Es bietet viele Funktionen von Haus, damit erfüllt es alle Grundanforderungen und besitzt darüber hinaus auch Support für fast alle Bonus-Features. Einzig und allein gibt es keinen bezahlten Support, dafür allerdings eine große Community, welche man durch einen Mailing Liste oder IRC erreichen kann.
-
-\cite{TheApacheSoftwareFoundation.2019}
+Da Solr zur Apache Foundation gehört, ist es Open Source. Es bietet viele Funktionen von Haus, damit erfüllt es alle Grundanforderungen und besitzt darüber hinaus auch Support für fast alle Bonus-Features. Einzig und allein gibt es keinen bezahlten Support, dafür allerdings eine große Community, welche man durch einen Mailing Liste oder IRC erreichen kann. \cite{TheApacheSoftwareFoundation.2019}
 
 \section{ElasticSearch}
 \label{elasticsearch}
@@ -99,7 +96,7 @@ Sie erfüllt alle der Grundanforderungen, wenn auch Logging nur im Grundsinne er
 
 Auch gibt es eine Möglichkeit für bezahlten Support. Auf der Webseite werden zwei Firmen angegeben, welche bezahlten Support bieten. Allerdings funktioniert der Link aktuell nur für eine der beiden Firmen aktuell. Zudem ist ein PHP-Connector für die Suchmaschine vorhanden, was die Einbindung ist das Projekt vereinfacht. \cite{XAP.2019}
 
-\section {Vorauswahl}
+\section {Tabellarischer Vergleich}
 
 Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier in der Tabelle nun nochmals aufgeführt für einen leichteren Vergleich. 
 
@@ -123,7 +120,7 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
         bezahlter Support                           & - & x  & -  & x  & x & x  & x \\
         \hline
         unter aktiver Entwicklung**                 & x & -  & x  & x  & x & x  & x \\
-        offizelles Docker Image                     & - & -  & x  & x  & x & -  & - \\
+        offizielles Docker Image                    & - & -  & x  & x  & x & -  & - \\
         Synonym Support                             & x & x  & x  & x  & x & x  & x \\
         Web-Interface                               & - & -  & x  & x  & x & x  & - \\
         Plugin Support                              & - & x  & x  & x  & x & -  & - \\
@@ -134,7 +131,7 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
     \label{vglTable}
 
     *  = Feature nur in der kostenlosen Variante verfügbar. \\
-    ** = Update innerhalb des letzen halben Jahres \\
+    ** = Update innerhalb des letzten halben Jahres \\
     -- = Nur mit Omega CGI installiert \\
     +  = Anbieter kümmert sich um das Feature \\
     -  = Funktion nur per Plugin Implementiert \\
@@ -154,5 +151,40 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
 
 \end{table}
 
+\section{Vorauswahl}
 
-Nach einem ersten Überblick wurden nun Aufgrund der Auswahlkriterien diese Systeme zum genaueren Vergleich ausgewählt: Apache Solr, Manticore Search, ElasticSearch (in der kostenlosen Version) und Xapian. Lucene Core wird nicht genauer untersucht, da Solr ein umfassenderes Paket bietet, welches den gestellten Anforderungen mehr entspricht.
+Nach einem ersten Feature-Vergleich haben nur 7 Suchmaschinen die Grundanforderungen erfüllt. Davon werden nun 4 Stück in den genaueren Vergleich genommen, bei dem die Systeme nun genauer aufgesetzt und genauer getestet werden. Ich gehe nun die Suchmaschinen der Reihe nach durch und gebe zur jeder eine Begründung warum oder warum sie es nicht in den genauen Vergleich geschafft hat.
+
+\subsection{Lucene Core}
+
+Lucene Core scheidet dadurch aus das es zum einen keine direkte Schnittstelle liefert, die gut mit PHP zur erreichen ist. Die einzige Möglichkeit wären direkte System-Calls, welche nicht einfach zu implementieren sind und am besten die Implementierung eine Bibliothek erfordern. Zum anderen gibt es für Lucene Core ja eine Erweiterung, namentlich Solr, welches alle diese Probleme löst. \cite{TheApacheSoftwareFoundation.2019b}
+
+\subsection{Sphinx}
+
+Sphinx wäre eine interessante Alternative gewesen, allerdings durch den Kommunikationsverlust und die gestoppten Updates (Es gab schon seit über einen Jahr kein Update mehr), ist dieses Projekt wohl als tot anzusehen. \cite{SphinxTechnologiesInc.2019}
+
+\subsection{Solr}
+
+Wie schon bei Lucene Core kurz angesprochen, liefert Solr viele der Features die Lucene Core nicht bietet. Dazu besitzt es eine Web-Oberfläche zur Administration. Durch die aktive Entwicklung unter der Apache-Lizenz und die große Community ist auch eine Langzeit-Entwicklung sehr wahrscheinlich. Daher ist Solr die erste der vier Kandidaten für das genauere Testen. \cite{TheApacheSoftwareFoundation.2019}
+
+\subsection{ElasticSearch}
+
+Auch ElasticSearch basiert auf Solr, ist aber im Gegensatz nicht komplett Open-Source und bietet eine kommerzielle Version an, was allerdings auch bedeutet, dass es bezahlten Support gibt. Die Community und der Kundenkreis ist auch groß, was eine Weiterentwicklung sehr wahrscheinlich macht. Auch diese Suchmaschinen bietet eine Web-Oberfläche mit besonderes Augenmerk auf die Visualisierung der Daten, was für spätere Administratoren einen einfacheren Einstieg in die Administration liefern könnte. Daher wird auch ElasticSearch den genaueren Vergleich mit eingebunden.
+
+\subsection{Fess}
+
+Fess ist eine Suchmaschine, welches auf ElasticSearch basiert, was ja seinerseits auf Lucene basiert. Trotzdem möchte ich diese Suchmaschine in die genauere Auswahl ziehen, da diese im Gegensatz zu ElasticSearch komplett Open-Source ist. Auch von den Features her bietet Fess, dank der Basis, viele Möglichkeiten. Es gibt auch kommerziellen Support, allerdings nur von einer japanischen Firma. Daher ist der Support wohl nur auf Englisch erreichbar.
+
+\subsection{Algolia}
+
+Als einzige Cloud-only Lösung im Vergleich, bietet Algolia eine interessante Alternative. Leider sind im kostenlosen Bereich nicht genügend Einträge speicherbar. Auch sind 50.000 Operationen zu wenig für die das Dietrich-Online. Von daher fällt diese Suchmaschine durch diese Limitationen raus.
+
+\subsection{Xapian}
+
+Xapian ist als einzige Suchmaschine ohne Web-Administration im engeren Vergleich. Durch die Nutzung der Suchmaschine für die Bibliothek Köln gibt es einen Kunden der Software, welcher einen ähnlichen Anwendungsfall besitzt. \cite{Xapian.2019} Dadurch und die Erfüllung vieler weiterer Kriterien kommt diese Suchmaschine auch in die engere Auswahl.
+
+\subsection{Abschluss}
+
+Daraus ergibt sich nun, dass die folgenden Suchmaschinen es in die genauere Auswahl geschafft haben: die beiden Platzhirsche Apache Solr und ElasticSearch, sowie Fess als Open-Source Alternative zu ElasticSearch und Xapian als Lucene freie Alternative. Ich hätte auch gerne eine Suchmaschine, welche auf Sphinx basiert dabei gehabt, allerdings, war die einzige noch aktive Alternative zu Sphinx direkt Manticore Search. Diese hat aber bisher noch keinen PDF-Import, welcher leider zwingend erforderlich ist. 
+
+
