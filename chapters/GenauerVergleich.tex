@@ -2,15 +2,22 @@
 
 In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt und getestet. Dabei wird Wert auf alle Aspekte gesetzt. Wie leicht lässt sich die Suchmaschine aufsetzen? Wie ist, falls vorhanden, das Webinterface? Wie funktionieren die Query’s und vor Allem wie viel Zeit benötigen diese? Da ich dieses Projekt nicht nach dieser Bachelor-Arbeit wohl nicht weiter verfolgen kann, ist es auch wichtig zu schauen, wie leicht ein neuer Administrator sich in das System einlernen kann, beziehungsweise wie leicht das System zu verstehen und administrieren ist. Deshalb wird auch die Dokumentation verglichen und geschaut, wie groß die Community der einzelnen Suchmaschinen ist. 
 
+Dafür wird eine Linux-Installation mit einer Datenbank-Kopie des Dietrich-Online Projektes aufgesetzt. 
+
 \section{Aufbau der Tests}
 
 \subsection{Installation}
 
-Im ersten Schritt wird die Installation bewertet, dabei wird geschaut, wie einfach es ist die Software zu installieren. Hierbei ist es wichtig zu schauen, wir simple die Installation ist. Existiert zum Beispiel ein Installations-Wizard? Wie ist die Konfiguration um das System zum Laufen zu kriegen? Wie viel muss manuell in den Dateien geändert werden?
+Im ersten Schritt wird die Installation bewertet, dabei wird geschaut, wie einfach es ist die Software zu installieren. Hierbei ist es wichtig zu schauen, wir simple die Installation ist. Existiert zum Beispiel ein Installations-Wizard? Wie ist die Konfiguration um das System zum Laufen zu kriegen? Wie viel muss manuell in den Dateien geändert werden? Wie viele externe Programme müssen nachinstalliert werden?
 
 \subsection{Oberfläche}
 
-Als Nächstes folgt der Ersteindruck der Software und des Interfaces. Dabei wird geschaut, wie übersichtlich die Oberfläche ist, falls eine gegeben ist, und wie verständlich das System für Einsteiger ist. Dafür wird im ersten Schritt möglichst auf die Dokumentation verzichtet, um einen Ersteindruck zu liefern, wie gut die Oberfläche für sich selbst spricht. Dies dient dafür um, zu schauen wie der neue Administrator sich ohne Vorkenntnisse einarbeiten kann. Besondere Punkte dabei sind zum Beispiel: Wie viel kann man über die Oberfläche konfigurieren? Lassen sich Updates direkt über die Oberfläche einspielen? Ist die Seite responsive? Wie funktioniert die Nutzerverwaltung?
+Als Nächstes folgt der Ersteindruck der Software und des Oberfläche. Dabei wird geschaut, wie übersichtlich die Oberfläche ist, falls eine gegeben ist, und wie verständlich das System für Einsteiger ist. Dafür wird im ersten Schritt möglichst auf die Dokumentation verzichtet, um einen Ersteindruck zu liefern, wie gut die Oberfläche für sich selbst spricht. Dies dient dafür um, zu schauen wie der neue Administrator sich ohne Vorkenntnisse einarbeiten kann. Besondere Punkte dabei sind zum Beispiel: Wie viel kann man über die Oberfläche konfigurieren? Lassen sich Updates direkt über die Oberfläche einspielen? Ist die Seite responsive? Wie funktioniert die Nutzerverwaltung?
+
+\subsection{Indexierung}
+
+Hier geht es darum festzustellen, wie einfach eine Indexierung der einzelenen Dateien möglich ist. Darunter fällt zum Beispie: Kann man die Daten über die grafische Benuzteroberfläche indexieren lassen? Wie weißt man das System auf Änderungen an oder soll es täglich neu Indexieren?
+
 
 \subsection{Dokumentation}
 
@@ -24,19 +31,97 @@ Hier geht es darum zu schauen, ob das Tool nach Hause telefoniert. Dann soll noc
 
 Im letzten Schritt werden einige Query’s abgesetzt. Dies wird zum einen über ein die Oberfläche geschehen, falls vorhanden, und was wichtiger ist über die Schnittstelle für PHP. Dafür wird ein PHP-Script geschrieben und die Laufzeit des Scripts gemessen.
 
-Der erste Query ist der am Aktuell am längsten laufende Query vom Dietrich-Online Projekt. Dabei werden alle Lemmata vom Buchstaben S angezeigt.
+Der erste Query ist der am Aktuell am längsten laufende Query vom Dietrich-Online Projekt. Dabei werden alle Lemmata vom Buchstaben S angezeigt \ref{img:errorListSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagram \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{images/structure_lemmaadministration.png}
+	\caption{Tabellenaufbau der Lemma-Administration Übersicht.}
+	\label{img:lAdminStructure}
+\end{figure}
 
-Als werden diverse Query’s für die Fehlerliste abgearbeitet. Die Fehlerliste eignet sich deshalb besonders gut für solche Query’s, da die 3 Tabellen umfasst, allerdings keine Verbindung zum restlichen Projekt besitzt. \ref{img:errorListStructure}
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{images/lemmaadministration_sample.PNG}
+	\caption{Frontend Ansicht der Lemma-Administration mit geladenen Buchstaben S (Ausschnitt).}
+	\label{img:lAdminSample}
+\end{figure}
+
+\lstset{language=SQL}
+\begin{lstlisting}[frame=single] 
+    SELECT
+    lemma.id
+FROM lemma
+WHERE
+    lemma.bezeichnung LIKE 'S%'
+    AND lemma.ist_geloescht = 0
+ORDER BY
+    lemma.bezeichnung ASC,
+    lemma.id ASC;
+\end{lstlisting}
+
+Im zweiten Schritt werden dann die gerade geholten ID’s mit vielen JOIN's für die Darstellung vorbereitet.
+
+\lstset{language=SQL}
+\begin{lstlisting}[frame=single] 
+SELECT  lemma.id,                        
+        lemma.bezeichnung,                
+        lemma.original_bezeichnung,     
+        lemma.erweiterung,               
+        lemma.original_homonym_zusatz,  
+        lemma.neuer_homonym_zusatz,      
+        lemma.allgemeinebemerkung,       
+        lemma.ist_gnd_verzeichnet,      
+        lemma.ist_geloescht,             
+        lemma.verweis,                  
+        lemma.fk_lemmabearbeitungsstatus, 
+        lemmaBStatus.id,               
+        lemmaBStatus.bezeichnung,    
+        lemmaBStatus.beschreibung,              
+        lemma_gnd_map.id,                 
+        gnd.id,               
+        gnd.nummer,                   
+        gnd.schlagwort,             
+        gnd_ddc_map.id,              
+        ddc.id,                      
+        ddc.notation,               
+        ddc.schlagwort,             
+        ddc.webdewey_is_checked,        
+        lemma.fk_lemmabearbeitungsstatus,
+        lemma_gnd_map.fk_lemma,
+        lemma_gnd_map.fk_gnd,          
+        gnd_ddc_map.fk_gnd,         
+        gnd_ddc_map.fk_ddc,                
+        ddc.fk_ddc_parent            
+FROM lemma lemma
+      
+INNER JOIN lemmabearbeitungsstatus lemmaBStatus
+ON lemma.fk_lemmabearbeitungsstatus = lemmaBStatus.id
+
+LEFT JOIN lemma_gnd lemma_gnd_map ON lemma.id = lemma_gnd_map.fk_lemma
+LEFT JOIN gnd gnd ON lemma_gnd_map.fk_gnd = gnd.id
+LEFT JOIN gnd_ddc gnd_ddc_map ON gnd.id = gnd_ddc_map.fk_gnd
+LEFT JOIN ddc ddc ON gnd_ddc_map.fk_ddc = ddc.id
+WHERE lemma.id IN ([Array of Lemma IDs])
+ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
+
+\end{lstlisting}
+
+Der zweite Query ist von dem Fehlermodul \ref{img:errorListSample}, bei diesem gibt es einen Query, welcher die drei Tabellen \ref{img:errorListStructure} verbindet. Es gibt für jeden Fehler einen Eintrag, dieser wird in tf\_fehler gespeichert. Da es für jeden Eintrag mehrere Fehler geben kann und diese Fehler für jeden Eintrag verfügbar sind, gibt es hier eine n zu m Beziehung. Um diese Abzubilden wurde die Tabelle tfl\_fehler\_rptmap eingefügt. Diese verbindet jeweils die ID’s mit den dazugehörigen Fehlercodes. 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\linewidth]{images/structure_errormodule.png}
-	\caption{Tabellenaufbau der Fehler Liste}
+	\caption{Tabellenaufbau der Fehlerliste.}
 	\label{img:errorListStructure}
 \end{figure}
 
-Im ersten Query werden die Fehlercodes zu den einzelnen Fehlern direkt an die Tabelle angebunden. 
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{images/errormodule_sample.png}
+	\caption{Ansicht der Frontend Tabelle.}
+	\label{img:errorListSample}
+\end{figure}
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single]  % Start your code-block
@@ -64,4 +149,3 @@ ORDER BY fehler.eid;
 \end{lstlisting}
 
 
-Da es für jeden Eintrag mehrere Fehler geben kann und diese Fehler für jeden Eintrag verfügbar sind, gibt es hier eine n zu m Beziehung. Um diese Abzubilden wurde die Tabelle tfl\_fehler\_rptmap eingefügt. Diese verbindet jeweils die ID’s mit den dazugehörigen Fehlercodes. 
