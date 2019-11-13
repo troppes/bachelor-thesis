@@ -1,27 +1,36 @@
 \chapter{Genauer Vergleich}
 
-In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt und getestet. Dabei wird Wert auf alle Aspekte gesetzt. Wie leicht lässt sich die Suchmaschine aufsetzen? Wie ist, falls vorhanden, das Webinterface? Wie funktionieren die Query’s und vor Allem wie viel Zeit benötigen diese? Da ich dieses Projekt nicht nach dieser Bachelor-Arbeit wohl nicht weiter verfolgen kann, ist es auch wichtig zu schauen, wie leicht ein neuer Administrator sich in das System einlernen kann, beziehungsweise wie leicht das System zu verstehen und administrieren ist. Deshalb wird auch die Dokumentation verglichen und geschaut, wie groß die Community der einzelnen Suchmaschinen ist. 
+In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt und getestet. Hier wird Wert auf alle Aspekte des Prozesses gesetzt. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit wohl nicht weiter verfolgen kann, ist es auch wichtig zu schauen, wie leicht ein neuer Administrator sich in das System einlernen kann, beziehungsweise wie leicht das System zu verstehen und administrieren ist. Deshalb wird auch die Dokumentation verglichen und geschaut, wie groß die Community der einzelnen Suchmaschinen ist. Die genaueren Kriterien werden nun im Folgenden mit Erkärungen aufgeführt.
 
-Dafür wird eine Linux-Installation mit einer Datenbank-Kopie des Dietrich-Online Projektes aufgesetzt. 
+Das Test-System hat folgende Spezifikationen:
+
+\begin{itemize}
+    \item CPU: 4 Kerne
+    \item RAM: 16 Gigabyte
+    \item Festplattenspeicher: 500 GB
+    \item Betriebssystem: Ubuntu
+\end{itemize} 
+
+Auf das System wird daraufhin die MySQL Datenbank von Dietrich-Online Projekt aufgespielt. Dies für diesen Vergleich die einzige Datenquelle sein.
 
 \section{Aufbau der Tests}
 
 \subsection{Installation}
 
-Im ersten Schritt wird die Installation bewertet, dabei wird geschaut, wie einfach es ist die Software zu installieren. Hierbei ist es wichtig zu schauen, wir simple die Installation ist. Existiert zum Beispiel ein Installations-Wizard? Wie ist die Konfiguration um das System zum Laufen zu kriegen? Wie viel muss manuell in den Dateien geändert werden? Wie viele externe Programme müssen nachinstalliert werden?
+Im ersten Schritt wird die Installation bewertet, dabei wird geschaut, wie einfach es ist die Software zu installieren. Hierbei ist es wichtig zu schauen, wie simpel die Installation ist. Existiert zum Beispiel ein Installations-Wizard? Wie viel muss manuell in den Dateien geändert werden? Müssen viel externe Programme nachinstalliert werden?
 
 \subsection{Oberfläche}
 
-Als Nächstes folgt der Ersteindruck der Software und des Oberfläche. Dabei wird geschaut, wie übersichtlich die Oberfläche ist, falls eine gegeben ist, und wie verständlich das System für Einsteiger ist. Dafür wird im ersten Schritt möglichst auf die Dokumentation verzichtet, um einen Ersteindruck zu liefern, wie gut die Oberfläche für sich selbst spricht. Dies dient dafür um, zu schauen wie der neue Administrator sich ohne Vorkenntnisse einarbeiten kann. Besondere Punkte dabei sind zum Beispiel: Wie viel kann man über die Oberfläche konfigurieren? Lassen sich Updates direkt über die Oberfläche einspielen? Ist die Seite responsive? Wie funktioniert die Nutzerverwaltung?
+Als Nächstes folgt der Ersteindruck der Software und Oberfläche. Dabei wird geschaut, wie übersichtlich die Oberfläche ist, falls eine gegeben ist, und wie verständlich das System für Einsteiger ist. Dafür wird im ersten Schritt möglichst auf die Dokumentation verzichtet, um einen Ersteindruck zu liefern, wie gut die Oberfläche für sich selbst spricht. Dies dient dazu um, zu schauen wie der neue Administrator bestimmte Aufgaben ohne Vorkenntnisse erfüllen kann. Besondere Punkte dabei sind zum Beispiel: Wie viel kann man über die Oberfläche konfigurieren? Lassen sich Updates direkt über die Oberfläche einspielen? Ist die Seite responsive? Wie funktioniert die Nutzerverwaltung?
 
 \subsection{Indexierung}
 
-Hier geht es darum festzustellen, wie einfach eine Indexierung der einzelenen Dateien möglich ist. Darunter fällt zum Beispie: Kann man die Daten über die grafische Benuzteroberfläche indexieren lassen? Wie weißt man das System auf Änderungen an oder soll es täglich neu Indexieren?
+Hier geht es darum festzustellen, wie einfach eine Indexierung der einzelnen Dateien möglich ist. Darunter fällt zum Beispiel: Kann man die Daten über die grafische Benutzeroberfläche indexieren lassen? Kann man das System darauf anweisen Änderungen direkt neu zu indexieren?
 
 
 \subsection{Dokumentation}
 
-Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Es wird auch Wert darauf gelegt, inwiefern die Dokumentation ohne Fachkenntnisse zu verfolgen ist. Da in diesen Kurztest nicht alle Funktionen durchgetestet werden können, ist es leider auch nicht möglich zu schauen, ob alle Funktionen korrekt und ausführlich dokumentiert sind. Sollte allerdings schon von den Grundfunktionen eine schlechte oder fehlende Dokumentation auffallen wird dies natürlich erwähnt. 
+Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Auch hier ist es wieder wichtig zu schauen, ob die Dokumentation auch ohne Vorkenntnisse gut zu verstehen ist. Da in diesen Kurztest nicht alle Funktionen durchgetestet werden können, ist es leider auch nicht möglich zu schauen, ob alle Funktionen korrekt und ausführlich dokumentiert sind. Sollte allerdings schon von den Grundfunktionen eine schlechte oder fehlende Dokumentation auffallen wird dies natürlich erwähnt. 
 
 \subsection{Datenschutz}
 
@@ -29,9 +38,9 @@ Hier geht es darum zu schauen, ob das Tool nach Hause telefoniert. Dann soll noc
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-Im letzten Schritt werden einige Query’s abgesetzt. Dies wird zum einen über ein die Oberfläche geschehen, falls vorhanden, und was wichtiger ist über die Schnittstelle für PHP. Dafür wird ein PHP-Script geschrieben und die Laufzeit des Scripts gemessen.
+Im letzten Schritt werden einige Query’s abgesetzt. Dies wird zum einen über die Oberfläche geschehen, falls vorhanden, und was wichtiger ist über die Schnittstelle für PHP. Dafür wird ein PHP-Script geschrieben und die Laufzeit des Scripts gemessen.
 
-Der erste Query ist der am Aktuell am längsten laufende Query vom Dietrich-Online Projekt. Dabei werden alle Lemmata vom Buchstaben S angezeigt \ref{img:errorListSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagram \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
+Der erste Query ist einer der am aktuell am langsamsten läuft. Er ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:errorListSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagramm \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
 
 \begin{figure}
 	\centering
@@ -60,7 +69,7 @@ ORDER BY
     lemma.id ASC;
 \end{lstlisting}
 
-Im zweiten Schritt werden dann die gerade geholten ID’s mit vielen JOIN's für die Darstellung vorbereitet.
+Im zweiten Schritt werden dann die gerade geholten ID’s mit vielen JOIN’s für die Darstellung vorbereitet.
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single] 
@@ -107,7 +116,7 @@ ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 
 \end{lstlisting}
 
-Der zweite Query ist von dem Fehlermodul \ref{img:errorListSample}, bei diesem gibt es einen Query, welcher die drei Tabellen \ref{img:errorListStructure} verbindet. Es gibt für jeden Fehler einen Eintrag, dieser wird in tf\_fehler gespeichert. Da es für jeden Eintrag mehrere Fehler geben kann und diese Fehler für jeden Eintrag verfügbar sind, gibt es hier eine n zu m Beziehung. Um diese Abzubilden wurde die Tabelle tfl\_fehler\_rptmap eingefügt. Diese verbindet jeweils die ID’s mit den dazugehörigen Fehlercodes. 
+Der zweite Query ist von dem Fehlermodul \ref{img:errorListSample}. Dieser Query verbindet die drei Tabellen \ref{img:errorListStructure} zu einer Darstellung. Es gibt für jeden Fehler einen Eintrag, dieser wird in tf\_fehler gespeichert. Da es für jeden Eintrag mehrere Fehler geben kann und diese Fehler für jeden Eintrag verfügbar sind, gibt es hier eine n zu m Beziehung. Um diese Abzubilden wurde die Tabelle tfl\_fehler\_rptmap eingefügt. Diese verbindet jeweils die ID’s mit den dazugehörigen Fehlercodes. 
 
 \begin{figure}
 	\centering
