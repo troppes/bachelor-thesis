@@ -1,14 +1,14 @@
 \chapter{Genauer Vergleich}
 
-In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt und getestet. Hier wird Wert auf alle Aspekte des Prozesses gesetzt. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit wohl nicht weiter verfolgen kann, ist es auch wichtig zu schauen, wie leicht ein neuer Administrator sich in das System einlernen kann, beziehungsweise wie leicht das System zu verstehen und administrieren ist. Deshalb wird auch die Dokumentation verglichen und geschaut, wie groß die Community der einzelnen Suchmaschinen ist. Die genaueren Kriterien werden nun im Folgenden mit Erkärungen aufgeführt.
+In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt und getestet. Hier wird Wert auf alle Aspekte des Prozesses gesetzt. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit wohl nicht weiter verfolgen kann, ist es auch wichtig zu schauen, wie leicht ein neuer Administrator sich in das System einlernen kann, beziehungsweise wie leicht das System zu verstehen und administrieren ist. Deshalb wird auch die Dokumentation verglichen und geschaut, wie groß die Community der einzelnen Suchmaschinen ist. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt. Da es nicht für jede der Suchmaschinen ein offizielles Docker-Image gibt, werden der Fairness halber alle Systeme manuell aufgesetzt.
 
 Das Test-System hat folgende Spezifikationen:
 
 \begin{itemize}
     \item CPU: 4 Kerne
     \item RAM: 16 Gigabyte
-    \item Festplattenspeicher: 500 GB
-    \item Betriebssystem: Ubuntu
+    \item Festplattenspeicher: 20 GB
+    \item Betriebssystem: Ubuntu 18.04.03 LTS
 \end{itemize} 
 
 Auf das System wird daraufhin die MySQL Datenbank von Dietrich-Online Projekt aufgespielt. Dies für diesen Vergleich die einzige Datenquelle sein.
@@ -40,7 +40,7 @@ Hier geht es darum zu schauen, ob das Tool nach Hause telefoniert. Dann soll noc
 
 Im letzten Schritt werden einige Query’s abgesetzt. Dies wird zum einen über die Oberfläche geschehen, falls vorhanden, und was wichtiger ist über die Schnittstelle für PHP. Dafür wird ein PHP-Script geschrieben und die Laufzeit des Scripts gemessen.
 
-Der erste Query ist einer der am aktuell am langsamsten läuft. Er ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:errorListSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagramm \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
+Der erste Query ist einer der bisher am langsamsten laufenden Query’s. Er ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:errorListSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagramm \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
 
 \begin{figure}
 	\centering
@@ -157,4 +157,12 @@ AND fehler.severity > 3
 ORDER BY fehler.eid;
 \end{lstlisting}
 
+\subsection{Vorbereitung}
 
+Auf den Server werden folgenden Programme zur Vorbereitung installiert.
+
+Für die Konfiguration des Servers wurde, von dem Hauptadministrator folgende Programme aufgespielt:
+
+LISTE MARTIN
+
+Ich habe dann zusätlich noch den MariaDB-Server installiert, um eine Replikation der aktuellen Datenbank aufzuspielen.

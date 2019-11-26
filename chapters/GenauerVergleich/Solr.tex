@@ -1,7 +1,40 @@
 
 \section{Solr}
 
+Der erste Kandidat ist Solr. Der Download gestaltet sich hierbei denkbar einfach mit einem großen Download-Knopf direkt auf der Homepage \cite{TheApacheSoftwareFoundation.2019}. Da Solr komplett Open Source ist, kann sich neben den Binary’s auch der Source-Code heruntergeladen werden. 
+
 \subsection{Installation}
+
+Bevor die Installation starten kann, muss zuerst eine Java Version > 8 installiert werden. Ich habe mir daraufhin für Java 11 entschieden, da eine neuere Version von OpenJDK nicht auf dieser Ubuntu-Version verfügbar ist.
+
+Danach ist die Installation denkbar einfach. Es wird Solr aus dem Archiv entpackt und startet mit \path{bin/solr start} das System. Hierbei wurde ich allerdings direkt von 2 Warnungen begrüßt. 
+
+\begin{lstlisting}[frame=single] 
+    *** [WARN] *** Your open file limit is currently 1024.
+    It should be set to 65000 to avoid operational disruption.
+
+    *** [WARN] ***  Your Max Processes Limit is currently 63918.
+    It should be set to 65000 to avoid operational disruption.
+\end{lstlisting}
+
+Dieses Problem ließ sich aber schnell mit einer Anpassung in der \path{/etc/security/limits.conf} \ref{lst:limits} lösen. Danach muss sich nur neu eingeloggt werden und die Warnungen waren verschwunden.
+
+\begin{lstlisting}[frame=single, label={lst:limits}] 
+
+    #<domain>                <type>  <item>   <value>
+     reitz                   soft   nofile    65000
+     reitz                   hard   nproc     65000
+     reitz                   soft   nproc     65000
+    
+\end{lstlisting}
+
+Nun Startete der Server komplett ohne Warnungen. Nun musste nur noch der Port in der hier sehr restriktiven Firewall freigeben werden, es wird sämtliche ankommende Verbindungen geblockt, und schon lief die Weboberfläche ohne Probleme. Dazu dann mehr in der Oberfläche. Bevor dort allerdings angesetzt werden kann, muss zuerst noch ein sogenannter „Core“ erstellt werden. Dieses ist ein Index mit dazugehörigen Transaktionslog und Konfigurationsdateien. Nur mit diesen ist es möglich Dateien zu indexieren und auf ihnen zu suchen.
+Die Erstellung eines Core’s läuft mit dem Befehl: \path{bin/solr create -c <name>} ab. Dieser erscheint daraufhin auch direkt in der Oberfläche. Klickt man allerdings auf Dataimport lässt einen das Menü direkt wissen, dass die solrconfig.xml noch keinen DataImportHandler besitzt.
+
+Um diesen zu erstellen, muss zuerst in das Verzeichnis des Core’s gewechselt werden, dies ist normalerweise unter \path{SOLRORDNER/server/solr/CORENAME} zu finden. In dem Verzeichnis gibt es die solrconfig.xml. In dieser muss jetzt der DataImportHandler angegeben werden. \cite{solrref.2019b}
+
+Dafür habe ich zuerst einen passenden Treiber heruntergeladen und diesen nach \path{SOLRORDNER/contrib/dataimporthandler/lib} entpackt. Als Nächstes muss eine XML-Datei definiert werden, die angibt, welche Spalten und Tabellen indiziert werden sollten. {GRAFIK EINFÜGEN}. Nachdem dies geschehen ist, muss man Solr noch sagen, dass es dieses DataImportHandler auch verwenden soll. Dafür muss ein Eintrag in der solrconfig.xml gemacht werden. Ist dies geschehen, kann nun in der Weboberfläche der Crawler über die Daten gelaufen lassen.
+\cite{IqubalMustafaKaki.2016}
 
 \subsection{Oberfläche}
 
