@@ -7,7 +7,7 @@ Der erste Kandidat ist Solr. Der Download gestaltet sich hierbei denkbar einfach
 
 Bevor die Installation starten kann, muss zuerst eine Java Version > 8 installiert werden. Ich habe mir daraufhin für Java 11 entschieden, da eine neuere Version von OpenJDK nicht auf dieser Ubuntu-Version verfügbar ist.
 
-Danach ist die Installation denkbar einfach. Es wird Solr aus dem Archiv entpackt und startet mit \path{bin/solr start} das System. Hierbei wurde ich allerdings direkt von 2 Warnungen begrüßt. 
+Die Development-Installation ist denkbar einfach. Zuerst wird Solr aus dem Archiv entpackt und dann mit \path{bin/solr start} gestartet. Hierbei wurde ich allerdings direkt von 2 Warnungen begrüßt. 
 
 \begin{lstlisting}[frame=single] 
     *** [WARN] *** Your open file limit is currently 1024.
@@ -28,13 +28,27 @@ Dieses Problem ließ sich aber schnell mit einer Anpassung in der \path{/etc/sec
     
 \end{lstlisting}
 
-Nun Startete der Server komplett ohne Warnungen. Nun musste nur noch der Port in der hier sehr restriktiven Firewall freigeben werden, es wird sämtliche ankommende Verbindungen geblockt, und schon lief die Weboberfläche ohne Probleme. Dazu dann mehr in der Oberfläche. Bevor dort allerdings angesetzt werden kann, muss zuerst noch ein sogenannter „Core“ erstellt werden. Dieses ist ein Index mit dazugehörigen Transaktionslog und Konfigurationsdateien. Nur mit diesen ist es möglich Dateien zu indexieren und auf ihnen zu suchen.
-Die Erstellung eines Core’s läuft mit dem Befehl: \path{bin/solr create -c <name>} ab. Dieser erscheint daraufhin auch direkt in der Oberfläche. Klickt man allerdings auf Dataimport lässt einen das Menü direkt wissen, dass die solrconfig.xml noch keinen DataImportHandler besitzt.
+Nun Startete der Server komplett ohne Warnungen. Nun musste nur noch der Port in der hier sehr restriktiven Firewall freigeben werden, es wird sämtliche ankommende Verbindungen geblockt, und schon lief die Weboberfläche ohne Probleme. Dazu dann mehr in den Oberflächen-Teil.
 
-Um diesen zu erstellen, muss zuerst in das Verzeichnis des Core’s gewechselt werden, dies ist normalerweise unter \path{SOLRORDNER/server/solr/CORENAME} zu finden. In dem Verzeichnis gibt es die solrconfig.xml. In dieser muss jetzt der DataImportHandler angegeben werden. \cite{solrref.2019b}
+Nun noch die richtige Installation aus Service. In dem entpackten Solr-Ordner findet man ein Installation-Skript. Diese benötigt das gepackte Solr als Argument. Solar legt sich dabei einen eigenen Nutzer an, also müssen die Limits auch für diesen User wieder geändert werden. Solr selbst startet sich unter dem Nutzer solr, der auch alle Rechte für die Verzeichnisse besitzt. Will man also etwas an den Konfigurationsdateien ändern, muss auf diesen Nutzer geloggt werden.
 
-Dafür habe ich zuerst einen passenden Treiber heruntergeladen und diesen nach \path{SOLRORDNER/contrib/dataimporthandler/lib} entpackt. Als Nächstes muss eine XML-Datei definiert werden, die angibt, welche Spalten und Tabellen indiziert werden sollten. {GRAFIK EINFÜGEN}. Nachdem dies geschehen ist, muss man Solr noch sagen, dass es dieses DataImportHandler auch verwenden soll. Dafür muss ein Eintrag in der solrconfig.xml gemacht werden. Ist dies geschehen, kann nun in der Weboberfläche der Crawler über die Daten gelaufen lassen.
-\cite{IqubalMustafaKaki.2016}
+\subsection{Indexierung}
+
+Um mit der Indexierung starten zu können, muss zuerst in sogenannter „Core“ erstellt werden. Dieser ist ein Index mit dazugehörigen Transaktionslog und Konfigurationsdateien. Nur mit diesen ist es möglich Dateien zu indexieren und auf ihnen zu suchen.
+Die Erstellung eines Core’s läuft mit dem Befehl: \path{bin/solr create -c <name>} ab. Dieser erscheint daraufhin auch direkt in der Oberfläche. Nun ist das Solr-System bereit für die Indexierung.
+
+Als ich nun über die Oberfläche, unter den Punkt Dataimport meine Datenbank einlesen wollte, ließ mich Solr wissen, dass die solrconfig.xml noch keinen DataImportHandler besitzt.
+
+Um diesen zu erstellen, muss auf den Server zuerst in das Verzeichnis des Core’s gewechselt werden, dies ist normalerweise unter \path{SOLRORDNER/server/solr/CORENAME} zu finden. In dem Verzeichnis gibt es die solrconfig.xml. In dieser muss jetzt der DataImportHandler angegeben werden. \cite{solrref.2019b}
+
+Dafür habe ich zuerst einen passenden Treiber heruntergeladen und diesen nach \path{SOLRORDNER/contrib/dataimporthandler/lib} entpackt. Als Nächstes muss eine XML-Datei definiert werden, die angibt, welche Spalten und Tabellen indiziert werden sollten. {GRAFIK EINFÜGEN}. Nachdem dies geschehen ist, muss man Solr noch sagen, dass es dieses DataImportHandler auch verwenden soll. Dafür muss ein Eintrag in der solrconfig.xml gemacht werden. Ist dies geschehen, kann nun in der Weboberfläche der Crawler über die Daten gelaufen lassen. \cite{IqubalMustafaKaki.2016}
+
+Als ich den Crawler allerdings startete, meldet mir Solr, das wenige Einträge indexiert wurden. Bei genauerer Betrachtung fand ich heraus, dass nur eine Tabelle von Solr betrachtet wurde. Als ich mir nun die Daten dieser Tabelle herausgegeben habe, bemerkte ich, dass nur das Feld „id“ indexiert wurde. Dies liegt daran, dass nur Felder in den Solr-Index geschrieben werden, die vorher im Schema festgelegt wurden. Dieses Schema kann man entweder über die Weboberfläche oder die API geändert werden kann. Es gibt auch eine Möglichkeit, das Schema direkt zu ändern, allerdings ist diese Methode nicht mehr erwünscht, da die API Fehler erkennt und Einträge so direkt ablehnt.
+
+
+RUNTIME LOW RAM
+Requests: 435,026 4,439/s, Fetched: 490,052 5,001/s, Skipped: 0 , Processed: 138,366 1,412/s
+
 
 \subsection{Oberfläche}
 
