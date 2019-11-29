@@ -32,10 +32,6 @@ Hier geht es darum festzustellen, wie einfach eine Indexierung der einzelnen Dat
 
 Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Auch hier ist es wieder wichtig zu schauen, ob die Dokumentation auch ohne Vorkenntnisse gut zu verstehen ist. Da in diesen Kurztest nicht alle Funktionen durchgetestet werden können, ist es leider auch nicht möglich zu schauen, ob alle Funktionen korrekt und ausführlich dokumentiert sind. Sollte allerdings schon von den Grundfunktionen eine schlechte oder fehlende Dokumentation auffallen wird dies natürlich erwähnt. 
 
-\subsection{Datenschutz}
-
-Hier geht es darum zu schauen, ob das Tool nach Hause telefoniert. Dann soll noch überprüft werden, ob die Logdateien anonymisiert und nach gewisser Zeit gelöscht werden können.
-
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
 Im letzten Schritt werden einige Query’s abgesetzt. Dies wird zum einen über die Oberfläche geschehen, falls vorhanden, und was wichtiger ist über die Schnittstelle für PHP. Dafür wird ein PHP-Script geschrieben und die Laufzeit des Scripts gemessen.
@@ -74,33 +70,7 @@ Im zweiten Schritt werden dann die gerade geholten ID’s mit vielen JOIN’s f�
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single] 
 SELECT  lemma.id,                        
-        lemma.bezeichnung,                
-        lemma.original_bezeichnung,     
-        lemma.erweiterung,               
-        lemma.original_homonym_zusatz,  
-        lemma.neuer_homonym_zusatz,      
-        lemma.allgemeinebemerkung,       
-        lemma.ist_gnd_verzeichnet,      
-        lemma.ist_geloescht,             
-        lemma.verweis,                  
-        lemma.fk_lemmabearbeitungsstatus, 
-        lemmaBStatus.id,               
-        lemmaBStatus.bezeichnung,    
-        lemmaBStatus.beschreibung,              
-        lemma_gnd_map.id,                 
-        gnd.id,               
-        gnd.nummer,                   
-        gnd.schlagwort,             
-        gnd_ddc_map.id,              
-        ddc.id,                      
-        ddc.notation,               
-        ddc.schlagwort,             
-        ddc.webdewey_is_checked,        
-        lemma_gnd_map.fk_lemma,
-        lemma_gnd_map.fk_gnd,          
-        gnd_ddc_map.fk_gnd,         
-        gnd_ddc_map.fk_ddc,                
-        ddc.fk_ddc_parent            
+        [...] #Lemma, GND und DCC-Spalten        
 FROM lemma lemma
       
 INNER JOIN lemmabearbeitungsstatus lemmaBStatus
@@ -135,13 +105,7 @@ Der zweite Query ist von dem Fehlermodul \ref{img:errorListSample}. Dieser Query
 \begin{lstlisting}[frame=single]  % Start your code-block
 
 SELECT  fehler.eid,
-        fehler.originalText,
-        fehler.band,
-        fehler.bd_seite,
-        fehler.bd_spalte,
-        fehler.bd_zeile,
-        fehler.lemma,
-        fehler.charErrors,
+        [...] #Weitere Spalten von tf_fehler
         fehlercodes.description
 FROM tfl_fehler fehler
 
@@ -158,10 +122,4 @@ ORDER BY fehler.eid;
 
 \subsection{Vorbereitung}
 
-Auf den Server werden folgenden Programme zur Vorbereitung installiert.
-
-Für die Konfiguration des Servers wurde, von dem Hauptadministrator folgende Programme aufgespielt:
-
-LISTE MARTIN
-
-Ich habe dann zusätlich noch den MariaDB-Server installiert, um eine Replikation der aktuellen Datenbank aufzuspielen.
+Vor der Serverübergabe wurden nur ein paar Hilfsprogramme, wie VIM und Curl installiert. Als Datenbank habe ich dann noch eine MariaDB Instanz aufgesetzt, welche ein aktuelles Datenbank-Abbild von Dietrich-Online erhalten hat.
