@@ -34,9 +34,9 @@ Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-Im letzten Schritt werden einige Query’s abgesetzt. Dies wird zum einen über die Oberfläche geschehen, falls vorhanden, und was wichtiger ist über die Schnittstelle für PHP. Dafür wird ein PHP-Script geschrieben und die Laufzeit des Scripts gemessen.
+Im letzten Schritt werden eine Query abgesetzt. Dabei wird in PHP die Zeit gemessen, die für eine solche Abfrage benötigt wird.
 
-Der erste Query ist einer der bisher am langsamsten laufenden Query’s. Er ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:errorListSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagramm \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
+Die dabei verwendete Query ist einer der bisher am langsamsten laufenden Query’s. Er ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagramm \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
 
 \begin{figure}
 	\centering
@@ -83,41 +83,6 @@ LEFT JOIN ddc ddc ON gnd_ddc_map.fk_ddc = ddc.id
 WHERE lemma.id IN ([Array of Lemma IDs])
 ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 
-\end{lstlisting}
-
-Der zweite Query ist von dem Fehlermodul \ref{img:errorListSample}. Dieser Query verbindet die drei Tabellen \ref{img:errorListStructure} zu einer Darstellung. Es gibt für jeden Fehler einen Eintrag, dieser wird in tf\_fehler gespeichert. Da es für jeden Eintrag mehrere Fehler geben kann und diese Fehler für jeden Eintrag verfügbar sind, gibt es hier eine n zu m Beziehung. Um diese Abzubilden wurde die Tabelle tfl\_fehler\_rptmap eingefügt. Diese verbindet jeweils die ID’s mit den dazugehörigen Fehlercodes. 
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\linewidth]{images/structure_errormodule.png}
-	\caption{Tabellenaufbau der Fehlerliste.}
-	\label{img:errorListStructure}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=1\linewidth]{images/errormodule_sample.png}
-	\caption{Ansicht der Frontend Tabelle.}
-	\label{img:errorListSample}
-\end{figure}
-
-\lstset{language=SQL}
-\begin{lstlisting}[frame=single]  % Start your code-block
-
-SELECT  fehler.eid,
-        [...] #Weitere Spalten von tf_fehler
-        fehlercodes.description
-FROM tfl_fehler fehler
-
-LEFT JOIN tfl_fehler_rptmap fehler_fehlercode_map 
-ON fehler.eid = fehler_fehlercode_map.fk_fehler
-
-LEFT JOIN tfl_rptmap fehlercodes 
-ON fehlercodes.id = fehler_fehlercode_map.fk_rptmap
-
-WHERE fehler.band = ('1')
-AND fehler.severity > 3
-ORDER BY fehler.eid;
 \end{lstlisting}
 
 \subsection{Vorbereitung}
