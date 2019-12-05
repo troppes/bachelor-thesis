@@ -1,8 +1,9 @@
 \chapter{Genauer Vergleich}
 
-In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt und getestet. Hier wird Wert auf alle Aspekte des Prozesses gesetzt. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit wohl nicht weiter verfolgen kann, ist es auch wichtig zu schauen, wie leicht ein neuer Administrator sich in das System einlernen kann, beziehungsweise wie leicht das System zu verstehen und administrieren ist. Deshalb wird auch die Dokumentation verglichen und geschaut, wie groß die Community der einzelnen Suchmaschinen ist. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt. Da es nicht für jede der Suchmaschinen ein offizielles Docker-Image gibt, werden der Fairness halber alle Systeme manuell aufgesetzt.
+In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt, um einen Ersteindruck zu erstellen. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit weiter betreuen kann, ist es auch wichtig zu schauen, wie leicht  es für einen neuen Administrator ist, sich in dieses System einzuarbeiten. Deshalb wird ein besonderes Augenmerk auf die Dokumentation und Oberfläche, insofern vorhanden, gelegt. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt.
 
-Das Test-System hat folgende Spezifikationen:
+\subsection{Testsystem}
+Das Testsystem besitzt die folgende Spezifikationen:
 
 \begin{itemize}
     \item CPU: 4 Kerne
@@ -11,32 +12,27 @@ Das Test-System hat folgende Spezifikationen:
     \item Betriebssystem: Ubuntu 18.04.03 LTS
 \end{itemize} 
 
-Auf das System wird daraufhin die MySQL Datenbank von Dietrich-Online Projekt aufgespielt. Dies für diesen Vergleich die einzige Datenquelle sein.
+Auf das System wird zudem die MariaDB Datenbank von Dietrich-Online Projekt als Datenquelle eingespielt. Zudem mussten einige Programme während der Vorbereitung des Servers durch die Administratoren aufgespielt werden. Eine genaue Liste findet sich im Anhang. Diese Programme werde daher auch als gegeben bewertet.
 
 \section{Aufbau der Tests}
 
 \subsection{Installation}
 
-Im ersten Schritt wird die Installation bewertet, dabei wird geschaut, wie einfach es ist die Software zu installieren. Hierbei ist es wichtig zu schauen, wie simpel die Installation ist. Existiert zum Beispiel ein Installations-Wizard? Wie viel muss manuell in den Dateien geändert werden? Müssen viel externe Programme nachinstalliert werden?
-
-\subsection{Oberfläche}
-
-Als Nächstes folgt der Ersteindruck der Software und Oberfläche. Dabei wird geschaut, wie übersichtlich die Oberfläche ist, falls eine gegeben ist, und wie verständlich das System für Einsteiger ist. Dafür wird im ersten Schritt möglichst auf die Dokumentation verzichtet, um einen Ersteindruck zu liefern, wie gut die Oberfläche für sich selbst spricht. Dies dient dazu um, zu schauen wie der neue Administrator bestimmte Aufgaben ohne Vorkenntnisse erfüllen kann. Besondere Punkte dabei sind zum Beispiel: Wie viel kann man über die Oberfläche konfigurieren? Lassen sich Updates direkt über die Oberfläche einspielen? Ist die Seite responsive? Wie funktioniert die Nutzerverwaltung?
+Im ersten Schritt wird die Installation bewertet, dabei wird geschaut, wie einfach es ist die Software zu installieren. Dabei wird der Installationsprozess kurz beschrieben. Existiert zum Beispiel ein Installations-Wizard? Wie viel muss manuell in den Dateien geändert werden? Müssen viel externe Programme nachinstalliert werden?
 
 \subsection{Indexierung}
 
-Hier geht es darum festzustellen, wie einfach eine Indexierung der einzelnen Dateien möglich ist. Darunter fällt zum Beispiel: Kann man die Daten über die grafische Benutzeroberfläche indexieren lassen? Kann man das System darauf anweisen Änderungen direkt neu zu indexieren?
-
+Hierbei wird geschaut, wie einfach die Indexierung von den Daten aus der Datenbank ausfällt. Dabei wird auch geschaut, ob es möglich ist, Daten direkt von der Oberfläche zu indexieren und ob man die Indexierung in einen Zeitplan legen kann.
 
 \subsection{Dokumentation}
 
-Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Auch hier ist es wieder wichtig zu schauen, ob die Dokumentation auch ohne Vorkenntnisse gut zu verstehen ist. Da in diesen Kurztest nicht alle Funktionen durchgetestet werden können, ist es leider auch nicht möglich zu schauen, ob alle Funktionen korrekt und ausführlich dokumentiert sind. Sollte allerdings schon von den Grundfunktionen eine schlechte oder fehlende Dokumentation auffallen wird dies natürlich erwähnt. 
+Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Da in diesen Kurztest nicht alle Bereiche der Dokumentation genau durchgelesen und daraufhin auch Testweise implementiert werden können, werden nur die Seiten, die von Relevanz für die obigen Schritte sind bewertet.
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-Im letzten Schritt werden eine Query abgesetzt. Dabei wird in PHP die Zeit gemessen, die für eine solche Abfrage benötigt wird.
+Im letzten Schritt werden eine Query in PHP abgesetzt. Dabei wird die Zeit gemessen, wie lange die Query braucht um die Daten zu liefern.
 
-Die dabei verwendete Query ist einer der bisher am langsamsten laufenden Query’s. Er ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesen Diagramm \ref{img:lAdminStructure} zu finden. Eigentlich muss man sagen, dass es sich hierbei nicht um einen Query handelt, sondern um zwei. Der erste Sammelt alle ID’s aus der Datenbank, welche unter dem Buchstaben zu finden sind:
+Die dabei verwendete Query ist die bisher am langsamsten laufenden Query der Dietrich-Online Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen die für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Querys. Die erste findet alle IDs der Lemmata und der zweite baut auf dieser Liste die Daten zusammen.
 
 \begin{figure}
 	\centering
@@ -84,7 +80,3 @@ WHERE lemma.id IN ([Array of Lemma IDs])
 ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 
 \end{lstlisting}
-
-\subsection{Vorbereitung}
-
-Vor der Serverübergabe wurden nur ein paar Hilfsprogramme, wie VIM und Curl installiert. Als Datenbank habe ich dann noch eine MariaDB Instanz aufgesetzt, welche ein aktuelles Datenbank-Abbild von Dietrich-Online erhalten hat.
