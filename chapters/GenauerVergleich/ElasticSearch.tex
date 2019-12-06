@@ -1,0 +1,51 @@
+
+\section{ElasticSearch}
+
+\subsection{Installation}
+
+Die Installation ist bei ElasticSearch dreigeteilt. Um ElasticSearch in dem Umfang nutzen zu können, wie es hier gewünscht ist, muss zum einen ElasticSearch, Kibana als auch Logstash installiert werden. ElasticSearch ist hierbei das Kernstück und dient als Datenbank. Kibana ist eine grafische Benutzeroberfläche für ElasticSearch und Logstash stellt die Brücken zwischen der MySQL-Datenbank und ElasticSearch dar. Während ElasticSearch Java mitgeliefert hat, muss für Logstash Java Version 8 oder 11 nachinstalliert werden. Um die drei Dienste für den Development Modus zu installieren, mussten nur die Archive entpackt und die entsprechenden Anwendungen gestartet werden. Ohne die Konfigurationsdateien zu ändern, konnten die Anwendungen direkt miteinander kommunizieren. 
+
+!!Richtige Installtion!!
+
+\subsection{Indexierung}
+
+Um nun Daten zu indexieren, muss in einer Conf-Datei in Logstash definiert werden, wie und welche Daten gelesen und weitergegeben werden sollten \ref{lst:lsConf}. Die Datei kann direkt Querys gegen die Datenbank stellen. Dabei trat zu Beginn allerdings ein Fehler auf, welcher nur damit behoben werden konnte, dass der MariaDB-Treiber direkt im Kern von Logstash mitgeladen wird. Deswegen ist der Pfad zur Treiber-Bibliothek in der Datei auch leer. In den Block Output definiert man nun das Ziel. !!TODO FURTHER!!
+
+
+\begin{lstlisting}[language=json, frame=single, label={lst:lsConf}] 
+  input {
+    jdbc {
+      jdbc_validate_connection => true
+      jdbc_driver_library => ""
+      jdbc_driver_class => "Java::org.mariadb.jdbc.Driver"
+      jdbc_connection_string =>
+          "jdbc:mariadb://localhost:3306/dietrichonline"
+      jdbc_user => "USER"
+      jdbc_password => "PW"
+      statement => "MYSQL-Query"
+      schedule => "0 */6 * * *"
+    }
+  }
+  
+  output {
+    stdout { codec => json_lines }
+    elasticsearch {
+      document_id => "%{id}"
+      document_type => "lemma"
+      index => "lemma"
+      hosts => "localhost:9200"
+    }
+  }
+\end{lstlisting}
+
+
+\subsection{Oberfläche}
+
+Es gibt einen Update Knopf!
+
+
+\subsection{Dokumentation}
+
+
+\subsection{Absetzen einer Anfrage und Integration in PHP}
+

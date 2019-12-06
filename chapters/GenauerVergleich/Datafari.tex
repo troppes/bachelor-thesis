@@ -9,13 +9,28 @@ Für Datafari musste folgende Software nachinstalliert werden: Java 8 und JQ, ei
 
 Damit eine Indexierung durchgeführt werden kann, muss bei Datafari ein sogenanntes Repository angelegt werden. In diesem wird die Datenbank-Verbindung eingetragen. Dabei ist es wichtig, dass vorher der Treiber korrekt installiert wird. Es kam bei mir dabei zu Problemen. 
 Das auf Apache ManifoldCF basierende System akzeptiert nur MySQL-JDBC Treiber. Da der MariaDB-Treiber einen anderen Klassennamen in Java verwendet, funktioniert dieser nicht. \begin{quote} This connection type cannot be configured to work with other databases than the ones listed above without software changes.~\cite[S.~61]{ApacheSoftwareFoundation.}\end{quote} Deswegen musste ich für diesen Test den MySQL-Treiber von Oracle verwendet.
-Nachdem der Treiber korrekt installiert ist und das Repository erstellt ist, kann nun einen Job zu Indexierung der Einträge starten. In dem werden die Queries und der Zeitplan konfiguriert.
-CONTINUE HERE!
+Nachdem der Treiber korrekt installiert ist und das Repository erstellt ist, kann nun einen Job zu Indexierung der Einträge gestartet werden. In diesem werden die Queries und der Zeitplan konfiguriert.
+Im ersten Schritt wird das Repository ausgewählt und das Ziel, in diesem Fall also Solr. In dem Tab Queries lassen sich dann diverse Querys bauen. Der erste ist der Seeding Query, welche eine Art Delta-Query für dieses System ist und natürlich der Data-Query, welcher die Daten aus der Datenbank lädt. Dabei werden mehrere Variablen definiert, damit der Query korrekt von ManifoldCF erkannt wird. Zuerst einmal das Feld: IDCOLUMN, welches die ID enthält, dann URLCOLUMN, welches einen Hyperlink für diesen Eintrag enthält. Da hier keine solche Spalte gegeben ist, wird einfach nochmal die ID mitgegeben, was so in einen Screenshot in der Dokumentation zu sehen ist. und als letztes die DATACOLUMN, welche alle Daten konkateniert enthält. Um das System zu testen habe ich allerdings erstmal nur eine Zeile in die DATACOLUMN geschrieben \ref{img:datafariQuery} Die Konkatenation ist vorgegebene die Methode aus der ManifoldCF-Dokumentation. \cite[S.~97]{ApacheSoftwareFoundation.} Dies ist für unseren Zweck leider keine gute Datenstruktur.
+Sind alle Querys eingetragen, kann die Indexierung beginnen. Dafür wird der Job in der Oberfläche manuell gestartet, insofern kein Zeitplan konfiguriert ist. In meinen Test kam es dabei allerdings zu Problemen, die Indexierung erfolgte nicht korrekt und blieb immer am Ende hängen. Der Log zeigte ein "Ready for processing" an, machte dort allerdings nicht weiter. Einen Eintrag in der Dokumentation oder generell im Internet konnte ich zu diesem Problem nichts finden. Auch eine Reduktion der Einträge auf nur 125 hat das Problem leider nicht lösen können. Deswegen breche ich an dieser Stelle den Test ab. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{images/datafari_query.png}
+	\caption{Übersichtsseite des Querys in Datafari.}
+	\label{img:datafariQuery}
+\end{figure}
 
 \subsection{Oberfläche}
 
 Die Oberfläche von Datafari ist dreigeteilt. Zum einen gibt eine Such-Oberfläche, welche sich ohne Anmeldung erreichen lässt. Als Zweites findet sich eine Administrationsoberfläche, welche erst eingesehen werden kann, sobald man eingeloggt ist. Dort findet man diverse Einstellungen für die Suchmaschinen, wie Synonyme oder die Facetten-Konfiguration. Auch sind dort die Logs einzusehen, welche durch die Einbindung der Oberfläche von Kibana \ref{elasticsearch} aus ELK-Stack angezeigt werden. Die dritte Oberfläche ist die Einstellungsseite für die Datacrawler. Dies ist eine modifizierte Oberfläche von Apache ManifoldCF. Generell sind die Menüs sehr übersichtlich, auch wenn die Einbindung von anderen Anwendungen keine Ideale Lösung darstellt. Es lassen sich keine Updates direkt über die Oberfläche einspielen.
-!!CONTINUE RESPONSIVE UND UPDATES!!
+Die Such-Seite und die Seite für die Erstellung der Datacrawler sind Responsive, während die Administrationsoberfläche bei kleineren Bildschirmgrößen das Menü versteckt und die Seite somit unnutzbar macht. Update können auch hier nicht über die Oberfläche eingespielt werden.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{images/datafari_kibana.png}
+	\caption{Kibana Integration in Datafari.}
+	\label{img:datafariKibana}
+\end{figure}
 
 \subsection{Dokumentation}
 
@@ -32,3 +47,5 @@ Die Dokumentation ist im aktuellen Stand nicht sauber strukturiert. Sie gibt das
 
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
+
+Durch das fehlgeschlagene Einlesen der Daten konnte dieser Test leider nicht ausgeführt werden.
