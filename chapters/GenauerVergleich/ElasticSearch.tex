@@ -42,30 +42,96 @@ Danach verlief die Indexierung ohne weitere Probleme.
   }
 \end{lstlisting}
 
-Nun ist die Frage jedoch, wie weiß ElasticSearch, was für ein Datentyp das Feld besitzt. Dafür verwendet ElasticSearch ein sogenanntes Dynamic Mapping, indem es versucht den am besten passenden Datentyp für das Feld zu finden. In diesem Text wurden die meisten Felder als Strings erkannt und so gesetzt. Dies ist für diesen Kurztest ausreichend. 
+Nun ist die Frage jedoch, wie weiß ElasticSearch, was für ein Datentyp das Feld besitzt. Dafür verwendet ElasticSearch ein sogenanntes Dynamic-Mapping, indem es versucht den am besten passenden Datentyp für das Feld zu finden. In diesem Text wurden die meisten Felder als Strings erkannt und so gesetzt. 
+
+Um eigene Feld-Typen zu setzen, muss der Index von Hand erstellt werden. Um ein Feld zu definieren, muss ein Mapping manuell erstellt werden \ref{lst:mapping}. Dieses enthält zumindest den Feld-Namen, hier original\_bezeichnung, und den Typen. Zudem können noch andere Optionen angegeben werden, um die Indexierung nach dem eigenen ermessen anzupassen. Es kann zum Beispiel deklariert werden, dass ein Feld zwar existiert, allerdings nicht Suchbar ist. Dies ist für IDs interessant, die zur Verwaltung des Indices dienen, allerdings nicht nach außen hin herausgegeben werden sollen.
+
+\begin{lstlisting}[language=json, frame=single, label={lst:mapping}] 
+PUT lemma
+{
+  "mappings": {
+    "properties": {
+      "original_bezeichnung": {
+        "type":  "keyword"
+}}}}
+\end{lstlisting}
+
+Will man allerdings nicht alle Felder von Hand erstellen, ist es zudem möglich eine Vorlage für ein dynamisches Feld zu generieren \ref{lst:mappginTemplate}. Dieses übernimmt ersetzt zum Beispiel in diesen Fall die automatische Erkennung von original\_bezeichnung und setzt den Typen immer auf Keyword. Keyword ist hierbei ein String, welcher allerdings zum Sotieren verwendet werden kann, indem er sich nicht als Volltext ausweist. 
+
+\begin{lstlisting}[language=json, frame=single, label={lst:mappginTemplate}] 
+PUT lemma
+{
+  "mappings": {
+    "dynamic_templates": [
+      {
+        "obez_as_keyword": {
+          "match":   "original_bezeichnung",
+          "mapping": {
+            "type": "keyword"
+  }}}]}}
+\end{lstlisting}
+
+Eine Erstellung eines Mappings oder eines Templates ist hier allerdings nicht notwendig, da ElasticSearch bei der automatischen Indexierung jedes String-Feld als Keyword, sowie Volltext abspeichert, insofern die Länge unter 256 ist.
 
 \subsection{Oberfläche}
 
-Die Oberfläche von Kibana bietet eine zu Beginn überwältigende Erfahrung. Allerdings können Sichten für verschiedene Nutzer angelegt werden. Zudem gibt es ein Login-System, welcher allerdings erst aktiviert werden muss. Es gibt viele Menüpunkte, welche es ermöglichen die Daten auf diverse Arten darzustellen. Darunter in Graphen-Form und auf einer Landkarte. Unter dem Punkt Management finden sich die Einstellungen für das ElasticSearch System. Hier kann man nicht nur Snapshots erstellen, sondern auch das System mit Updates versorgen. Zudem können hier die Indices verwaltet werden \ref{img:elasticInterface}. Eine Erstellung ist allerdings nur per API möglich. Auch ist es möglich Indizes eine Lebensdauer zu geben. Die Oberfläche ist vollkommen responsive. Neben diesem Menü gibt es ebenfalls eine Entwicklerkonsole, in der es möglich ist Anfragen an das ElasticSearch-System zu schicken. 
-
+Die Oberfläche von Kibana bietet eine zu Beginn überwältigende Erfahrung \ref{img:elasticInterface}. Um dies für andere Nutzer zu verhindern, bietet Kibana die Möglichkeit Sichten zu erstellen. Zudem gibt es ein Login-System, welcher allerdings erst aktiviert werden muss. Es gibt viele Menüpunkte, welche es ermöglichen die Daten auf diverse Arten darzustellen, darunter in Grafen-Form und auf einer Landkarte. Unter dem Punkt Management finden sich die Einstellungen für das ElasticSearch System. Hier kann man nicht nur Snapshots erstellen, sondern auch das System mit Updates versorgen. Zudem können hier die Indices verwaltet werden \ref{img:elasticIndexSettings}. Eine Erstellung der Indices ist allerdings nur per API möglich. Allerdings ist es möglich einige Einstellungen an den Indices vorzunehmen und diese auch zu löschen. Zudem gibt es die Möglichkeit Indices eine Lebensdauer zuzuweißen, was in Zeiten der Datenschutzgrundverordnung sicherlich eine nützliche Funktion darstellen wird. Die Oberfläche ist vollkommen responsive. Neben diesem Menü gibt es ebenfalls eine Entwicklerkonsole, in der es möglich ist Anfragen an das ElasticSearch-System zu schicken. 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=1\linewidth]{images/elastic_ui.png}
-	\caption{Index Managment Seite von ElasticSearch}
+	\caption{Index Management Seite von ElasticSearch}
 	\label{img:elasticInterface}
 \end{figure}
 
 
 \subsection{Dokumentation}
 
-
-
-Bei der Informationsseite zum PHP-Klienten ist allerdings ein kleiner Fehler auf der Seite. Die benötige PHP-Version ist dort falsch vermerkt.
-
+Die Dokumentation von ElasticSearch ist sehr ausführlich und gut zu lesen. Um einen einfacheren Einstieg in das System zu bieten, beginnt die Dokumentation mit einem kleinen Beispiel, um das Konzept zu verdeutlichen. Diese Struktur zieht sich durch die gesamte Dokumentation, jedes Thema ist mit vielen Beispielen bebildert, was eine angenehme Einarbeitung in das System ermöglicht. Interessant dabei ist, dass es möglich ist mit einem Klick den Befehl direkt in der Konsole von Kibana zu importieren. So können die Beispiele leicht ohne viel Copy und Paste ausgeführt werden. Während meines Testes ist mir nur ein Fehler in der Dokumentation aufgefallen, und zwar wurde bei den Informationsseite zum PHP-Klienten eine falsche PHP-Version vermerkt.
 
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-ElasticSearch bietet einen eigenen PHP-Klienten an. Dieser kann mit Composer installiert werden.
+ElasticSearch biete für PHP einen eigenen Klienten an. Es ist möglich, diesen unter anderem auch mit Composer zu installieren. Um die Indexierte Dateien abzufragen, muss ein ClientBuilder gebaut werden, welcher einen oder mehrere Hosts mitgegeben bekommt. Auch hier sendet der Server, insofern nicht anders angegeben, 10 Resultate zurück. Um diese Limitierung aufzuheben, muss hierbei an 2 Stellen etwas verändert werden. In PHP muss dem Clienten bei der Anfrage ein Size-Paramter mitgegeben werden. Dies funktioniert allerdings nur bis zu 10.000 Ergebnissen. Sollten allerdings mehr Ergbenisse erwünscht sein, muss auch noch etwas am Index geändert werden. Dies kann entweder über eine HTTP Anfrage, oder über die Oberfläche geändert werden. Für den Test wurde dieses Limit nun erhöht \ref{img:elasticIndexSettings}. 
+
+
+\begin{lstlisting}[language=php, frame=single, label={lst:managedSchema}, 
+  morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
+  <?php
+  [...] # Imports and variable declarations
+
+  $clientBuilder = ClientBuilder::create()->setHosts(['136.199.34.55']);
+  $client        = $clientBuilder->build();
+
+  $params = [
+      'index' => 'lemma',
+      'body' => [
+          'size' => 1000000,
+          'query' => [
+              "wildcard" => ["bezeichnung.keyword" => "S*"],
+  ]]];
+  
+  $results = $client->search($params);
+  [...] # Loop with Timer  
+  $results = $client->search($params);
+
+  $count=0;
+    foreach ($results['hits']['hits'] as $hit){
+      $count++;
+    }
+  [...] # Output Runtime
+  
+\end{lstlisting}
+
+Zum Code ist noch zu sagen, dass im Ergebnis keine Summe der Ergebnisse liegt, sondern dafür ein eigener Query vonnöten ist. Deswegen werden hier die Ergebnisse in einer Schleife gezählt.
+
+Auch hier wurde nun de Query 100-Mal ausgeführt, um einen Median Wert zu ermitteln. Dieser lag bei ElasticSearch bei 0.58 Sekunden pro Query und erbrachte 15653 Ergebnisse bei jeden Durchlauf.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{images/elastic_index_settings.png}
+	\caption{Einstellungen vom Lemma-Index bei ElasticSearch}
+	\label{img:elasticIndexSettings}
+\end{figure}
+
 
