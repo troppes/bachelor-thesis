@@ -9,9 +9,9 @@ Allerdings ist der Server bisher nur Lokal ansprechbar, um dies zu ändern, muss
 \subsection{Indexierung}
 \label{xap:index}
 
-Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, habe ich zuerst einmal das gegebene Beispiel zur Indexierung von einer CSV Datei durchgearbeitet. Dabei ist mir aufgefallen, dass hier die Indexierung komplett selbst geschrieben werden muss. Deswegen habe ich anhand des Beispiels eine Indexierung für die MySQL-Daten geschrieben. 
+Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, habe ich zuerst einmal das gegebene Beispiel zur Indexierung von einer CSV Datei durchgearbeitet. Dabei ist mir aufgefallen, dass hier die Indexierung der komplette Handler selbstgeschrieben war. Daraufhin habe ich auf der Basis des Beispiels einen Import für die Daten aus der Datenbank geschrieben.
 
-\begin{lstlisting}[language=php, frame=single, label={lst:managedSchema}, 
+\begin{lstlisting}[language=php, frame=single, label={lst:XapPhp}, 
 	morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
 	<?php
 	require_once("xapian.php");
@@ -56,7 +56,7 @@ Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, habe ich
 	
   \end{lstlisting}
 
-Bei dem Skript möchte ich gerne auf ein paar Zeilen genauer eingehen. Zuerst in Zeile 10. Der Stemmer dient dazu, wenn der Plural eines Wortes gesucht wird, auch Ergebnisse mit dem Singular zu finden. In Zeile 23 wird ein Feld mit einem Präfix indexiert, dies dient dazu diese Zeile für die spätere Suche auszuweisen. Die Präfixe werden dabei vor die Zeile geschrieben und bei der Suche dann wieder herausgefiltert. Die anderen Felder wurde für die generelle Suche ohne Präfix indexiert. Damit ein Feld allerdings indexiert werden kann, darf es nicht leer sein. Deswegen habe ich leere Felder mit EMPTY gekennzeichnet. 
+Bei dem Skript\ref{lst:XapPhp} möchte ich gerne auf ein paar Zeilen genauer eingehen. Zuerst in Zeile 10. Der Stemmer dient dazu, wenn der Plural eines Wortes gesucht wird, auch Ergebnisse mit dem Singular zu finden. In Zeile 23 wird ein Feld mit einem Präfix indexiert. Dies dient dazu diese Zeile für die spätere Suche auszuweisen. Die Präfixe werden dabei vor die Zeile geschrieben und bei der Suche dann wieder herausgefiltert. Die anderen Felder wurden für die generelle Suche ohne Präfix indexiert. Zuletzt noch der Grund, warum leere Strings gegen das Wort 'EMPTY' ausgetauscht werden. Dies beruht darauf, dass Xapian es nicht erlaubt, leere Strings zu indexieren. !!Quelle XAP!
 
 Als nun das PHP-Script auf den Server gestartet wurde, mussten noch eine Warnung behoben werden. Dazu wurde die php.ini angepasst, indem der Eintrag 'enable\_dl' aktiviert wurde. 
 
@@ -64,14 +64,14 @@ Die Indexierung lief dabei äußerst schnell in unter einer Minute ab.
 
 \subsection{Oberfläche}
 
-Xapian besitzt keine Oberfläche zur Verwaltung. Allerdings kann sich ein Such-Frontend installiert werden, welches allerdings hier nicht geprüft wurde, da die Dokumentation noch nicht verfügbar war. Generell würde das Projekt ein selbstgebautes Frontend benötigen.
+Xapian besitzt keine Oberfläche zur Verwaltung. Allerdings kann sich ein Such-Frontend installiert werden, welches allerdings hier nicht geprüft wurde, da die Dokumentation noch nicht verfügbar war. Generell würde das Projekt ohnehin ein selbstgebautes Frontend benötigen.
 
 \subsection{Dokumentation}
 
-Bei dem letzten Versionsupgrade wurde die Dokumentation von Xapian komplett umgeschrieben. Diese neue Dokumentation hat bisher noch viele Lücken und besitzt auch Todo-Boxen \ref{img:xapianDoku}.
+Bei dem letzten Versionsupgrade wurde die Dokumentation von Xapian komplett umgeschrieben. Diese neue Dokumentation hat bisher noch viele Lücken und auch Todo-Boxen \ref{img:xapianDoku}.
 Zu der Installation von dem TCP-Server war nichts in der neuen Dokumentation zu finden. Beim Durchsuchen des Internets, wie der Server extern ansprechbar gemacht werden kann, bin ich zufällig auf eine Seite der alten Dokumentation gestoßen, welche einen Befehl zum Starten vermerkt hatte. Nachdem dieser Befehl ausgeführt wurde, wurde gemeldet, dass für diesen Befehl ein weiteres Paket installiert werden musste. Dieses Paket wurde in der Dokumentation nicht vermerkt. 
 
-Generell bietet die Dokumentation bisher nur einen sehr grundlegenden Einblick in das System und beleuchtet keine genauen Themen, wie das Indexieren von MySQL-Datenbanken. Positiv anzumerken ist allerdings, dass Xapian ein Beispiel zu Indexierung von Daten mit Code in allen verfügbaren Sprachen bereitstellt. In der Dokumentation direkt ist allerdings nur das Python-Beispiel erklärt.
+Generell bietet die Dokumentation, in der aktuellen Form, nur einen sehr grundlegenden Einblick in das System. Positiv anzumerken ist allerdings, dass Xapian ein Beispiel zu Indexierung von Daten mit Code in allen verfügbaren Programmiersprachen auf Github bereitstellt. In der Dokumentation direkt ist allerdings nur das Python-Beispiel erklärt.
 
 \begin{figure}
 	\centering
@@ -84,9 +84,9 @@ Generell bietet die Dokumentation bisher nur einen sehr grundlegenden Einblick i
 
 Xapian besitzt keine REST-Schnittstelle. Daher muss hier per Befehl direkt auf mit Systemaufrufen gearbeitet werden. Ich konnte leider nicht die Remote Ausführung testen, da der Aufwand, um die PHP-Erweiterung auf Windows zu bauen, das Zeitkontingent für den Test überschreitet. Daher habe ich die Datei direkt auf den Server ausgeführt, was bei der Laufzeit bedacht werden muss. 
 
-Der Grund, warum eine eigene Zeile für den Buchstaben ausgewiesen werden muss, ist, dass Xapian generell nur Volltext ausweist. Ich habe zuerst versucht mit Wildcards zu arbeiten, allerdings ergab sich dabei dasselbe Problem, wie bei den anderen Suchmaschinen. Generell um in Xapian Volltext-Suche nutzen zu können, müssen gewissen Flags gesetzt werden.
+Der Grund, warum eine eigene Zeile für den Buchstaben ausgewiesen werden muss, ist, dass Xapian generell nur Volltext ausweist. Ich habe zuerst versucht mit Wildcards zu arbeiten, allerdings ergab sich dabei dasselbe Problem, wie bei den anderen Suchmaschinen. Zudem muss, um Wildcards überhaupt nutzen zu können, ein bestimmtes Flag mitgegeben werden.
 
-\begin{lstlisting}[language=php, frame=single, label={lst:managedSchema}, 
+\begin{lstlisting}[language=php, frame=single, label={lst:XapPhpQuery}, 
 	morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
 // Require xapian.php and declare variables
 
@@ -113,8 +113,10 @@ foreach ($matches as $pointer){
 	
 \end{lstlisting}
 
-Nachdem der Query die ersten hundert Male durchlief, war die Zeit mit 0.0044 Sekunden im Durchschnitt für die 15661 Ergebnisse sehr gering. Dies liegt daran, dass die Ergebnisse erstmal nur Pointer auf die kompletten Daten sind. Um nun alle Daten zu erhalten, muss nochmals ein gesonderter Befehl geschickt werden. Deswegen ist im Code ab Zeile 15 auch eine For-Schleife, welche die Datensätze für alle Pointer holt. Foreach verschiebt dabei automatisch den Pointer von den Ergebnissen. Wichtig ist, dass der Count ein Step ist, der theoretisch die Laufzeit erhöht. Allerdings habe ich diesen hingenommen, um festzustellen, ob immer alle Ergebnisse korrekt geliefert werden. 
+Nachdem der Query die ersten hundert Male durchlief, war die Zeit mit 0.0044 Sekunden im Durchschnitt für die 15661 Ergebnisse sehr gering. Dies liegt daran, dass die Ergebnisse erstmal nur Pointer auf die kompletten Daten sind. 
+
+Um nun alle Daten zu erhalten, muss nochmals ein gesonderter Befehl geschickt werden. Deswegen ist im Code ab Zeile 15 auch eine For-Schleife, welche die Datensätze für alle Pointer holt. Foreach verschiebt dabei automatisch den Pointer von den Ergebnissen. Wichtig ist, dass der Count ein Programmschritt ist, der theoretisch die Laufzeit erhöht und nicht für die normale Query genutzt wird. Allerdings habe ich diesen hingenommen, um festzustellen, ob immer alle Ergebnisse korrekt geliefert werden. 
 Die auskommentierte Zeile würde das Objekt nun als Array mit Indices zurückgeben. 
 
-Bei den Lauf mit der Foreach-Schleife, lief der Query im Durchschnitt 0.22 Sekunden, was immernoch sehr schnell ist. Allerdings muss dabei bedacht werden, dass das die Query hierbei auf den System ausgeführt wurde und nicht, wie bei den anderen Suchmaschinen, von meinen PC an den Server gesendet wurde. 
+Bei den Lauf mit der Foreach-Schleife, lief der Query im Durchschnitt 0.22 Sekunden, was immernoch sehr schnell ist. Allerdings muss dabei bedacht werden, dass das die Query hierbei auf dem Server direkt ausgeführt wurde und nicht, wie bei allen anderen System von meinen System die Query an den Server übermittelt wurde.
 
