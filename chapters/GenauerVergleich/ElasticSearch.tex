@@ -15,12 +15,12 @@ Bei diesem Schritt kam es bei dem System allerdings zu Problemen. Der Treiber ko
 
 Nachdem die Datenbank Konfiguration und Query angegeben wurden, kann zudem noch ein Zeitplan definiert werden. Außerdem ist es auch möglich, eine Art Delta-Query zu definieren. Hierfür wird eine Tracking-Spalte festgelegt, welche dann in der Query auf einen Zeitstempel überprüft wird.
 
-Im zweiten Teil der Datei wird das Ziel definiert. Die erste Zeile dient dazu nur dem Debugging, da es alle ausgegeben Linien des Skripts auch auf die Shell herausgibt. In dem ElasticSearch-Segment wird zum einen eine ID definiert, welche verhindert, dass Einträge doppelt in die Datenbank gespielt werden. Deswegen wird hier die ID der Lemmata genommen, da diese auch in der Datenbank nicht wiederholt werden darf. Zum anderen wird noch ein Index angegeben, welcher für die erhaltenen Daten angelegt wird. 
+Im zweiten Teil der Datei wird das Ziel definiert. Die erste Zeile dient dazu nur dem Debugging, da es alle ausgegeben Linien des Skripts auch auf die Shell ausgibt. In dem ElasticSearch-Segment wird zum einen eine ID definiert, welche verhindert, dass Einträge doppelt in die Datenbank gespielt werden. Deswegen wird hier die ID der Lemmata genommen, da diese auch in der Datenbank nicht wiederholt werden darf. Zum anderen wird noch ein Index angegeben, welcher für die erhaltenen Daten angelegt wird. 
 
 Als die Indexierung nun gestartet wurde, kam es allerdings zu einem Fehler, dass die MySQL-Query nicht gültig sei. Um zu ermitteln, wie viele Daten indiziert werden müssen, wird die Query mit einer Count-Abfrage umhüllt. Dabei verwendete Logstash Double anstelle von Single-Quotes, was bei MariaDB zu einem Fehler führte. Dies konnte behoben werden, indem eine Einstellung in der Datenbank vorgenommen wurde, um auch Double-Quotes zu erlauben. 
 Danach verlief die Indexierung ohne weitere Probleme.
 
-\begin{lstlisting}[language=json, frame=single, label={lst:lsConf}] 
+\begin{lstlisting}[language=xml, frame=single, label={lst:lsConf}] 
   input {
     jdbc {
       jdbc_validate_connection => true
@@ -51,7 +51,7 @@ Nun ist die Frage jedoch, wie weiß ElasticSearch, was für ein Datentyp das Fel
 
 Um eigene Feld-Typen zu setzen, muss der Index von Hand erstellt werden. Um ein Feld zu definieren, muss ein Mapping manuell erstellt werden \ref{lst:mapping}. Dieses enthält zumindest den Feld-Namen und den Typen. Zudem können noch andere Optionen angegeben werden, um die Indexierung nach dem eigenen Ermessen anzupassen. Es kann zum Beispiel deklariert werden, dass ein Feld zwar existiert, allerdings nicht Suchbar ist. Dies ist für IDs interessant, die zur Verwaltung der Indices dienen, allerdings nicht nach außen hin herausgegeben werden sollen.
 
-\begin{lstlisting}[language=json, frame=single, label={lst:mapping}] 
+\begin{lstlisting}[language=xml, frame=single, label={lst:mapping}] 
 PUT lemma
 {
   "mappings": {
@@ -61,9 +61,9 @@ PUT lemma
 }}}}
 \end{lstlisting}
 
-Will man allerdings nicht alle Felder von Hand erstellen, ist es zudem möglich eine Vorlage für ein dynamisches Feld zu generieren \ref{lst:mappingTemplate}. So kann für ein Feld eine bestimmte Regel gesetzt werden, ohne alle Felder manuell anlegen zu müssen. Als Beispiel habe ich hier definiert, dass das Feld "original\_bezeichnung" immer nur als Keyword gespeichert wird.
+Will man allerdings nicht alle Felder von Hand erstellen, ist es zudem möglich eine Vorlage für ein dynamisches Feld zu generieren \ref{lst:mappingTemplate}. So kann für ein Feld eine bestimmte Regel gesetzt werden, ohne alle Felder manuell anlegen zu müssen. Als Beispiel habe ich hier definiert, dass das Feld original\_bezeichnung immer nur als Keyword gespeichert wird.
 
-\begin{lstlisting}[language=json, frame=single, label={lst:mappingTemplate}] 
+\begin{lstlisting}[language=xml, frame=single, label={lst:mappingTemplate}] 
 PUT lemma
 {
   "mappings": {
@@ -76,7 +76,7 @@ PUT lemma
   }}}]}}
 \end{lstlisting}
 
-Für den Test war eine Erstellung eines Mappings oder eines dynamischen Templates allerdings nicht notwendig, da ElasticSearch bei der automatischen Indexierung jedes String-Feld als Keyword, sowie Volltext abspeichert, insofern die Länge unter 256 ist.
+Für den Test war eine Erstellung eines Mappings oder eines dynamischen Templates allerdings nicht notwendig, da ElasticSearch bei der automatischen Indexierung jedes String-Feld als Keyword, sowie Volltext abspeichert, insofern die Länge unter 256 Zeichen ist.
 
 \subsection{Oberfläche}
 
@@ -102,7 +102,7 @@ Gut gelöst dabei ist, dass es möglich ist mit einem Klick den Befehl direkt in
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-ElasticSearch bietet für PHP einen eigenen Klienten an. Es ist möglich, diesen unter anderem auch mit Composer zu installieren. Um die Indexierten Dateien abzufragen, muss ein ClientBuilder gebaut werden, welcher einen oder mehrere Hosts mitgegeben bekommt. Der Server sendet, insofern nicht anders konfiguriert, 10 Resultate zurück. Um diese Limitierung aufzuheben, muss hierbei an 2 Stellen etwas verändert werden. In PHP muss dem Klienten bei der Anfrage ein Parameter mitgegeben werden, welcher die Menge der Ergebnisse bestimmt. Dies funktioniert allerdings nur bis zu 10.000 Ergebnissen. Sollten mehr Ergebnisse erwünscht sein, muss auch noch etwas am Index geändert werden. Dies kann entweder über eine HTTP Anfrage oder über die Oberfläche geändert werden. Für den Test wurde dieses Limit nun erhöht \ref{img:elasticIndexSettings}. 
+ElasticSearch bietet für PHP einen eigenen Klienten an. Es ist möglich, diesen unter anderem auch mit Composer zu installieren. Um die indexierten Dateien abzufragen, muss ein ClientBuilder gebaut werden, welcher einen oder mehrere Hosts mitgegeben bekommt. Der Server sendet, insofern nicht anders konfiguriert, 10 Resultate zurück. Um diese Limitierung aufzuheben, muss hierbei an 2 Stellen etwas verändert werden. In PHP muss dem Klienten bei der Anfrage ein Parameter mitgegeben werden, welcher die Menge der Ergebnisse bestimmt. Dies funktioniert allerdings nur bis zu 10.000 Ergebnissen. Sollten mehr Ergebnisse erwünscht sein, muss auch noch etwas am Index geändert werden. Dies kann entweder über eine HTTP Anfrage oder über die Oberfläche geändert werden. Für den Test wurde dieses Limit nun erhöht \ref{img:elasticIndexSettings}. 
 
 
 \begin{lstlisting}[language=php, frame=single, label={lst:phpElastic}, 
@@ -135,7 +135,7 @@ ElasticSearch bietet für PHP einen eigenen Klienten an. Es ist möglich, diesen
 
 Zum Code ist noch zu sagen, dass im Ergebnis keine Summe der Ergebnisse liegt, sondern dafür ein eigener Query vonnöten ist. Deswegen werden hier die Ergebnisse in einer Schleife gezählt.
 
-Auch hier wurde nun de Query 100-Mal ausgeführt, um einen Median Wert zu ermitteln. Dieser lag bei ElasticSearch bei 0.58 Sekunden pro Query und erbrachte 15653 Ergebnisse bei jeden Durchlauf.
+Auch hier wurde nun der Query 100-Mal ausgeführt, um einen Median Wert zu ermitteln. Dieser lag bei ElasticSearch bei 0.58 Sekunden pro Query und erbrachte 15653 Ergebnisse bei jeden Durchlauf.
 
 \begin{figure}
 	\centering
