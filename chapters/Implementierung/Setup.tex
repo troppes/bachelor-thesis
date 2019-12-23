@@ -1,14 +1,61 @@
 \chapter{Setup}
 
-Nach dem Vergleich wurde in einem Meeting beschlossen, dass ein ELK-Stack, also ElasticSearch verwendet wird. Die Installtion wird dabei über Docker passieren. Dabei wird auch direkt SSL/Login verwendet. 
+Diese Kapitel handelt von der Installation und Ersteinrichtung der Suchmaschine über Docker. Bei einem Meeting wurde beschlossen, dass ElasticSearch als Suchmaschine genutzt wird. Die Installation erfolgt dabei über Docker-Compose, zum Verwalten von mehreren Docker-Maschinen. Dabei werden 2 ElasticSearch Instanzen, eine Kibana Instanz und eine Logstash-Instanz verwendet. Um das System abzusichern wird zudem der Reverse-Proxy Traefik verwendet. Dabei wird Kibana mit SSL-Verschlüsselung und dem Login-System versehen. Auch die Anfragen an ElasticSearch werden mit einer Basic-Authenification gesichert.
 
-\subsection{Docker}
+\section{Docker}
 
-Rechte sind doof, da guid 1000 verwendet wird, also die von LinuxAdmin
+Die Konfiguration der Instanzen funktioniert größtenteils über YAML-Datei. Dabei wird für jedes System die entsprechende Datei gemountet. 
 
-https://elk-docker.readthedocs.io/#troubleshooting
+Zudem möchte ich noch gern auf die Rechte-Verwaltung von Docker eingehen. Jeder Container kann seine eigenen Nutzer anlegen, jedoch können diese nicht unbedingt auf den Filesystem der Hosts schreiben. Um nun einen Docker-Container Nutzer das Recht zu geben auf den Filesystem zu schreiben, muss die User-ID der Datei auf denselben Wert gesetzt werden, wie der Nutzer im Container. ElasticSearch verwendet grundsätzlich einen Nutzer mit der UID 1000 und der GUID 1000. Deswegen müssen die Ordner auf dem Host-System nun auch diese Rechte bekommen. Dazu wurden mit CHOWN die Rechte auf 1000:1000 gesetzt. Allerdings ist der Nutzer 1000 auf dem Host-System ein anderer Nutzer. Deswegen besitzt jetzt ein anderer Nutzer die Dateien in den ElasticSerach Ordner. Um dies zu beheben, wurde der Nutzer auf eine andere UID/GUID gesetzt um Konfusion zu vermeiden. \cite{JarrodWeaver.2014}
 
-ElasticSerach host IP auf 0.0.0.0
+\subsection{ElasticSearch}
+
+\begin{lstlisting}[language=XML, frame=single, label={lst:es01}] 
+	es01:
+	image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+	container_name: es01
+	environment:
+		- "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+	ulimits:
+		memlock: -1
+	volumes:
+		- /srv/elk/elasticSearch01/:/usr/share/elasticsearch/data
+		- /srv/elk/config/elasticsearch.yml:
+			/usr/share/elasticsearch/config/elasticsearch.yml
+	ports:
+		- 9200:9200
+	networks:
+		- elastic
+\end{lstlisting}
+
+Für die beiden ElasticSearch Instanzen wurde zudem der Java-Speicher erhöht. Es werden 4 Gigabyte benutzt, da wir 2 Server haben, welcher allerdings in Kombination niemals mehr Speicher verwenden sollen als 50 \% des gesamten RAMs. \cite{ElasticsearchB.V..12172019}
+
+Der ulimits Befehl hebt die Begrenzung des Memory-Locks auf, damit ElasticSearch korrekt arbeiten kann.
+
+Als Volumes ist zum einen die oben genannte YAML-Datei angegeben und zum anderen wird der Datenordner gemountet. Dies dient dazu, dass, falls der Container zerstört wird, die indexierten Daten trotzdem weiterhin gespeichert werden.
+
+Der Port wird zum Host-System durchgereicht, damit das System auch von außerhalb der Docker-Container zu erreichen ist.
+
+In der ElasticSearch-Konfigurationsdatei werden nun die Einstellungen, die speziell für das ElasticSearch-System relevant sind verwaltet. 
+
+Dafür wird zuerst der Cluster-Name definiert. Dieser dient dazu, dass die Server wissen, dass Sie dieselben Daten betreuen. 
+Danach wird der Name des Servers vergeben. Dieser wird für spätere Einstellungen noch wichtig.
+
+Das Memory-Lock Setting dient dazu, dass die Anwendung verhindert, dass sie in den SWAP gelegt wird.
+
+Der Network Host wird hier auf alle Interfaces der Maschine gesetzt, damit sich alle System innerhalb der Docker Netzwerkes finden können.
+Das Seed-Host Setting sagt aus, an welche Nodes die Daten synchronisiert werden sollen.
+
+Der letzte Eintrag dient dazu, dass bei der ersten Synchronisation das System weiß, welche Nodes alle Daten enthalten, also mit welchen Server sich synchronisiert werden soll. Da hier beide Systeme beim ersten Start noch keine Daten besitzen, sind alle Nodes zu beginnt Master. 
+\begin{lstlisting}[language=XML, frame=single, label={lst:es01-yml}] 
+	cluster.name: dietrich-online-cluster
+	node.name: es01
+	bootstrap.memory_lock: true
+	network.host: 0.0.0.0
+	discovery.seed_hosts: ["es02"]
+	cluster.initial_master_nodes: ["es01", "es02"]
+\end{lstlisting}
+
+\subsection{Kibana}
 
 
-Setze die Heap-Size auf 4G weil 2 Cluster = 8G . Never use more than 50 Percent https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html
