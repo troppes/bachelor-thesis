@@ -120,9 +120,9 @@ foreach ($matches as $pointer){
 	
 \end{lstlisting}
 
-Nachdem der Query die ersten hundert Male durchlief, war die Zeit mit 0.0044 Sekunden im Durchschnitt für die 15661 Ergebnisse sehr gering. Dies liegt daran, dass die Ergebnisse erstmal nur Pointer auf die kompletten Daten sind. 
+Nachdem der Query die ersten hundert Male durchgelaufen war, war die Zeit mit 0.0044 Sekunden im Durchschnitt für die 15661 Ergebnisse sehr gering. Dies liegt daran, dass die Ergebnisse erstmal nur Pointer auf die kompletten Daten sind. 
 
 Um nun alle Daten zu erhalten, muss nochmals ein gesonderter Befehl geschickt werden. Deswegen ist im Code ab Zeile 15 auch eine For-Schleife, welche die Datensätze für alle Pointer holt. Foreach verschiebt dabei automatisch den Pointer von den Ergebnissen. Wichtig ist, dass der Count ein Programmschritt ist, der theoretisch die Laufzeit erhöht und nicht für die normale Query genutzt wird. Allerdings habe ich diesen hingenommen, um festzustellen, ob immer alle Ergebnisse korrekt geliefert werden. 
 Die auskommentierte Zeile würde das Objekt nun als Array mit Indices zurückgeben. 
 
-Der Query mit dem Abholen der Daten dauerte nun im Durschnitt 0.22 Sekunden, was immernoch sehr schnell ist. Allerdings muss dabei bedach werden, dass der Query direkt auf dem Server lief, wodurch es keine Latenzzeit gab.
+Der Query mit dem Abholen der Daten dauerte nun im Durchschnitt 0.22 Sekunden, was immer noch sehr schnell ist. Allerdings muss dabei bedacht werden, dass der Query direkt auf dem Server lief, wodurch es keine Latenzzeit gab.
