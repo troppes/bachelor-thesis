@@ -9,20 +9,20 @@ Zuerst muss der ElasticSearch Client in der Docker-Compose hinzugefügt werden.
 \subsection{ElasticSearch}
 
 \begin{lstlisting}[language=XML, frame=single, label={lst:es01}] 
-	es01:
-	image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
-	container_name: es01
-	environment:
-		- "ES_JAVA_OPTS=-Xms4g -Xmx4g"
-	ulimits:
-		memlock: -1
-	volumes:
-		- /srv/elk/elasticSearch01/:/usr/share/elasticsearch/data
-		- /srv/elk/config/elasticsearch.yml:
-			/usr/share/elasticsearch/config/elasticsearch.yml
-	ports:
-		- 9200:9200
-	networks:
-		- elastic
+    POST /_security/api_key
+    {
+      "name": "dietrich-webiste",
+      "role_descriptors": { 
+        "role-a": {
+          "cluster": ["all"],
+          "index": [
+            {
+              "names": ["dietrich_*"],
+              "privileges": ["read"]
+            }
+          ]
+        }
+      }
+    }
 \end{lstlisting}
 
