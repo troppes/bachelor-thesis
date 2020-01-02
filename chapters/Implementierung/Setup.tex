@@ -34,7 +34,7 @@ Der ulimits Befehl hebt die Begrenzung des Memory-Locks auf, damit ElasticSearch
 
 Als Volumes ist zum einen die oben genannte YAML-Datei angegeben und zum anderen wird der Datenordner gemountet. Dies dient dazu, dass, falls der Container zerstört wird, die indexierten Daten trotzdem weiterhin gespeichert werden.
 
-Der Port wird zum Host-System durchgereicht, damit das System auch von außerhalb des Docker-Netwerks zu erreichen ist.
+Der Port wird zum Host-System durchgereicht, damit das System auch von außerhalb des Docker-Netwerks zu erreichen ist. Dabei ist das System troz blockierter UFW zu erreichen. Dies liegt daran, dass Docker in der Standardeinstellung UFW ignoriert.
 
 In der ElasticSearch-Konfigurationsdatei werden nun die Einstellungen, die speziell für das ElasticSearch-System relevant sind verwaltet. 
 
@@ -69,8 +69,27 @@ Für die Grundkonfiguration von Logstash muss, wie schon im Test vorher, der Tre
 
 \section{X-Security}
 
-Generate Cert Authorty for Cluster. Genreate Cert for each Member
-Setup Passwords
-Add Password to Kibana and Logstash
+X-Security nennt sich das Packet mit den Sicherheitseinstellungen vom ELK-Stack. Dafür habe ich hier den kompletten Traffic zwischen den einzelnen Komponenten, sowie der Endnuzter mit SSL Verschlüsselt. Dazu mussten zuerst einmal die Zertifikate generiert werden. Dafür bietet ElasticSearch ein Tool an, welches eine Autorität und die einzelnen Zertifikate mit Private und Public-Key generiert. Allerdings werden diese standardmäßig im PK12 Format abgespeichert. Dieses ist ein Container-Format welches die Schlüssel, sowie die Autorität verpackt. Jedoch benötigt Kibana zum Beispiel nur die Autorität als PM (TODO EXPLAIN) und kann diese auch nicht aus der PK12 extrahieren.
+Es gibt eine Möglichkeit diese Dateien aus der PK12 zu entpacken, jedoch gab es auch hierbei Probleme, da OpenSSL, das Tool welches zum Entpacken verwendet wird, die Autorität nicht richtig entpackt. \cite{nerophon.2018}
+
+Es kann allerdings auch bei der Zertifikat-Erstellung eine Option mitgegeben werden, dass die Zertifikate nicht entpackt werden sollen. Um nun alle Zertifikate gleichzeitig zu generieren, kann eine YAML Datei mitgegeben werden, welche alle Informationen zu den einzelnen Systemen enthält. In diesem Fall wurde nur der DNS-Name angegeben \ref{lst:certs-yml}. Mit diesen Informationen wurde nun für alle Systeme Zertifikate generiert. 
+
+\begin{lstlisting}[language=XML, frame=single, label={lst:certs-yml}] 
+	instances:
+	- name: 'es01'
+	  dns: [ 'es01', 'bib55', 'bib55.uni-trier.de' ]
+	  [...]
+\end{lstlisting}
+
+Um die Zertifikate nun einzutragen. Müssen in den diversen YAML-Dateien alle Pfade zu den Zertifikaten eingegeben werden. 
+
+Zusätzlich zu den Zertifikaten muss auch noch eine Password Authenifikation eingebaut werden. Dazu kann auf den ElasticSearch-Containern ein Befehl zur Erstellung der Systempasswörter aufgerufen werden. Diese müssen dann auch in den Config-Dateien vermerkt werden. Weitere Nutzer können dann per API oder Kibana erstellt werden. Die Verteilung der Rechte passiert hierbei Rollenbasiert. Es wird zuerst eine Rolle erstellt, mit den gewünschten Rechten, welche daraufhin an den Nutzer weitergegeben wird.
+
+Um nun einen Query gegen das ElasticSearch System zu stellen, muss zum einen eine BasicAuth sowie das Zertifikat mitgegeben werden \ref{lst:curlQuery}.
+
+\begin{lstlisting}[language=BASH, frame=single, label={lst:curlQuery}] 
+	curl https://bib55:9200 --cacert ca.crt -uuser:pass
+\end{lstlisting}
+
 
 
