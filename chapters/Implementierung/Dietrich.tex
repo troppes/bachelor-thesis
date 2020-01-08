@@ -104,13 +104,14 @@ Bei dem Vergleich kamen die folgenden Durchschnittswerte zustande:
 
   //Create Client with basic Params
 
-  $filters     = [];
-  $mustQueries = [];
+  $mustNotQueries = [];
+  $filters        = [];
+  $mustQueries    = [];
 
   if ($character === LemmaEntity::NOT_A_TO_Z_CHARACTER) {
       $mustQueries[] = ['regexp' => ['bezeichnung.keyword' => 
         ['value' => '@&~(^[a-zA-Z].+)', 'flags' => 'ALL']]];
-
+        
       $filters[]     = ['term' => ['ist_geloescht' => false]];
   } elseif ($character === LemmaEntity::DELETED) {
       $filters[] = ['term' => ['ist_geloescht' => true]];
@@ -126,8 +127,9 @@ Bei dem Vergleich kamen die folgenden Durchschnittswerte zustande:
       //[Other Filters]
   }
 
-  $params['body']['query']['bool']['must']   = $mustQueries;
-  $params['body']['query']['bool']['filter'] = $filters;
+  $params['body']['query']['bool']['must']     = $mustQueries;
+  $params['body']['query']['bool']['must_not'] = $mustNotQueries;
+  $params['body']['query']['bool']['filter']   = $filters;
 
   return $client->search($params)['hits']['hits'];
 
