@@ -6,7 +6,7 @@ In diesem Kapitel wird die Implementation ins Dietrich-Projekt genauer erläuter
 
 Zuerst muss der ElasticSearch Client bei Composer hinzugefügt werden. Danach ist der PHP-Client nutzbar. 
 
-Um für die Vergleiche ein faires Spielfeld zu bauen, wurde dieselbe MYSQL-Datenbank verwendet. Diese Datenbank liegt auf denselben Server wie ElasticSearch. Das bedeutet, dass Doctrine nun zu dem selben Server kommuniziert wie der PHP-Client von ElasticSearch.
+Um für die Vergleiche ein faires Spielfeld zu bauen, wurde dieselbe MYSQL-Datenbank verwendet. Diese Datenbank liegt auf denselben Server wie ElasticSearch. Das bedeutet, dass Doctrine nun zu demselben Server kommuniziert wie der PHP-Client von ElasticSearch.
 
 Zum Testen wird nun zuerst der Lemma-Query, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet, der auch schon bei dem vorherigen Vergleich hinhalten musste.
 
@@ -36,12 +36,58 @@ Zudem muss auch wieder die CA für den Aufbau der SSL-Verbindung genutzt werden.
 
 Um nun alle Daten in richtiger Form in das Projekt zu laden, muss die Indexierung von damals umgeschrieben werden. 
 
-//JOINS LEFT Erklären.
+Bei den Joins wurden m zu n Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M zu N Beziehung gibt. 
+
+Zur Verdeutlichung hier ein Beispiel.
+Es gibt eine Tabelle Artikel, welche eine M zu N Beziehung mit der Tabelle DDC bezieht. In der Artike Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz verbunden wird. Bei einen Join wird nun alles in eine flache Hirachie gezogen. Deswegen würde die Tabelle der Ergebnisse des Joins nun die Folgenden Einträge enthalten \ref{tbl:join}.
+
+\begin{table} %[hbtp]
+	\centering
+		\begin{tabular}{l | l | l}
+		    \textbf{ID} & \textbf{Artikel} & \textbf{DDC} \\
+        \hline
+        01 & Trier & Trier \\
+        01 & Trier & Rheinland-Pflaz  \\
+		\end{tabular}
+    \caption{Tabelle für ein Beispiel der Joins}
+    \label{tbl:join}
+\end{table}
+
+Um nun einen solchen Eintrag in ElasticSearch abzubilden wäre es schön eine Art Array für die DDC Einträge zu haben. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser Aggregiert auf Basis der ID die Daten. So ist es nun möglich Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst. Der Aggregat-Filter wird nun also so lange durchlaufen, wie dieselbe ID hintereinander aus der Datenbank kommt. 
+
+Deswegen ist es wichtig, dass diese Prozess nicht in mehreren Threads ausgeführt wird. Daher erhalten alle Pipelines auch nur einen Thread in diesem Projekt.
 
 
-//TODO RUBY
+\begin{lstlisting}[language=XML, frame=single, label={lst:fronendConf}] 
+  [...]
+  map['bstatus_beschreibung'] ||= event.get('bstatus_beschreibung')
 
-\subsection{Aufbau des Queryss}
+  map['ddc_entries'] ||= []
+  if event.get('ddc_notation') != nil
+      duplicate = false
+      map['ddc_entries'].each { |n|
+          if n.value?(event.get('ddc_notation'))
+             duplicate = true
+             break
+          end
+      }
+      if !duplicate
+          map['ddc_entries'] << {
+              'ddc_notation' => event.get('ddc_notation'),
+              'ddc_schlagwort' => event.get('ddc_schlagwort'),
+              'ddc_webdewey_is_checked' => 
+                event.get('ddc_webdewey_is_checked')
+          }
+      end
+  end
+  [...]
+\end{lstlisting}
+
+Der Wert bstatus\_beschreibung wird nun bei jeden Durchlauf überschrieben. 
+
+Um nun aber die sich ändernden Werte zu aggregieren, wurde ein Code geschrieben, welche die Einträge in eine Array schreibt \ref{lst:fronendConf}. Da hier nun allerdings mehr als eine Tabelle mit m zu n Beziehungen gejoint wird, ist es notwendig ein paar Überprüfungen auszuführen. Zum einen soll ein Wert nur aggregiert werden, wenn er auch existiert. Sonst sind später Null-Werte in ElasticSerach, die nicht gewünscht sind. Als nächstes kann es aufgrund der Join Struktur dazu kommen, dass Duplikate eingetragen werden. Dafür schaut eine Schleife immer kurz nach, ob schon ein Wert in dem Array steht, bevor es ihr nochmals hereinschreibt. 
+
+\subsection{Aufbau des Queries}
 
 Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstaktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt und abgesendet. Der hier betrachtete Query wurde schonmal von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den Daten ausgeführt werden.
 
@@ -91,13 +137,13 @@ Und zuletzt der Filter-Teil. Die gesetzten Filter sind auch Must-Befehle. Allerd
   
 \end{lstlisting}
 
-In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Querys \ref{lst:phpElastic} ein Prefix-Query verwendet wird. Dies ist eine Optimierung gegenüber des Vergleiches von vorher, da dieser Query schneller ausgewertet werden kann. !QUELLE!
+In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Querys \ref{lst:phpElastic} ein Prefix-Query verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.
 
 
 \subsection{Vergleich}
 
 Die oben Beschriebenen Querys wurde jetzt jeweils 100-Mal mit einen Timer laufen gelassen. 
-Dafür wurden die Methodenaufrufen, welche die Querys genieren und ausführen mit dem Timer umschlossen. 
+Dafür wurden die Methodenaufrufe, welche die Querys genieren und ausführen mit dem Timer umschlossen. 
 
 Bei dem Vergleich kamen die folgenden Durchschnittswerte zustande:
 \begin{table} %[hbtp]
