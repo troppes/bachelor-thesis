@@ -1,25 +1,54 @@
-\chapter{FrontEnd}
+\chapter{Frontend-Suche}
 
-Nachdem nun Anhand der 
+\section{Indexierung}
 
-Code-Analyse -> welche paramter werden verwendet und müssen indexiert werden,
-Durch Twig code gelesen und gearbeitet
+Um die Daten zu indexieren, wurde eine statische Code-Analyse durchgeführt, welche Daten alles im Frontend angezeigt wurden. Dafür wurde der gesamte Code zur Suche untersucht und alle Werte aufgeschrieben. Aufgrund dieser Basis wurde daraufhin ein Query gebaut, welche alle Daten an den Aggregat-Filter weiterreicht. Dabei wurde dieser angepasst und enthält nun auch eine String Konkatenation, welche zuvor bei der Anzeige ausgeführt wurde.
 
-QUery eingebaut
+Der Index ist hierbei der aktuell Größte im Dietrich-Online Projekt mit rund 1.4 Millionen Einträgen. Diese Größe des Index beläuft sich auf 2.4 Gigabyte.
 
-RAM limit für logstash musste erhöht werden
-Einführung einer YML Datei zu verwaltung der Pipelines
+Diese Zahl wird sich allerdings verringern lassen, wenn mehr Regeln zu Indexierung eingebaut werden. Aktuell werden alle Spalten mit Text, die unter 256 Zeichen fallen einmal als Keyword und als Volltext indexiert \ref{elaVgl:index}.
 
-Database changed
-MariaDB [dietrichonline]> select count(*) from artikel;
-+----------+
-| count(*) |
-+----------+
-|  1430074 |
-+----------+
-1 row in set (1.10 sec)
+Der Query enthielt nun 13 Joins. Diese Datenmenge konnte Logstash nicht verarbeiten und stürzte ab. Der RAM musste auf 4 Gigabyte erhöht werden, damit der Index ordentlich aufgebaut werden konnte.
 
-Integration ins dietrichonline
+Damit nun verschiedene Pipelines gleichzeitig arbeiten können, musste eine Datei zur Verwaltung der Pipelines angelegt werden. In dieser wurde definiert, dass von den vier verfügbaren Workern jeweils einer pro Pipeline zur Verfügung steht. 
 
-Query 1 zu 1 
-Boolean Logic so subquery inside subquery
+\section{Integration}
+
+Die Integration folgte demselben Muster, wie die der Lemma Administration. Ich möchte hier allerdings auf ein paar Unterschiede eingehen. 
+
+
+
+\subsection{Paginierung}
+Zum einen werden diesmal 2 Querys abgeschickt. Zum einen ein Count-Query und zum anderen ein Query mit den Ergebnissen. Dies liegt daran, dass die Paginierung direkt zu Beginn die Anzahl der Ergebnisse wissen muss. 
+
+Bisher wurde die Paginierung vom Symfony übernommen, es wurden maximal 1001 Ergebnisse aus der Datenbank geholt und diese dann paginiert. Nun wird die Paginierung von ElasticSearch verwendet. Dort kann bei einem Query ein Offset mitgegeben werden, welcher es ermöglicht mehr Ergebnisse zu holen, ohne Einbußen in der Performance zu haben. 
+
+\subsection{Boolesche Logik}
+
+Zum anderen ist es möglich eine boolesche Logik bei der Suche zu verwenden. Um diese Umzusetzen, werden die Query-Teile ineinander verschachtelt \ref{lst:booleanEla}. 
+
+Bei jeder Suche wird ein Array mit allen Suchanfragen weitergegeben. Das erste Item in Array hat dabei niemals einen Junktor. Dafür existiert der erste Fall. Existiert eine weitere Stelle im Array ist auch ein Junktor mit angegeben. Dieser wird dann in dem unten gezeigten Switch-Case ausgelesen. Dann wird ein weiterer Boolean-Query geschrieben, welcher zum einen den zweiten Teil der Suche, sowie die bisherige Suche enthält.
+
+\begin{lstlisting}[language=PHP, frame=single, label={lst:booleanEla}] 
+    switch ($userSearchItem->getJunktor()) {
+        case UserSearchItem::JUNKTOR_NO: //First Entry
+            $this->fullQuery = [
+                'bool' => [
+                    'must' => [
+                        $this->addTypeValue($userSearchItem), //Add Search
+                    ],
+                ],
+            ];
+            break;
+        case UserSearchItem:: JUNKTOR_AND: //MUST
+            $this->fullQuery = [
+                'bool' => [
+                    'must' => [
+                        $this->addTypeValue($userSearchItem), //Add Search
+                        $this->fullQuery, //First Part of Query
+                    ],
+                ],
+            ];
+            break;
+    [...] // More Cases like OR or AND NOT
+\end{lstlisting}

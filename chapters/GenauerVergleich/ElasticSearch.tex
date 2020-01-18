@@ -8,6 +8,7 @@ Die Installation ist bei ElasticSearch dreigeteilt. Um die Suchmaschine in dem U
 Für eine richtige Installation gibt es mehrere Wege, entweder man fügt deren Repository ein, verwendet das bereitgestellte Debian-Paket oder installiert per Docker. Für diesen Test habe ich mich für das Debian-Paket entschieden. Die Installation verlief dabei ohne weitere Probleme.
 
 \subsection{Indexierung}
+\label{elaVgl:index}
 
 Um nun Daten zu indexieren, muss in einer Conf-Datei in Logstash definiert werden, wie und welche Daten gelesen und weitergegeben werden sollten \ref{lst:lsConf}. Dabei kann Logstash direkt MySQL-Querys gegen die Datenbank stellen. Die Datei ist in zwei Blöcke unterteilt. Zum einen ein Input-Block, welcher erklärt, welche Daten eingelesen werden sollen und einen Output Block, welcher das Ziel für die Daten angibt. Für den Input Block verwende ich hier den MariaDB-Treiber.
 

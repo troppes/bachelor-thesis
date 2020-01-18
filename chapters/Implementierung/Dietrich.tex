@@ -87,7 +87,7 @@ Der Wert bstatus\_beschreibung wird nun bei jeden Durchlauf überschrieben.
 
 Um nun aber die sich ändernden Werte zu aggregieren, wurde ein Code geschrieben, welche die Einträge in eine Array schreibt \ref{lst:fronendConf}. Da hier nun allerdings mehr als eine Tabelle mit m zu n Beziehungen gejoint wird, ist es notwendig ein paar Überprüfungen auszuführen. Zum einen soll ein Wert nur aggregiert werden, wenn er auch existiert. Sonst sind später Null-Werte in ElasticSerach, die nicht gewünscht sind. Als nächstes kann es aufgrund der Join Struktur dazu kommen, dass Duplikate eingetragen werden. Dafür schaut eine Schleife immer kurz nach, ob schon ein Wert in dem Array steht, bevor es ihr nochmals hereinschreibt. 
 
-\subsection{Aufbau des Queries}
+\section{Aufbau des Queries}
 
 Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstaktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt und abgesendet. Der hier betrachtete Query wurde schonmal von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den Daten ausgeführt werden.
 
@@ -139,8 +139,7 @@ Und zuletzt der Filter-Teil. Die gesetzten Filter sind auch Must-Befehle. Allerd
 
 In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Querys \ref{lst:phpElastic} ein Prefix-Query verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.
 
-
-\subsection{Vergleich}
+\section{Vergleich}
 
 Die oben Beschriebenen Querys wurde jetzt jeweils 100-Mal mit einen Timer laufen gelassen. 
 Dafür wurden die Methodenaufrufe, welche die Querys genieren und ausführen mit dem Timer umschlossen. 
