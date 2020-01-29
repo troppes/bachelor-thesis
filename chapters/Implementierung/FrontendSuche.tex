@@ -63,7 +63,7 @@ $subQuery = [
 ];
 \end{lstlisting}
 
-Der Query ist sehr simpel aufgebaut
+Wichtig ist das der lenient-Wert, dieser sagt aus, das Format-Fehler, wie das Suchen eines Strings in einen Zahlen-Feld ignoriert werden. Dieser ist generell bei allen Querys aktiv, damit keine Fehler geworfen werden.
 
 
 \subsection{Boolesche Logik}
@@ -120,17 +120,4 @@ Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geh
 
 Die vollständige Suche soll die aktuelle Schnellsuche, welche aus Artikeltitel mit Sigle besteht ersetzten. Dazu wurde zuerst geschaut, welche Felder sonst noch von Interesse sein könnten. Nach einen Besprechung mit einen Mitarbeiter wurde eine Liste mit relvanten Spalten erstellt. Als Nächstes wurde geschaut, welche Spalten denn für die Auto-Vervollständigung verwendet werden sollten. Dabei wurden dann Felder mit ID-Nummern herausgenommen. Auf den restlichen Daten wurde dann ein Index für die Auto-Vervollständigungsfunktion gebaut. 
 
-Für die Indexierung der 
-
-
-"artikel_titel",
-"lemma_bezeichnung",
-"artikel_autor",
-"artikel_id",
-"artikel_sigle",
-"ddc_entries.ddc_notation",
-"ddc_entries.ddc_schlagwort",
-"gnd_entries.gnd_nummer",
-"gnd_entries.gnd_schlagwort",
-"normlitref_entries.normlitref_zdb_bezeichnung",
-"normlitref_entries.normlitref_kvk_bezeichnung",
+Für die Indexierung der !!Todo!!
