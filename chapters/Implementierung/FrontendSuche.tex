@@ -1,5 +1,7 @@
 \chapter{Frontend-Suche}
 
+Diese Kapitel handelt von der Implementierung ElasticSearchs in das Dietrich-Online Projekt. Dabei soll zuerst einmal die Suche und die automatische Vervollständigung komplett übertragen werden. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Suche, welche darauf basiert, welche Autoren bei der vorherigen Suche das meiste geschrieben haben.
+
 \section{Indexierung}
 
 Um die Daten zu indexieren, wurde eine statische Code-Analyse durchgeführt, welche Daten alles im Frontend angezeigt wurden. Dafür wurde der gesamte Code zur Suche untersucht und alle Werte aufgeschrieben. Aufgrund dieser Basis wurde daraufhin ein Query gebaut, welche alle Daten an den Aggregat-Filter weiterreicht. Dabei wurde dieser angepasst und enthält nun auch eine String Konkatenation, welche zuvor bei der Anzeige ausgeführt wurde.
@@ -10,7 +12,17 @@ Diese Zahl wird sich allerdings verringern lassen, wenn mehr Regeln zu Indexieru
 
 Der Query enthielt nun 13 Joins. Diese Datenmenge konnte Logstash nicht verarbeiten und stürzte ab. Der RAM musste auf 4 Gigabyte erhöht werden, damit der Index ordentlich aufgebaut werden konnte.
 
-Damit nun verschiedene Pipelines gleichzeitig arbeiten können, musste eine Datei zur Verwaltung der Pipelines angelegt werden. In dieser wurde definiert, dass von den vier verfügbaren Workern jeweils einer pro Pipeline zur Verfügung steht. 
+Damit nun verschiedene Pipelines gleichzeitig arbeiten können, musste eine Datei zur Verwaltung der Pipelines angelegt werden. In dieser wurde definiert, dass von den vier verfügbaren Workern jeweils einer pro Pipeline zur Verfügung steht, damit die Aggregation richtig funktioniert.
+
+Für die Auto-Vervollständigung mussten zudem noch einige neue Felder angelegt werden. Es gibt im Projekt für jede Suchart eine eigene Vervollständigung. Um dies auch im Index abzubilden, wurden diverse Vervollständigungs-Felder angelegt, welche zum Teil einzelne Felder oder Feldmengen durchsuchen. Diese Felder wurden dann mithilfe des Aggregat Filters befüllt. Ein Beispiel:
+
+Artikeltitel und die dazugehörige Sigle werden in zwei unterschiedlichen Felder gespeichert, sollten allerdings für die Vervollständigung zusammengesetzt werden.
+Dafür wird in dem Aggregationsfilter von Logstash definiert, dass das Feld zusammengebaut wird \ref{lst:stringConcat}. Nun wird daraus entstandene String in das Suggestions-Feld von ElasticSearch gegeben. ElasticSearch indexiert daraufhin des String so, dass jedes Wort zur Autovervollständigung benutzt werden kann. Als Ausgabe erscheint dabei aber immer der vollständige String.
+
+\begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}] 
+    map['artikel_titel_suggest']        ||= '['+event.get('lemma_bezeichnung').to_s+'] '+event.get('artikel_titel').to_s
+\end{lstlisting}
+
 
 \section{Integration}
 
@@ -19,9 +31,40 @@ Die Integration folgte demselben Muster, wie die der Lemma Administration. Ich m
 
 
 \subsection{Paginierung}
-Zum einen werden diesmal 2 Querys abgeschickt. Zum einen ein Count-Query und zum anderen ein Query mit den Ergebnissen. Dies liegt daran, dass die Paginierung direkt zu Beginn die Anzahl der Ergebnisse wissen muss. 
 
-Bisher wurde die Paginierung vom Symfony übernommen, es wurden maximal 1001 Ergebnisse aus der Datenbank geholt und diese dann paginiert. Nun wird die Paginierung von ElasticSearch verwendet. Dort kann bei einem Query ein Offset mitgegeben werden, welcher es ermöglicht mehr Ergebnisse zu holen, ohne Einbußen in der Performance zu haben. 
+Bei der Umsetzung der Paginierung musste mehr geändert werden, als zuerst gedacht. Dies lag daran, dass die Paginierung bisher alle Ergebnisse mit Daten genommen hat und daraufhin die Paginierung generiert hat. Damit die Seite dann nicht zu Lange geladen hat, wurden die Ergebnisse auf 1001 begrenzt.
+
+Diese Einschränkung kann nun mit ElasticSearch entfernt werden. Dazu wird zuerst einmal ein Query abgesetzt, der alle Ergebnisse zählt. Durch diesen wird eine Paginierung gebaut. Als Nächstes wird mithilfe der Seitennummer ein Offset für den Query errechnet. Dieser kann dann einfach in ElasticSearch mitgegeben werden.
+
+\begin{lstlisting}[language=PHP, frame=single, label={lst:generierung}] 
+    $result = $repo->findUserSearchResult(
+        //array with all search-querys and junctors
+        $this->userSearchItemArray, 
+        //offset for the results
+        ($request->query->getInt('pageNumber', 1) * 30 - 30)
+    );
+\end{lstlisting}
+
+\subsection{Query String}
+Für die diversen Suchen wurde diesmal eine Query String Suche verwendet, da diese erlaubt, dass Wildcard Symbole wie * zu verwenden. Diese Suche ist zwar langsamer im Vergleich zu Boolean-Querys, bietet aber dafür mehr Funktionen.
+
+\begin{lstlisting}[language=PHP, frame=single, label={lst:aufbauQueryString}] 
+$subQuery = [
+    'query_string' => [
+        'query' => $userSearchItem->getValue(),
+        'fields' => [
+            "artikel_titel",
+            "lemma_bezeichnung",
+            [...], //weitere Felder
+            "normlitref_entries.normlitref_kvk_bezeichnung",
+        ],
+        "lenient" => true,
+    ],
+];
+\end{lstlisting}
+
+Der Query ist sehr simpel aufgebaut
+
 
 \subsection{Boolesche Logik}
 
@@ -52,3 +95,42 @@ Bei jeder Suche wird ein Array mit allen Suchanfragen weitergegeben. Das erste I
             break;
     [...] // More Cases like OR or AND NOT
 \end{lstlisting}
+
+\subsection{Auto-Vervollständigung}
+
+Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geht es nun darum, wie ein Query an dieses System aussieht. Damit das System weiß, welches Suggestor-Feld verwendet werden soll, wird dieses in der Applikation als Array hinterlegt. Normalerweise wird auch der gesamte Eintrag mitgegeben. Da dies bei dieser Art der Suche nicht erwünscht ist, wird das \_source-Feld auf leer gesetzt.
+
+
+\begin{lstlisting}[language=PHP, frame=single, label={lst:autocompleParams}] 
+    $params = [
+        'index' => 'dietrich_frontend',
+        'body' => [
+            '_source' => '', //Empty Source since we need only the String
+            'suggest' => [
+                'auto_complete' => [
+                    'prefix' => $matchAgainst,
+                    'completion' => [
+                        'field' => SEA::AUTOCOMPLETE_COLUMNS[$categoryIndex],
+                        'size' => $maxMatches,
+                        'skip_duplicates' => true,
+    ]]]]];
+\end{lstlisting}
+
+\subsection{Vollständige Suche}
+
+Die vollständige Suche soll die aktuelle Schnellsuche, welche aus Artikeltitel mit Sigle besteht ersetzten. Dazu wurde zuerst geschaut, welche Felder sonst noch von Interesse sein könnten. Nach einen Besprechung mit einen Mitarbeiter wurde eine Liste mit relvanten Spalten erstellt. Als Nächstes wurde geschaut, welche Spalten denn für die Auto-Vervollständigung verwendet werden sollten. Dabei wurden dann Felder mit ID-Nummern herausgenommen. Auf den restlichen Daten wurde dann ein Index für die Auto-Vervollständigungsfunktion gebaut. 
+
+Für die Indexierung der 
+
+
+"artikel_titel",
+"lemma_bezeichnung",
+"artikel_autor",
+"artikel_id",
+"artikel_sigle",
+"ddc_entries.ddc_notation",
+"ddc_entries.ddc_schlagwort",
+"gnd_entries.gnd_nummer",
+"gnd_entries.gnd_schlagwort",
+"normlitref_entries.normlitref_zdb_bezeichnung",
+"normlitref_entries.normlitref_kvk_bezeichnung",
