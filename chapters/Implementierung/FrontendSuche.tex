@@ -17,24 +17,27 @@ Damit nun verschiedene Pipelines gleichzeitig arbeiten können, musste eine Date
 Für die Auto-Vervollständigung mussten zudem noch einige neue Felder angelegt werden. Es gibt im Projekt für jede Suchart eine eigene Vervollständigung. Um dies auch im Index abzubilden, wurden diverse Vervollständigungs-Felder angelegt, welche zum Teil einzelne Felder oder Feldmengen durchsuchen. Diese Felder wurden dann mithilfe des Aggregat Filters befüllt. Ein Beispiel:
 
 Artikeltitel und die dazugehörige Sigle werden in zwei unterschiedlichen Felder gespeichert, sollten allerdings für die Vervollständigung zusammengesetzt werden.
-Dafür wird in dem Aggregationsfilter von Logstash definiert, dass das Feld zusammengebaut wird \ref{lst:stringConcat}. Nun wird daraus entstandene String in das Suggestions-Feld von ElasticSearch gegeben. ElasticSearch indexiert daraufhin des String so, dass jedes Wort zur Autovervollständigung benutzt werden kann. Als Ausgabe erscheint dabei aber immer der vollständige String.
+Dafür wird in dem Aggregationsfilter von Logstash definiert, dass das Feld zusammengebaut wird \ref{lst:stringConcat}. Nun wird daraus entstandene String in das Suggestions-Feld von ElasticSearch gegeben. ElasticSearch indexiert daraufhin des String so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann. Als Ausgabe erscheint dabei aber immer der vollständige String.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}] 
-    map['artikel_titel_suggest']        ||= '['+event.get('lemma_bezeichnung').to_s+'] '+event.get('artikel_titel').to_s
+    map['artikel_titel_suggest'] ||= 
+        '['+event.get('lemma_bezeichnung').to_s+']'
+            +event.get('artikel_titel').to_s
 \end{lstlisting}
 
+Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich auch ein Array von Daten an ElasticSearch weiterzugeben.
 
 \section{Integration}
 
 Die Integration folgte demselben Muster, wie die der Lemma Administration. Ich möchte hier allerdings auf ein paar Unterschiede eingehen. 
 
-
-
 \subsection{Paginierung}
 
-Bei der Umsetzung der Paginierung musste mehr geändert werden, als zuerst gedacht. Dies lag daran, dass die Paginierung bisher alle Ergebnisse mit Daten genommen hat und daraufhin die Paginierung generiert hat. Damit die Seite dann nicht zu Lange geladen hat, wurden die Ergebnisse auf 1001 begrenzt.
+Die bisherige Paginierung holte sich bis zu 1001 Ergebnisse aus der Datenbank und generierte daraufhin die Paginierung. Die Begrenzung ergibt sich daher, dass die vollen Datensätze aus der Datenbank geholt wurden, und dies bei größeren Zahlen zu einer langen Laufzeit führte.
 
-Diese Einschränkung kann nun mit ElasticSearch entfernt werden. Dazu wird zuerst einmal ein Query abgesetzt, der alle Ergebnisse zählt. Durch diesen wird eine Paginierung gebaut. Als Nächstes wird mithilfe der Seitennummer ein Offset für den Query errechnet. Dieser kann dann einfach in ElasticSearch mitgegeben werden.
+Diese Einschränkung kann nun mit ElasticSearch entfernt werden. Dazu wird zuerst einmal ein Query abgesetzt, der alle Ergebnisse zählt. Für diesen Fall liefert ElasticSearch einen Count-Query mit. In diesem wird der Index-Name und der entsprechende Query mitgegeben. 
+
+Durch diesen wird eine Paginierung generiert. Dafür wird mithilfe der Seitennummer ein Offset für den Query generiert, so dass ElasticSearch immer nur die aktuellen Ergebnisse für die Suche liefert.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:generierung}] 
     $result = $repo->findUserSearchResult(
@@ -46,7 +49,7 @@ Diese Einschränkung kann nun mit ElasticSearch entfernt werden. Dazu wird zuers
 \end{lstlisting}
 
 \subsection{Query String}
-Für die diversen Suchen wurde diesmal eine Query String Suche verwendet, da diese erlaubt, dass Wildcard Symbole wie * zu verwenden. Diese Suche ist zwar langsamer im Vergleich zu Boolean-Querys, bietet aber dafür mehr Funktionen.
+Für die diversen Suchen wurde diesmal eine Query String Suche verwendet, da diese erlaubt, dass Wildcard Symbole zu verwenden. Dadurch geben sich zwar Performanzeinbußen, allerdings sind Wildcard-Suchen ein oft genutztes Element in diesem Projekt und daher erforderlich.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:aufbauQueryString}] 
 $subQuery = [
@@ -63,8 +66,7 @@ $subQuery = [
 ];
 \end{lstlisting}
 
-Wichtig ist das der lenient-Wert, dieser sagt aus, dass Format-Fehler, wie das Suchen eines Strings in einem Zahlen-Feld ignoriert werden. Dieser ist generell bei allen Querys aktiv, damit keine Fehler geworfen werden.
-
+Ein Augenmerk muss auch noch auf "lenient" gelegt werden. Ist dieser Wert nicht gesetzt, bricht die Suche mit einem Format-Fehler, wie das Suchen eines Strings in einem Zahlen-Feld, ab. Diese Funktion wurde daher bei allen Suchen abgeschaltet. Gerade wie bei diesem Beispiel, muss die Suche Felder mit diversen Inhalt gleichzeitig durchsuchen. 
 
 \subsection{Boolesche Logik}
 
@@ -118,6 +120,30 @@ Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geh
 
 \subsection{Vollständige Suche}
 
-Die vollständige Suche soll die aktuelle Schnellsuche, welche aus Artikeltitel mit Sigle besteht ersetzten. Dazu wurde zuerst geschaut, welche Felder sonst noch von Interesse sein könnten. Nach einen Besprechung mit einen Mitarbeiter wurde eine Liste mit relvanten Spalten erstellt. Als Nächstes wurde geschaut, welche Spalten denn für die Auto-Vervollständigung verwendet werden sollten. Dabei wurden dann Felder mit ID-Nummern herausgenommen. Auf den restlichen Daten wurde dann ein Index für die Auto-Vervollständigungsfunktion gebaut. 
+Die vollständige Suche soll die aktuelle Schnellsuche, welche aus Artikeltitel mit Sigle besteht ersetzen. Dazu wurde zuerst geschaut, welche Felder sonst noch von Interesse sein könnten. 
 
-Für die Indexierung der !!Todo!!
+Nach einer Besprechung mit einem Mitarbeiter wurde eine Liste mit relevanten Spalten erstellt. Daraufhin wurde analysiert, welche Spalten für die Auto-Vervollständigung indexiert werden sollen. Dabei wurden Felder, bei den es keinen Sinn ergibt sie automatisch zu vervollständigen, wie das ID-Feld, herausgenommen. Auf den verbleibenden Feldern wurde dann ein Autovervollständigungs-Index gebaut.
+
+\subsection{Autoren}
+
+Bei jeder Suche soll eine Auswertung mitgeschickt werden, welche Autoren in der aktuellen Suche die meisten Artikel verfasst haben. Dazu wird eine Aggregation bei jeder Suche auf dem Autoren-Feld durchgeführt. Der Query wird dafür um einen Parameter erweitert \ref{lst:bestAuthors}.
+
+\begin{lstlisting}[language=PHP, frame=single, label={lst:bestAuthors}] 
+    'aggs' => [
+        'best_authors' => [
+            'terms' => [
+                'field' => 'artikel_autor.keyword',
+    ]]],
+\end{lstlisting}
+
+
+Nun kann kommt bei jeder Suchanfrage eine Aggregation namens 'best\_authors' mit zurück. Diese enthält zum einen den Namen, sowie die Anzahl der gefundenen Dokumente des Autors in der jeweiligen Suche. 
+Mit diesen Daten war es nun möglich Buttons zu generieren, welche eine neue Suche mit den Autoren starten.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{images/best_authors.png}
+	\caption{Abbildung der Erweiterten Suche}
+	\label{img:timeProdEla}
+\end{figure}
