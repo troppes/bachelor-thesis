@@ -1,8 +1,12 @@
 \chapter{Einleitung und Problemstellung}
 
-Begonnen werden soll mit einer Einleitung zum Thema, also Hintergrund und Ziel erläutert werden.
 
-Weiterhin wird das vorliegende Problem diskutiert: Was ist zu lösen, warum ist es wichtig, dass man dieses Problem löst und welche Lösungsansätze gibt es bereits. Der Bezug auf vorhandene oder eben bisher fehlende Lösungen begründet auch die Intention und Bedeutung dieser Arbeit. Dies können allgemeine Gesichtspunkte sein: Man liefert einen Beitrag für ein generelles Problem oder man hat eine spezielle Systemumgebung oder ein spezielles Produkt (zum Beispiel in einem Unternehmen), woraus sich dieses noch zu lösende Problem ergibt.
+Die Suche des Dietrich online Projektes \ref{dietrichonline} arbeitet aktuell auf einer MariaDB Datenbank. In dieser werden bei jeder Suchanfrage diverse Tabellen, Joins zusammengebaut und daraufhin dem Nutzer ausgegeben. Bei den Datenmengen, welche sich aktuell in der Datenbank befinden, circa 1.4 Millionen Einträge, wird die Ladezeit unangenehm lang. Daher wurden schon die maximalen Suchergebnisse, welche ein Nutzer aktuell bekommen kann auf 1001 begrenzt. 
 
-Im weiteren Verlauf wird die Problemstellung konkret dargestellt: Was ist spezifisch zu lösen? Welche Randbedingungen sind gegeben und was ist die Zielsetzung? Letztere soll das
-beschreiben, was man mit dieser Arbeit (mindestens) erreichen möchte.
+Damit die Nutzer ein möglichst gutes Sucherlebnis haben, sollen sogenannte Enterprise Suchmaschinen evaluiert werden. Diese indexieren die Daten in einer Weise, welche es ermöglicht viele Datensätze schnell zu durchsuchen. Im ersten Schritt werden nun diverse Suchmaschinen nach einer Kriterienliste analysiert.
+
+Im zweiten Schritt werden die vier passendsten Suchmaschinen werden daraufhin für einen Ersteindruck aufgesetzt.
+
+Sobald ein Kandidat danach ausgewählt ist, wird dieser, wenn möglich in einer Docker-Umgebung, aufgesetzt. Dabei werden auch die benötigten Datensätze indexiert.
+
+Zuletzt wird nun noch eine prototypische Implementierung in das Dietrich online Projekt vorgenommen. Dabei wird die aktuelle Suche durch die Enterprise Suchmaschine ersetzt und um einige Funktionen erweitert. 
