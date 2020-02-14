@@ -84,7 +84,7 @@ Hier nun einmal eine Beispiel aus dem Code \ref{lst:fronendConf}.
 
 Dieser Code wird nun solange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung wird nun zum Beispiel bei jeden Durchlauf überschrieben. 
 
-Damit die sich ändernden Wert aggregiert werden, wurde ein Code geschrieben, welche die Einträge in eine Array schreibt. Da bei diesem Query \ref{sqlQuery} nun allerdings mehrere Lefts Joins 
+Damit die sich ändernden Wert aggregiert werden, wurde ein Code geschrieben, welche die Einträge in eine Array schreibt. Da bei diesem Query \ref{sqlQuery} nun allerdings mehrere Lefts Joins  !!TODO!!
 
 Da hier nun allerdings mehr als eine Tabelle mit m zu n Beziehungen gejoint wird, ist es notwendig ein paar Überprüfungen auszuführen. Zum einen soll ein Wert nur aggregiert werden, wenn er auch existiert. Sonst sind später Null-Werte in ElasticSerach, die nicht gewünscht sind. Als nächstes kann es aufgrund der Join Struktur dazu kommen, dass Duplikate eingetragen werden. Dafür schaut eine Schleife immer kurz nach, ob schon ein Wert in dem Array steht, bevor es ihr nochmals hereinschreibt. 
 
