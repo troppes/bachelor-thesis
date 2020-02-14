@@ -4,13 +4,13 @@ In diesem Kapitel wird die Implementation ins Dietrich-Projekt genauer erläuter
 
 \section{Vorbereitung}
 
-Zuerst muss der ElasticSearch Client bei Composer hinzugefügt werden. Danach ist der PHP-Client nutzbar. 
+Um den ElasticSearch-Klienten zu nutzen muss dieser zuerst einmal per Composer installiert werden. Die geschieht durch einen Eintrag in die composer.json.
 
-Um für die Vergleiche ein faires Spielfeld zu bauen, wurde dieselbe MYSQL-Datenbank verwendet. Diese Datenbank liegt auf denselben Server wie ElasticSearch. Das bedeutet, dass Doctrine nun zu demselben Server kommuniziert wie der PHP-Client von ElasticSearch.
+Damit für den nun folgenden Vergleich eine faires Spielfeld aufzubauen wurde eine Datenbank, welche auf demselben Server wie ElasticSearch liegt verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
 
-Zum Testen wird nun zuerst der Lemma-Query, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet, der auch schon bei dem vorherigen Vergleich hinhalten musste.
+Zum Testen wird nun zuerst der Lemma-Query, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet.
 
-Um den ElasticSearch-Client zu verwenden, muss zuerst ein API-Key generiert werden \ref{lst:elaApi}. Dabei bekommt der API-Key lesende Rechte für alle Indices mit dietrich-Präfix. 
+Durch die eben aktivierte X-Security von ElasticSearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines Curl Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden. 
 
 \begin{lstlisting}[language=XML, frame=single, label={lst:elaApi}] 
     POST /_security/api_key
@@ -27,8 +27,6 @@ Um den ElasticSearch-Client zu verwenden, muss zuerst ein API-Key generiert werd
           ]
     }}}
 \end{lstlisting}
-
-Zudem muss auch wieder die CA für den Aufbau der SSL-Verbindung genutzt werden.
 
 
 \subsubsection{Indexierung}
@@ -55,7 +53,8 @@ Es gibt eine Tabelle Artikel, welche eine M zu N Beziehung mit der Tabelle DDC b
 
 Um nun einen solchen Eintrag in ElasticSearch abzubilden wäre es schön eine Art Array für die DDC Einträge zu haben. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser Aggregiert auf Basis der ID die Daten. So ist es nun möglich Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst. Der Aggregat-Filter wird nun also so lange durchlaufen, wie dieselbe ID hintereinander aus der Datenbank kommt. 
 
-Deswegen ist es wichtig, dass diese Prozess nicht in mehreren Threads ausgeführt wird. Daher erhalten alle Pipelines auch nur einen Thread in diesem Projekt.
+Dabei ist es wichtig, dass diese Prozess nicht in mehreren Threads ausgeführt wird. Daher erhält jede Pipeline in diesem Projekt auch maximal einen Thread.
+Hier nun einmal eine Beispiel aus dem Code \ref{lst:fronendConf}.
 
 
 \begin{lstlisting}[language=XML, frame=single, label={lst:fronendConf}] 
@@ -83,9 +82,11 @@ Deswegen ist es wichtig, dass diese Prozess nicht in mehreren Threads ausgeführ
   [...]
 \end{lstlisting}
 
-Der Wert bstatus\_beschreibung wird nun bei jeden Durchlauf überschrieben. 
+Dieser Code wird nun solange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung wird nun zum Beispiel bei jeden Durchlauf überschrieben. 
 
-Um nun aber die sich ändernden Werte zu aggregieren, wurde ein Code geschrieben, welche die Einträge in eine Array schreibt \ref{lst:fronendConf}. Da hier nun allerdings mehr als eine Tabelle mit m zu n Beziehungen gejoint wird, ist es notwendig ein paar Überprüfungen auszuführen. Zum einen soll ein Wert nur aggregiert werden, wenn er auch existiert. Sonst sind später Null-Werte in ElasticSerach, die nicht gewünscht sind. Als nächstes kann es aufgrund der Join Struktur dazu kommen, dass Duplikate eingetragen werden. Dafür schaut eine Schleife immer kurz nach, ob schon ein Wert in dem Array steht, bevor es ihr nochmals hereinschreibt. 
+Damit die sich ändernden Wert aggregiert werden, wurde ein Code geschrieben, welche die Einträge in eine Array schreibt. Da bei diesem Query \ref{sqlQuery} nun allerdings mehrere Lefts Joins 
+
+Da hier nun allerdings mehr als eine Tabelle mit m zu n Beziehungen gejoint wird, ist es notwendig ein paar Überprüfungen auszuführen. Zum einen soll ein Wert nur aggregiert werden, wenn er auch existiert. Sonst sind später Null-Werte in ElasticSerach, die nicht gewünscht sind. Als nächstes kann es aufgrund der Join Struktur dazu kommen, dass Duplikate eingetragen werden. Dafür schaut eine Schleife immer kurz nach, ob schon ein Wert in dem Array steht, bevor es ihr nochmals hereinschreibt. 
 
 \section{Aufbau des Queries}
 
