@@ -1,12 +1,12 @@
 \chapter{Einleitung und Problemstellung}
 
 
-Die Suche des Dietrich online Projektes \ref{dietrichonline} arbeitet aktuell auf einer MariaDB Datenbank. In dieser werden bei jeder Suchanfrage diverse Tabellen, Joins zusammengebaut und daraufhin dem Nutzer ausgegeben. Bei den Datenmengen, welche sich aktuell in der Datenbank befinden, circa 1.4 Millionen Einträge, wird die Ladezeit unangenehm lang. Daher wurden schon die maximalen Suchergebnisse, welche ein Nutzer aktuell bekommen kann auf 1001 begrenzt. 
+Die Suche des Dietrich Online Projektes \ref{dietrichonline} arbeitet aktuell auf einer MariaDB Datenbank. In dieser werden bei jeder Suchanfrage diverse Tabellen, Joins zusammengebaut und daraufhin dem Nutzer ausgegeben. Bei den Datenmengen, welche sich aktuell in der Datenbank befinden, circa 1.4 Millionen Einträge, werden Ladezeiten unangenehm lang. Daher wurden die maximalen Suchergebnisse, welche ein Nutzer aktuell bekommen kann auf 1001 begrenzt. 
 
 Damit die Nutzer ein möglichst gutes Sucherlebnis haben, sollen sogenannte Enterprise Suchmaschinen evaluiert werden. Diese indexieren die Daten in einer Weise, welche es ermöglicht viele Datensätze schnell zu durchsuchen. Im ersten Schritt werden nun diverse Suchmaschinen nach einer Kriterienliste analysiert.
 
-Im zweiten Schritt werden die vier passendsten Suchmaschinen werden daraufhin für einen Ersteindruck aufgesetzt.
+Im zweiten Schritt werden die vier am besten passenden Suchmaschinen daraufhin für einen Ersteindruck aufgesetzt.
 
 Sobald ein Kandidat danach ausgewählt ist, wird dieser, wenn möglich in einer Docker-Umgebung, aufgesetzt. Dabei werden auch die benötigten Datensätze indexiert.
 
-Zuletzt wird nun noch eine prototypische Implementierung in das Dietrich online Projekt vorgenommen. Dabei wird die aktuelle Suche durch die Enterprise Suchmaschine ersetzt und um einige Funktionen erweitert. 
+Zuletzt wird eine prototypische Implementierung in das Dietrich online Projekt vorgenommen. Dabei wird die aktuelle Suche durch die Enterprise Suchmaschine ersetzt und um einige Funktionen erweitert. 
