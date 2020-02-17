@@ -5,22 +5,22 @@
 
 Die Installation ist bei ElasticSearch dreigeteilt. Um die Suchmaschine in dem Umfang nutzen zu können, wie es hier benötigt wird, muss der komplette ELK-Stack installiert werden. ElasticSearch ist hierbei das Kernstück und dient als Datenbank. Kibana ist eine grafische Benutzeroberfläche und Logstash bildet die Brücke zwischen der Datenquelle und ElasticSearch. Während ElasticSearch Java mitgeliefert hat, muss für Logstash Java Version 8 oder 11 nachinstalliert werden. Um die drei Dienste für den Development Modus zu installieren, müssen nur die Archive entpackt und die entsprechenden Anwendungen gestartet werden. Ohne die Konfigurationsdateien zu ändern, haben die Anwendungen direkt miteinander kommunizieren können. Allerdings hat Logstash ein paar Warnungen beim Start geworfen, welche mit JRuby zusammenhingen und den Entwicklern schon bekannt sind. Daher können diese hier ignoriert werden.
 
-Für eine richtige Installation gibt es mehrere Wege. Es kann entweder das Repository von ElasticSearch verwendet werden, oder das bereitgestellte Debian-Paket oder es wird der Docker-Container genutzt. Für diesen Test wurde das Debian-Packet verwendet. Die Installtion verlief hierbei ohne Probleme.
+Für eine richtige Installation gibt es mehrere Wege. Für den Test wurde das Debian-Packet verwendet. Alternativ ist es allerdings auch möglich, entweder das Repository von ElasticSearch einzupflegen oder einen Docker-Container zu nutzen. Die Installtion verlief hierbei ohne Probleme.
 
 \subsection{Indexierung}
 \label{elaVgl:index}
 
-Um nun Daten zu indexieren, muss in einer Konfigurationsdatei in Logstash definiert werden, wie und welche Daten gelesen und and das ElasticSearch System weitergegeben werden sollen \ref{lst:lsConf}. Dabei kann Logstash direkt MySQL-Abfragen gegen die Datenbank stellen. Die Datei ist in zwei Blöcke unterteilt. Zum einen ein Input-Block, welcher erklärt, welche Daten eingelesen werden sollen und ein Output-Block, welcher das Ziel für die Daten angibt. Für den Input-Block verwende wird der JDBC Treiber von MariaDB verwendet.
+Um nun Daten zu indexieren, muss in einer Konfigurationsdatei in Logstash definiert werden, wie und welche Daten gelesen und and das ElasticSearch System weitergegeben werden sollen \ref{lst:lsConf}. Dabei kann Logstash direkt MySQL-Abfragen gegen die Datenbank stellen. Die Datei ist in zwei Blöcke unterteilt. Zum einen ein Input-Block, welcher erklärt, welche Daten eingelesen werden sollen und ein Output-Block, welcher das Ziel für die Daten angibt. Für den Input-Block wird der JDBC Treiber von MariaDB verwendet.
 
 Bei diesem Schritt kam es bei dem System allerdings zu Problemen. Der Treiber konnte über den in der Dokumentation angegeben Weg nicht geladen werden. Damit der Treiber korrekt erkannt werden konnte, musste er zusammen mit den Core-Bibliotheken von Logstash geladen werden. Deswegen ist die Zeile mit dem Pfad zur Bibliothek auch leer. 
 
-Nachdem die Datenbank Konfiguration und Query angegeben wurden, kann zudem noch ein Zeitplan definiert werden. Außerdem ist es auch möglich, eine Art Delta-Query zu definieren. Hierfür wird eine Tracking-Spalte festgelegt, welche dann in der Query auf einen Zeitstempel überprüft wird.
+Nachdem die Datenbank Konfiguration und Abfrage angegeben wurden, kann zudem noch ein Zeitplan definiert werden. Außerdem ist es auch möglich, eine Art Delta-Query zu definieren. Hierfür wird eine Tracking-Spalte festgelegt, welche dann in der Abfrage auf einen Zeitstempel überprüft wird.
 
 Im zweiten Teil der Datei wird das Ziel definiert. Die erste Zeile dient dazu nur dem Debugging, da es alle ausgegeben Linien des Skripts auch auf der Shell ausgibt. 
 
 In dem ElasticSearch-Segment wird zum einen eine ID definiert, welche verhindert, dass Einträge doppelt in die Datenbank gespielt werden. Deswegen wird hier die ID der Lemmata genommen, da diese auch in der Datenbank nicht wiederholt werden darf. Zum Anderen wird noch ein Index angegeben, in welchen die Daten geschrieben werden sollen. 
 
-Als die Indexierung nun gestartet wurde, kam es allerdings zu einem Fehler. Die MySQL-Abfrage sei nicht gültig. Dies lag daran, dass um zu ermitteln, wie viele Daten indiziert werden müssen, die Query mit einer Count-Abfrage umhüllt wird. Dabei verwendete Logstash Double anstelle von Single-Quotes, was bei MariaDB zu einem Fehler führte. Dies konnte behoben werden, indem eine Einstellung in der Datenbank vorgenommen wurde, um auch Double-Quotes zu erlauben. 
+Als die Indexierung nun gestartet wurde, kam es allerdings zu einem Fehler. Die MySQL-Abfrage sei nicht gültig. Dies lag daran, dass um zu ermitteln, wie viele Daten indiziert werden müssen, die Abfrage mit einer Count-Abfrage umhüllt wird. Dabei verwendete Logstash Double anstelle von Single-Quotes, was bei MariaDB zu einem Fehler führte. Dies konnte behoben werden, indem eine Einstellung in der Datenbank vorgenommen wurde, um auch Double-Quotes zu erlauben. 
 Danach verlief die Indexierung ohne weitere Probleme.
 
 \begin{lstlisting}[language=xml, frame=single, label={lst:lsConf}] 
@@ -79,7 +79,7 @@ PUT lemma
   }}}]}}
 \end{lstlisting}
 
-Für den Test war die Erstellung eines Mappings oder eines dynamischen Templates allerdings nicht notwendig, da ElasticSearch bei der automatischen Indexierung jedes String-Feld als Keyword, sowie Volltext abspeichert, insofern die Länge unter 256 Zeichen ist. So konnte die Abfrage, welche alle Lemmata mit den Buchstaben S sucht einfach verwendet werden, indem das Keyword Feld zur Suche verwendet wurde.
+Für den Test war die Erstellung eines Mappings oder eines dynamischen Templates allerdings nicht notwendig, da ElasticSearch bei der automatischen Indexierung jedes String-Feld als Keyword, sowie Volltext abspeichert, insofern die Länge unter 256 Zeichen ist. So konnte die Abfrage, welche alle Lemmata mit den Buchstaben S sucht einfach verwendet werden, indem das Keyword-Feld zur Suche verwendet wurde.
 
 \subsection{Oberfläche}
 

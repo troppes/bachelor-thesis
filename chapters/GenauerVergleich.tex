@@ -25,17 +25,17 @@ Im ersten Schritt wird die Installation bewertet. Dabei wird geschaut, wie einfa
 Hierbei wird geschaut, wie einfach die Indexierung von den Daten aus der Datenbank ausfällt. Dabei wird auch geschaut, ob es möglich ist, Daten direkt von der Oberfläche zu indexieren und ob es möglich ist die Indexierung in einen Zeitplan zu legen.
 
 \subsection{Oberfläche}
-In diesem Schritt wird geschaut, wie Übersicht und nützlich die Oberfläche gebaut ist. Dabei wird geschaut, wie viele Funktionen über die Oberfläche zu verwenden sind und ob es Komfort-Funktionen wie Responsiveness\footnote{Eine Webseite ist responsive, wenn sie für alle Endgeräte richtig skaliert und gut zu benutzen ist.} gibt.
+In diesem Schritt wird geschaut, wie übersichtlich und funktional die Oberfläche gebaut ist. Dabei geht es darum, wie viele Funktionen über die Oberfläche zu administrieren sind und ob es Komfort-Funktionen wie Responsiveness\footnote{Eine Webseite ist responsive, wenn sie für alle Endgeräte richtig skaliert und gut zu benutzen ist.} gibt.
 
 \subsection{Dokumentation}
 
-Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Da in diesem Kurztest nicht alle Bereiche der Dokumentation genau durchgelesen und daraufhin auch Testweise implementiert werden können, wird sich dabei auf die Schritte dieses Ersteindrucks bezogen.
+Im dritten Schritt wird die Dokumentation analysiert. Hier  bei wird Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Da in diesem Kurztest nicht alle Bereiche der Dokumentation genau durchgelesen und daraufhin auch Testweise implementiert werden können, wird sich dabei auf die Schritte dieses Ersteindrucks bezogen.
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-Im letzten Schritt wird eine Abfrage an das System von einem PHP-Skript abgesetzt. Dabei wird die Zeit gemessen, wie lange die Query braucht um die Daten zu liefern.
+Im letzten Schritt wird eine Abfrage an das System von einem PHP-Skript abgesetzt. Dabei wird die Zeit gemessen, wie lange die Abfrage braucht um die Daten zu liefern.
 
-Die dabei verwendete Query ist die bisher am langsamsten laufenden Query der Dietrich-Online Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen, welche für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Querys. Die erste findet alle IDs der Lemmata und der zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn diese Funktionalität wird direkt mitgeliefert.
+Die dabei verwendete Abfrage ist die bisher am langsamsten laufenden Abfrage der Dietrich Online Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen, welche für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und der zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn diese Funktionalität wird direkt mitgeliefert.
 
 \begin{figure}
 	\centering

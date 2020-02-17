@@ -1,12 +1,12 @@
-\chapter{Implementation in das Dietrich Projekt}
+\chapter{Implementation in das Dietrich Online Projekt}
 
-In diesem Kapitel wird die Implementation ins Dietrich-Projekt genauer erläutert.
+In diesem Kapitel wird die Implementation ins Dietrich Online Projekt genauer erläutert.
 
 \section{Vorbereitung}
 
 Um den ElasticSearch-Klienten zu nutzen, muss dieser zuerst einmal per Composer installiert werden. Die geschieht durch einen Eintrag in die composer.json.
 
-Damit für den nun folgenden Vergleich ein faires Spielfeld aufzubauen wurde eine Datenbank, welche auf demselben Server wie ElasticSearch liegt verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
+Um für den nun folgenden Vergleich ein faires Spielfeld aufzubauen, wurde eine Datenbank, welche auf demselben Server wie ElasticSearch liegt verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
 
 Zum Testen wird nun zuerst die Lemma-Abfrage, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet.
 
@@ -34,7 +34,7 @@ Durch die eben aktivierte X-Security von ElasticSearch braucht der Klient diesma
 
 Um nun alle Daten in richtiger Form in das Projekt zu laden, muss die Indexierung von damals umgeschrieben werden. 
 
-Bei den Joins wurden m zu n Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M zu N Beziehung gibt. 
+Bei den Joins wurden M zu N Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M zu N Beziehung gibt. 
 
 Zur Verdeutlichung hier ein Beispiel.
 Es gibt eine Tabelle Artikel, welche eine M zu N Beziehung mit der Tabelle DDC bezieht. In der Artikel Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz verbunden wird. Bei einem Join wird nun alles in eine flache Hierachie gezogen. Deswegen würde die Tabelle der Ergebnisse des Joins nun die Folgenden Einträge enthalten \ref{tbl:join}.
@@ -53,7 +53,7 @@ Es gibt eine Tabelle Artikel, welche eine M zu N Beziehung mit der Tabelle DDC b
 
 Um nun einen solchen Eintrag in ElasticSearch abzubilden wird ein Array in ElasticSearch benötigt. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser aggregiert auf Basis der ID die Daten. So ist es nun möglich Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst.
 
-Dabei ist es wichtig, dass diese Prozess nicht in mehreren Threads ausgeführt wird. Daher erhält jede Pipeline in diesem Projekt auch maximal einen Thread.
+Dabei ist es wichtig, dass dieser Prozess nicht in mehreren Threads ausgeführt wird. Daher erhält jede Pipeline in diesem Projekt auch maximal einen Thread.
 Hier nun einmal ein Beispiel aus dem Code \ref{lst:fronendConf}.
 
 
@@ -92,7 +92,7 @@ Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für 
 
 Die ElasticSearch-Abfrage anderseits besteht nur aus einer Abfrage, da hier alle Daten schon auf einer flachen Ebene existieren.
 
-Verwendet wird hier eine sogennante Boolean-Abfrage. Dieser enthält vier verschieden Untergruppierungen.
+Verwendet wird hier ein sogenannter Boolean-Query. Dieser enthält vier verschieden Untergruppierungen.
 
 Zuerst einmal der Must-Teil. Alle hier Angegeben Parameter müssen in jedem Ergebnis vorhanden sein. Dies ist gleichzustellen mit einem booleschen AND. 
 
@@ -136,11 +136,11 @@ Und zuletzt der Filter-Teil. Die gesetzten Filter sind auch Must-Befehle. Allerd
   
 \end{lstlisting}
 
-In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Abfrage, welcher in der vorherigen Abfrage verwendet wurde \ref{lst:phpElastic}, ein Prefix-Abfrage verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.
+In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Abfrage, welcher in der vorherigen Abfrage \ref{lst:phpElastic} verwendet wurde, ein Prefix-Abfrage verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.
 
 \section{Vergleich}
 
-Die oben Beschriebenen Abfragen wurden jetzt jeweils 100-Mal mit einem Timer laufen gelassen. 
+Die oben beschriebenen Abfragen wurden jetzt jeweils 100-Mal mit einem Timer laufen gelassen. 
 
 Bei dem Vergleich kamen die folgenden Durchschnittswerte zustande:
 \begin{table} %[hbtp]
@@ -157,6 +157,8 @@ Bei dem Vergleich kamen die folgenden Durchschnittswerte zustande:
 
 Dabei ist zu sehen, dass ElasticSearch eine Reduktion der Zeit um 58,45 \% ermöglicht.
 
+Diese Abfrage wurde auch noch in einer nachgebauten Produktionsumgebung ausgeführt. Daran erkennt man, dass die Abfrage durchaus schneller agiert, allerdings im Gesamtkontext kaum einen Unterschied macht. ElasticSearch lädt mit 46,49 Sekunden durchaus als Doctrine mit 50,1 Sekunden, allerdings fällt dies bei der langen Ladezeit kaum ins Gewicht.
+
 
 \begin{figure}
 	\centering
@@ -172,4 +174,3 @@ Dabei ist zu sehen, dass ElasticSearch eine Reduktion der Zeit um 58,45 \% ermö
 	\label{img:timeProdDb}
 \end{figure}
 
-Diese Abfrage wurde auch noch in einer nachgebauten Produktionsumgebung ausgeführt. Daran erkennt man, dass die Abfrage durchaus schneller agiert, allerdings im Gesamtkontext kaum einen Unterschied macht. ElasticSearch lädt mit 46,49 Sekunden durchaus als Doctrine mit 50,1 Sekunden, allerdings fällt dies bei der langen Ladezeit kaum ins Gewicht.
