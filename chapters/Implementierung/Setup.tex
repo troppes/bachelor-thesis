@@ -1,12 +1,21 @@
 \chapter{Setup}
 
-Dieses Kapitel behandelt die Installation und Ersteinrichtung der Suchmaschine über Docker. Die Installation erfolgt dabei über Docker mithilfe von Docker-Compose. Es werden 2 ElasticSearch Instanzen, eine Kibana Instanz und eine Logstash-Instanz aufgesetzt. !!GRAFIK!!
+Dieses Kapitel behandelt die Installation und Ersteinrichtung der Suchmaschine über Docker. Die Installation erfolgt dabei über Docker mithilfe von Docker-Compose. Es werden 2 ElasticSearch Instanzen, eine Kibana Instanz und eine Logstash-Instanz aufgesetzt. Das fertig Setup soll dann wie folgt aussehen \ref{img:dockerNetwork}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{images/docker_structure.png}
+	\caption{Visualisierung des fertiges Docker-Netzwerkes}
+	\label{img:dockerNetwork}
+\end{figure}
+
+Logstash lädt die Daten von einen MySQL-Server herunter und fügt sie in die Elasticsearch Instanzen ein. Auch Kibana bekommt Zugriff auf beide Instanzen, um die Daten zu visualieren und bei Serverausfällen frühzeitig zu warnen. Die beiden Elasticsearch Instanzen halten sich dabei untereinander synchron. 
 
 \section{Docker}
 
-Docker ist eine Software zur Virtualiserung von Anwendungen. Dabei wird allerdings nicht wie bei virtuellen Maschinen die gesamte Hardware simuliert, sondern sie laufen im Kontext der Host-Betriebstystems.
+Docker ist eine Software zur Virtualisierung von Anwendungen. Dabei wird allerdings nicht wie bei virtuellen Maschinen die gesamte Hardware simuliert, sondern sie laufen im Kontext der Host-Betriebstystems.
 
-Docker-Compose ist ein Tool, mit welchen es erleichtert wird mehrere Docker-Container zu verwalten. Dafür werden in einer YAML-Datei die gewünschten Docker Container eingetragen \ref{lst:es01}. Dabei können Einstellungen wie der Container-Name Docker-Compose liest nun diese Datei und erstellt damit die Container und Netzwerke alle automatisch.
+Docker-Compose ist ein Tool, mit welchen es erleichtert wird mehrere Docker-Container zu verwalten. Dafür werden in einer YAML-Datei die gewünschten Docker Container und Einstellungen, wie der Container-Name, eingetragen \ref{lst:es01}. Mithilfe dieser Datei erstellt Docker-Compose dann die Container und Netzwerke automatisch.
 
 \subsection{Rechteverwaltung in Docker}
 
@@ -72,13 +81,13 @@ Der letzte Eintrag dient dazu, dass bei der ersten Synchronisation das System we
 
 Die Grundkonfiguration von Kibana ist einfacherer als die Konfiguration von ElasticSearch. Es muss nur die YAML-Datei gemountet werden und der Port 5601 nach außen durchgereicht werden.
 
-In der Konigurationsdatei werden nun die Einstellungen für Kibana gesetzt. Darunter fällt der oben genannte Port, der Server-Host, in diesem Fall auch 0.0.0.0, und die ElasticSearch-Hosts. Dabei werden alle Server Instanzen mitgegeben, auf denen Kibana arbeiten soll. 
+In der Konfigurationsdatei werden nun die Einstellungen für Kibana gesetzt. Darunter fällt der oben genannte Port, der Server-Host, in diesem Fall auch 0.0.0.0, und die ElasticSearch-Hosts. Dabei werden alle Server Instanzen mitgegeben, auf denen Kibana arbeiten soll. 
 
 \section{Logstash}
 
 Für die Grundkonfiguration von Logstash muss, wie schon im Ersteindruck, der Treiber in die Core-Bibliothek gelegt werden. Zudem werden die Konfigurationsdateien für die Pipelines, also die Prozesse des Daten sammeln und an ElasticSearch gemountet.
 
-In der Konfigurationsdatei für Logstash wird dann der Name, die Pipeline.id und die Pipeline-Worker festgelegt. Die Pipeline-Worker sind die Threads in denen eine der konfigurierten Pipelines abgearbeitet wird. Generell sollte die Anzahl der Cores auch die maximale Anzahl der Worker sein.
+In der Konfigurationsdatei für Logstash wird dann der Name, die Pipeline.id und die Pipeline-Worker festgelegt. Die Pipeline-Worker sind die Threads, in denen eine der konfigurierten Pipelines abgearbeitet wird. Generell sollte die Anzahl der Cores auch die maximale Anzahl der Worker sein.
 
 
 \section{X-Security}
@@ -100,11 +109,11 @@ Um nun alle Zertifikate gleichzeitig zu generieren, kann eine YAML Datei mitgege
 	  [...]
 \end{lstlisting}
 
-Damit diese Zertifikate auch genutzt werden können musste nun jeder Container das zugehörige Zertifikat mounten. Zudem wurde in den dazugehörigen Konfigrationsdateien die jeweiligen Optionen zur Nutzung der CA und Private Keys gesetzt werden.
+Damit diese Zertifikate auch genutzt werden können, musste nun jeder Container das zugehörige Zertifikat mounten. Zudem wurde in den dazugehörigen Konfigurationsdateien die jeweiligen Optionen zur Nutzung der CA und Private Keys gesetzt werden.
 
-Zusätzlich zu den Zertifikaten muss auch noch eine Password Authentifikation eingebaut werden. Dazu kann auf den ElasticSearch-Containern ein Befehl zur Erstellung der Systempasswörter aufgerufen werden. Dadurch werden alle Benuzter, welche die einzelene Systeme wie Logstash oder Kibana zum funktionieren brauchen generiert.
+Zusätzlich zu den Zertifikaten muss auch noch eine Password Authentifikation eingebaut werden. Dazu kann auf den ElasticSearch-Containern ein Befehl zur Erstellung der Systempasswörter aufgerufen werden. Dadurch werden alle Benutzer, welche die einzelnen Systeme wie Logstash oder Kibana zum funktionieren brauchen generiert.
 
-Auch diese müssen in den Konfigrationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte passiert hierbei rollen-basiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, welche daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelen Systemfunktionen wie die zum Beispiel die Erstellung von Snapshots spezifisch freigegeben werden. Hierbei sollte sich an das minimal Prinzip gehalten werden, also nur so viele Rechte vergeben, wie der Nutzer definitiv benötigt.
+Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte passiert hierbei rollen-basiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, welche daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelen Systemfunktionen wie die zum Beispiel die Erstellung von Snapshots spezifisch freigegeben werden. Hierbei sollte sich an das minimal Prinzip gehalten werden, also nur so viele Rechte vergeben, wie der Nutzer definitiv benötigt.
 
 Um nun einen Query gegen das ElasticSearch System zu stellen, muss zum einen eine BasicAuth sowie das CA mitgegeben werden \ref{lst:curlQuery}.
 
@@ -112,7 +121,7 @@ Um nun einen Query gegen das ElasticSearch System zu stellen, muss zum einen ein
 	curl https://bib55:9200 --cacert ca.crt -uuser:pass
 \end{lstlisting}
 
-Damit nun auch Logstash wieder Daten an ElasticSearch senden kann, wird ein Nutzer erstellt, welcher nur auf Indices mit mit dem Präfix dietrich\_ Zugriff erhält. Die Erstellung dieses Nutzer wurde dabei die Benuzter-Oberfläche von Kibana gemacht \ref{img:kibanaRoles}. 
+Damit nun auch Logstash wieder Daten an ElasticSearch senden kann, wird ein Nutzer erstellt, welcher nur auf Indices mit dem Präfix dietrich\_ Zugriff erhält. Die Erstellung dieses Nutzers wurde dabei die Benutzer-Oberfläche von Kibana gemacht \ref{img:kibanaRoles}. 
 
 \begin{figure}
 	\centering
