@@ -1,6 +1,6 @@
 \chapter{Frontend-Suche}
 
-Diese Kapitel handelt von der Implementierung des ElasticSearch-Systems in die DietrichOnline Frontend-Suche. Dabei soll zuerst einmal die Suche und die automatische Vervollständigung komplett übertragen werden. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben.
+Diese Kapitel handelt von der Implementierung des Elasticsearch-Systems in die DietrichOnline Frontend-Suche. Dabei soll zuerst einmal die Suche und die automatische Vervollständigung komplett übertragen werden. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben.
 
 \section{Indexierung}
 
@@ -9,7 +9,7 @@ Um die Daten zu indexieren, wurde eine statische Code-Analyse durchgeführt, wel
 Für die Auto-Vervollständigung mussten auch neue Felder angelegt werden. Es gibt im Projekt für jede Suchart eine eigene Vervollständigung. Um dies auch im Index abzubilden, wurden diverse Vervollständigungs-Felder angelegt, welche zum Teil einzelne Felder oder Feldmengen durchsuchen. Diese Felder wurden dann mithilfe des Aggregat-Filters befüllt. Ein Beispiel:
 
 Artikeltitel und die dazugehörige Sigle werden in zwei unterschiedlichen Felder gespeichert, sollten allerdings für die Vervollständigung zusammengesetzt werden.
-Dafür wird in dem Aggregationsfilter von Logstash definiert, der das Feld zusammenbaut \ref{lst:stringConcat}. Nun wird daraus entstandene String in das Suggestions-Feld von ElasticSearch gegeben. ElasticSearch indexiert daraufhin des String so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann. Als Ausgabe wird allerdings immer der komplette String zurückgegeben.
+Dafür wird in dem Aggregationsfilter von Logstash definiert, der das Feld zusammenbaut \ref{lst:stringConcat}. Nun wird daraus entstandene String in das Suggestions-Feld von Elasticsearch gegeben. Elasticsearch indexiert daraufhin des String so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann. Als Ausgabe wird allerdings immer der komplette String zurückgegeben.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}] 
 map['artikel_titel_suggest'] ||= 
@@ -17,7 +17,7 @@ map['artikel_titel_suggest'] ||=
         +event.get('artikel_titel').to_s
 \end{lstlisting}
 
-Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich auch ein Array von Daten an das Auto-Vervollständigungsfeld von ElasticSearch weiterzugeben.
+Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich auch ein Array von Daten an das Auto-Vervollständigungsfeld von Elasticsearch weiterzugeben.
 
 Der Index ist hierbei der aktuell Größte im DietrichOnline-Projekt mit rund 1.4 Millionen Einträgen. Die aktuelle Größe des Indexes zusammen mit den Feldern zur Auto-Vervollständigung beläuft sich auf rund 4.2 Gigabyte. 
 Diese Größe wurde hierbei schon ein wenig dadurch reduziert, dass jeder Feldtyp vorher definiert wurde.
@@ -34,9 +34,9 @@ Die Integration folgte demselben Muster, wie die Lemma-Administration. Auf ein p
 
 Die bisherige Paginierung holte bis zu 1001 Ergebnisse aus der Datenbank und generierte daraufhin die Paginierung. Die Begrenzung ergibt sich daher, dass die vollen Datensätze aus der Datenbank geholt wurden, und dies bei größeren Zahlen zu einer langen Laufzeit führte.
 
-Diese Einschränkung kann nun mit ElasticSearch entfernt werden. Dazu wird zuerst einmal eine Abfrage abgesetzt, der alle Ergebnisse zählt. Für diesen Fall liefert ElasticSearch eine Count-Abfrage mit.
+Diese Einschränkung kann nun mit Elasticsearch entfernt werden. Dazu wird zuerst einmal eine Abfrage abgesetzt, der alle Ergebnisse zählt. Für diesen Fall liefert Elasticsearch eine Count-Abfrage mit.
 
-Durch diesen wird eine Paginierung generiert. Dafür wird mithilfe der Seitennummer ein Offset für die Abfrage generiert, sodass ElasticSearch immer nur die aktuellen Ergebnisse für die Suche liefert.
+Durch diesen wird eine Paginierung generiert. Dafür wird mithilfe der Seitennummer ein Offset für die Abfrage generiert, sodass Elasticsearch immer nur die aktuellen Ergebnisse für die Suche liefert.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:generierung}] 
 $result = $repo->findUserSearchResult(

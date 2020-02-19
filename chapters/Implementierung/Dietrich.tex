@@ -4,13 +4,13 @@ In diesem Kapitel wird die Implementation ins DietrichOnline-Projekt genauer erl
 
 \section{Vorbereitung}
 
-Um den ElasticSearch-Klienten zu nutzen, muss dieser zuerst einmal per Composer installiert werden. Die geschieht durch einen Eintrag in die composer.json.
+Um den Elasticsearch-Klienten zu nutzen, muss dieser zuerst einmal per Composer installiert werden. Die geschieht durch einen Eintrag in die composer.json.
 
-Um für den nun folgenden Vergleich ein faires Spielfeld aufzubauen, wurde eine Datenbank, welche auf demselben Server wie ElasticSearch liegt verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
+Um für den nun folgenden Vergleich ein faires Spielfeld aufzubauen, wurde eine Datenbank, welche auf demselben Server wie Elasticsearch liegt verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
 
 Zum Testen wird nun zuerst die Lemma-Abfrage, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet.
 
-Durch die eben aktivierte X-Security von ElasticSearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines Curl Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich-Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden. 
+Durch die eben aktivierte X-Security von Elasticsearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines Curl Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich-Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden. 
 
 \begin{lstlisting}[language=JSON, frame=single, label={lst:elaApi}] 
 POST /_security/api_key
@@ -51,7 +51,7 @@ Es gibt eine Tabelle Artikel, welche eine M zu N Beziehung mit der Tabelle DDC b
     \label{tbl:join}
 \end{table}
 
-Um nun einen solchen Eintrag in ElasticSearch abzubilden wird ein Array in ElasticSearch benötigt. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser aggregiert auf Basis der ID die Daten. So ist es nun möglich Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst.
+Um nun einen solchen Eintrag in Elasticsearch abzubilden wird ein Array in Elasticsearch benötigt. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser aggregiert auf Basis der ID die Daten. So ist es nun möglich Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst.
 
 Dabei ist es wichtig, dass dieser Prozess nicht in mehreren Threads ausgeführt wird. Daher erhält jede Pipeline in diesem Projekt auch maximal einen Thread.
 Hier nun einmal ein Beispiel aus dem Code \ref{lst:fronendConf}.
@@ -90,7 +90,7 @@ Damit die sich ändernden Wert aggregiert werden, wurde ein Code geschrieben, we
 
 Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt. Die hier betrachtete Abfrage wurde schonmal von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den verbleibenden Datensätzen ausgeführt werden.
 
-Die ElasticSearch-Abfrage anderseits besteht nur aus einer Abfrage, da hier alle Daten schon auf einer flachen Ebene existieren.
+Die Elasticsearch-Abfrage anderseits besteht nur aus einer Abfrage, da hier alle Daten schon auf einer flachen Ebene existieren.
 
 Verwendet wird hier ein sogenannter Boolean-Query. Dieser enthält vier verschieden Untergruppierungen.
 
@@ -148,21 +148,21 @@ Bei dem Vergleich kamen die folgenden Durchschnittswerte zustande:
 		    \textbf{System} & \textbf{Zeit} \\
         \hline
         MariaDB + Doctrine & 3.49 \\
-        ElasticSearch      & 1.45  \\
+        Elasticsearch      & 1.45  \\
 		\end{tabular}
     \caption{Vergleich der Laufzeit zur Abfrage aller Daten für Buchstabe S der Lemma-Administration (15.846 Einträge)}
     \label{vlgTimeDBvsEla}
 \end{table}
 
-Dabei ist zu sehen, dass ElasticSearch eine Reduktion der Zeit um 58,45 \% ermöglicht.
+Dabei ist zu sehen, dass Elasticsearch eine Reduktion der Zeit um 58,45 \% ermöglicht.
 
-Diese Abfrage wurde auch noch in einer nachgebauten Produktionsumgebung ausgeführt. Daran erkennt man, dass die Abfrage durchaus schneller agiert, allerdings im Gesamtkontext kaum einen Unterschied macht. ElasticSearch lädt mit 46,49 Sekunden durchaus als Doctrine mit 50,1 Sekunden, allerdings fällt dies bei der langen Ladezeit kaum ins Gewicht.
+Diese Abfrage wurde auch noch in einer nachgebauten Produktionsumgebung ausgeführt. Daran erkennt man, dass die Abfrage durchaus schneller agiert, allerdings im Gesamtkontext kaum einen Unterschied macht. Elasticsearch lädt mit 46,49 Sekunden durchaus als Doctrine mit 50,1 Sekunden, allerdings fällt dies bei der langen Ladezeit kaum ins Gewicht.
 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=1\linewidth]{images/setup/query/time_prod_ela.png}
-	\caption{Query-Geschwindigkeit: ElasticSearch}
+	\caption{Query-Geschwindigkeit: Elasticsearch}
 	\label{img:timeProdEla}
 \end{figure}
 

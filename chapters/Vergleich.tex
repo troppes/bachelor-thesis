@@ -66,9 +66,9 @@ Terrier erfüllt leider nicht alle Grundanforderungen, da es keine direkte Mögl
 \section{Sphinx}
 \label{sphinx}
 
-Sphinx ist eine Suchmaschine, entwickelt von Andrew Aksyonoff. Das Akronym steht für „SQL Phrase Index“.\cite{SphinxTechnologiesInc.b} Bis zur Version 2 wurde sie aktiv als Open-Source-Software entwickelt. Ab Version 3 wurde die Entwicklung allerdings Closed-Source weitergeführt. Auf der Github-Seite steht: „The sources for 3.0 will also be posted here when we decide to make those publicly available.“ \cite{sphinxserach.2019}, also gibt es kein genaues Datum ob und wann die Version 3 als Open-Source Variante zur Verfügung steht. Version 3.1.1 wurde im Oktober 2018 veröffentlicht und seitdem lässt sich auch nichts mehr über den Status des Projektes finden. Von daher ist davon auszugehen, dass das Projekt nicht mehr weitergeführt wird. 
+Sphinx ist eine Suchmaschine, entwickelt von Andrew Aksyonoff. Das Akronym steht für „SQL Phrase Index“ \cite{SphinxTechnologiesInc.b}. Bis zur Version 2 wurde sie aktiv als Open-Source-Software entwickelt. Ab Version 3 wurde die Entwicklung allerdings Closed-Source weitergeführt. Auf der Github-Seite steht: „The sources for 3.0 will also be posted here when we decide to make those publicly available.“ \cite{sphinxserach.2019}, also gibt es kein genaues Datum ob und wann die Version 3 als Open-Source Variante zur Verfügung steht. Version 3.1.1 wurde im Oktober 2018 veröffentlicht und seitdem lässt sich auch nichts mehr über den Status des Projektes finden. Von daher ist davon auszugehen, dass das Projekt nicht mehr weitergeführt wird. 
 
-Zu den Features ist festzuhalten, dass es keinen nativen PDF-Unterstützung in der Open-Source Version gibt. Erst in Version 3 wurde ein Dokumenten-Speicher eingebaut. Allerdings werden die anderen Anforderungen alle erfüllt. Es existiert, laut Webseite, sogar ein bezahlter Support, allerdings ist fraglich, ob mit der Firma noch in Kontakt getreten werden kann. \cite{SphinxTechnologiesInc.2019}
+Zu den Features ist festzuhalten, dass es keine nativen PDF-Unterstützung in der Open-Source Variante gibt. Erst in Version 3 wurde ein Dokumenten-Speicher eingebaut. Allerdings werden die anderen Anforderungen alle erfüllt. Es existiert, laut Webseite, sogar ein bezahlter Support, allerdings ist fraglich, ob mit der Firma noch in Kontakt getreten werden kann. \cite{SphinxTechnologiesInc.2019}
 
 \section{Apache Solr}
 \label{solr}
@@ -111,7 +111,7 @@ Manticore erfüllt fast alle Grundanforderungen, allerdings ist kein nativer PDF
 \section{Xapian}
 \label{xapian}
 
-Xapian ist eine Open-Source Enterprise Suchmaschine, welche von Zeit-Online, der Universitätsbibliothek Köln und der Debian Webseite genutzt wird. Die Suchmaschine basiert auf Open Muscat, einer Suchmaschine, welche an der Cambridge Universität in den 1980ern von Dr. Martin Porter entwickelt wurde. In 2001, als Open Muscat Closed Source ging, haben sich einige Entwickler die letzte offene Version genommen und diese weiterentwickelt.
+Xapian ist eine Open-Source Enterprise Suchmaschine, welche von Zeit-Online\footnote{https://www.zeit.de/index}, der Universitätsbibliothek Köln\footnote{https://www.ub.uni-koeln.de/index.html} und der Debian Webseite genutzt wird. Die Suchmaschine basiert auf Open Muscat, einer Suchmaschine, welche an der Cambridge Universität in den 1980ern von Dr. Martin Porter entwickelt wurde. In 2001, als Open Muscat Closed Source ging, haben sich einige Entwickler die letzte offene Version genommen und diese weiterentwickelt.
 
 Sie erfüllt alle der Grundanforderungen, wenn auch Logging nur im Grundsinne erfüllt wird, da nur Fehlermeldungen ausgegeben werden. Des Weiteren bietet die Suchmaschine Support für PostgreSQL. Auch eine Replikations-Funktion wird mitgeliefert. Sie bietet auch Auto-Korrektur und Auto-Vervollständigung. Ein Login-System mit Sicherheitsfunktionen gibt es durch das Fehlende Frontend Administration nicht. Es gibt allerdings die Möglichkeit mit Omega eine CGI\footnote{Common Gateway Interface}-Suche zu nutzen. Diese Suche bietet allerdings keine Administration, sondern nur eine grafische Oberfläche für Suchanfragen.
 
@@ -120,7 +120,7 @@ Auch gibt es eine Möglichkeit für bezahlten Support. Auf der Webseite werden z
 \section{Datafari}
 \label{datafari}
 
-Datafari ist eine Open-Source Enterprise Suchlösung vom französischen Entwickler France Labs. Das Entwicklerstudio wurde 2011 gegründet und hat sich es sich zum Ziel gemacht, die beste Open-Source Enterpise Suchlösung zu erstellen \cite{Labs.2019}. Als Fundament dafür wurde hierbei Solr verwendet. Dies wurde dann mit dem ELK-Stack für die Analyse gemischt. Zu den Kunden zählt unter anderem das Linux Magazin, welches diese Suchmaschine in einer ihrer Ausgaben vorstellt \cite{MichaelBrandenburg.2019}. 
+Datafari ist eine Open-Source Enterprise Suchmaschine vom französischen Entwickler France Labs. Das Entwicklerstudio wurde 2011 gegründet und hat sich es sich zum Ziel gemacht, die beste Open-Source Enterprise Suchmaschine zu erstellen \cite{Labs.2019}. Als Fundament dafür wurde hierbei Solr verwendet. Dies wurde dann mit dem ELK-Stack für die Analyse gemischt. Zu den Kunden zählt unter anderem das Linux Magazin\footnote{https://www.linux-magazin.de/}, welches diese Suchmaschine in einer ihrer Ausgaben vorstellt \cite{MichaelBrandenburg.2019}. 
 
 Die Suchmaschine erfüllt alle Grundanforderungen. Darüber hinaus bietet sie auch Support für PostgreSQL, Auto-Korrektur und Vervollständigung, sowie den bezahlten Support. Eine Backup-Funktion gehört zu den Premium-Funktionen, genauso wie erweiterte Sicherheitsfunktionen. Allerdings ist zumindest die Rollenbasierte-Authentifizierung auch in der Open-Source Variante zu haben. Einen direkt PHP-Connector gibt es nicht, allerdings wird eine HTTP-API zu Verfügung gestellt. \cite{Labs.b}
 
@@ -170,7 +170,7 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
         \item LC = Lucene Core \ref{lucenecore}
         \item SH = Sphinx \ref{sphinx}
         \item AS = Apache Solr \ref{solr}
-        \item ES = ElasticSearch \ref{elasticsearch}
+        \item ES = Elasticsearch \ref{elasticsearch}
         \item FE = Fess \ref{fess}
         \item AG = Algolia \ref{algolia}
         \item XP = Xapian \ref{xapian}
@@ -196,13 +196,13 @@ Sphinx wäre eine interessante Alternative gewesen. Allerdings ist durch den Kom
 
 Wie schon bei Lucene Core kurz angesprochen, liefert Solr viele der Funktionen, die in diesem Projekt benötigt werden, direkt mit. Dazu besitzt es eine Web-Oberfläche zur Administration. Durch die aktive Entwicklung unter der Apache-Lizenz und die große Community ist auch eine Langzeit-Entwicklung sehr wahrscheinlich. Daher ist Solr die erste der vier Kandidaten für das genauere Testen. \cite{TheApacheSoftwareFoundation.2019}
 
-\subsection{ElasticSearch}
+\subsection{Elasticsearch}
 
-Auch ElasticSearch basiert auf Lucene, ist aber im Gegensatz nicht komplett Open-Source und bietet auch eine kommerzielle Version an, was allerdings auch bedeutet, dass es bezahlten Support gibt. Die Community und der Kundenkreis sind groß, was eine Weiterentwicklung sehr wahrscheinlich macht. Auch diese Suchmaschine bietet eine Web-Oberfläche mit besonderem Augenmerk auf die Visualisierung der Daten, was für spätere Administratoren einen einfacheren Einstieg in die Administration liefern könnte. Daher wird auch ElasticSearch den genaueren Vergleich mit eingebunden. \cite{Elasticsearch.2019}
+Auch Elasticsearch basiert auf Lucene, ist aber im Gegensatz nicht komplett Open-Source und bietet auch eine kommerzielle Version an, was allerdings auch bedeutet, dass es bezahlten Support gibt. Die Community und der Kundenkreis sind groß, was eine Weiterentwicklung sehr wahrscheinlich macht. Auch diese Suchmaschine bietet eine Web-Oberfläche mit besonderem Augenmerk auf die Visualisierung der Daten, was für spätere Administratoren einen einfacheren Einstieg in die Administration liefern könnte. Daher wird auch Elasticsearch den genaueren Vergleich mit eingebunden. \cite{Elasticsearch.2019}
 
 \subsection{Fess}
 
-Fess ist eine Suchmaschine, welche auf ElasticSearch basiert, was seinerseits auf Lucene basiert. Von den Funktionen her bietet Fess, dank der Basis, viele Möglichkeiten. Es gibt auch kommerziellen Support, allerdings nur von einer japanischen Firma. Dadurch kann es schwerer werden mit dem Support in Kontakt zu treten, was mich dazu veranlasst Datafari \ref{datafari} dieser Suchmaschine vorzuziehen. \cite{CodeLibs.2019}
+Fess ist eine Suchmaschine, welche auf Elasticsearch basiert, was seinerseits auf Lucene basiert. Von den Funktionen her bietet Fess, dank der Basis, viele Möglichkeiten. Es gibt auch kommerziellen Support, allerdings nur von einer japanischen Firma. Dadurch kann es schwerer werden mit dem Support in Kontakt zu treten, was mich dazu veranlasst Datafari \ref{datafari} dieser Suchmaschine vorzuziehen. \cite{CodeLibs.2019}
 
 \subsection{Algolia}
 
@@ -214,4 +214,4 @@ Xapian ist als einzige Suchmaschine ohne Web-Administration im engeren Vergleich
 
 \subsection{Datafari}
 
-Datafari ist der letzte Kandidat, der es in die engere Auswahl schafft. Wie oben schon erwähnt gewinnt diese Suchmaschine gegen Fess, durch die Entwicklung in Frankreich und der daher besser zu erreichende Support. Darüber hinaus ist es interessant zu sehen, ob das Entwicklerstudio schafft, Solr sinnvoll zu erweitern und die Datenaufbereitung mit ElasticSearch so zu liefern, dass sich die Suchmaschine wie aus einem Guss anfühlt. \cite{Labs.b}
+Datafari ist der letzte Kandidat, der es in die engere Auswahl schafft. Wie oben schon erwähnt gewinnt diese Suchmaschine gegen Fess, durch die Entwicklung in Frankreich und der daher besser zu erreichende Support. Darüber hinaus ist es interessant zu sehen, ob das Entwicklerstudio schafft, Solr sinnvoll zu erweitern und die Datenaufbereitung mit Elasticsearch so zu liefern, dass sich die Suchmaschine wie aus einem Guss anfühlt. \cite{Labs.b}
