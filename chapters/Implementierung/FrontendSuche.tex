@@ -1,6 +1,6 @@
 \chapter{Frontend-Suche}
 
-Diese Kapitel handelt von der Implementierung des ElasticSearch-Systems in die Dietrich Online Frontend-Suche. Dabei soll zuerst einmal die Suche und die automatische Vervollständigung komplett übertragen werden. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben.
+Diese Kapitel handelt von der Implementierung des ElasticSearch-Systems in die DietrichOnline Frontend-Suche. Dabei soll zuerst einmal die Suche und die automatische Vervollständigung komplett übertragen werden. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben.
 
 \section{Indexierung}
 
@@ -19,7 +19,7 @@ map['artikel_titel_suggest'] ||=
 
 Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich auch ein Array von Daten an das Auto-Vervollständigungsfeld von ElasticSearch weiterzugeben.
 
-Der Index ist hierbei der aktuell Größte im Dietrich-Online Projekt mit rund 1.4 Millionen Einträgen. Die aktuelle Größe des Indexes zusammen mit den Feldern zur Auto-Vervollständigung beläuft sich auf rund 4.2 Gigabyte. 
+Der Index ist hierbei der aktuell Größte im DietrichOnline-Projekt mit rund 1.4 Millionen Einträgen. Die aktuelle Größe des Indexes zusammen mit den Feldern zur Auto-Vervollständigung beläuft sich auf rund 4.2 Gigabyte. 
 Diese Größe wurde hierbei schon ein wenig dadurch reduziert, dass jeder Feldtyp vorher definiert wurde.
 
 So wurde zum Beispiel die URL nur als String und nicht als Volltext gespeichert. Auch werden Felder, die unter 255 Zeichen lang sind als Keyword und Volltext gleichzeitig indexiert. Es wurde sich hier für nur einen Typen entschieden, um mehr Platz zu sparen.
@@ -99,7 +99,7 @@ switch ($userSearchItem->getJunktor()) {
 
 \subsection{Auto-Vervollständigung}
 
-Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geht es nun darum, wie eine Abfrage an dieses System aussieht. Damit das System weiß, welches Suggestions-Feld verwendet werden soll, wird dieses in der Applikation als Array hinterlegt. Normalerweise wird auch der gesamte Eintrag mit aus der Datenbank geladen. Da dies bei der Projektstruktur Dietrich-Onlines nicht erwünscht ist, wird das \_source-Feld auf leer gesetzt.
+Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geht es nun darum, wie eine Abfrage an dieses System aussieht. Damit das System weiß, welches Suggestions-Feld verwendet werden soll, wird dieses in der Applikation als Array hinterlegt. Normalerweise wird auch der gesamte Eintrag mit aus der Datenbank geladen. Da dies bei der Projektstruktur DietrichOnlines nicht benötigt wird, wird das \_source-Feld auf leer gesetzt.
 
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:autocompleParams}] 

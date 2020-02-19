@@ -1,6 +1,6 @@
-\chapter{Implementation in das Dietrich Online Projekt}
+\chapter{Implementation in das DietrichOnline-Projekt}
 
-In diesem Kapitel wird die Implementation ins Dietrich Online Projekt genauer erläutert.
+In diesem Kapitel wird die Implementation ins DietrichOnline-Projekt genauer erläutert.
 
 \section{Vorbereitung}
 
@@ -10,7 +10,7 @@ Um für den nun folgenden Vergleich ein faires Spielfeld aufzubauen, wurde eine 
 
 Zum Testen wird nun zuerst die Lemma-Abfrage, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet.
 
-Durch die eben aktivierte X-Security von ElasticSearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines Curl Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden. 
+Durch die eben aktivierte X-Security von ElasticSearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines Curl Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich-Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden. 
 
 \begin{lstlisting}[language=JSON, frame=single, label={lst:elaApi}] 
 POST /_security/api_key
