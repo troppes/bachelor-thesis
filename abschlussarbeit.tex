@@ -63,16 +63,66 @@
 \usepackage[a4paper]{geometry} % Andere Formatierung
 \usepackage{bibgerm}
 \usepackage{array}
+\usepackage{xcolor}
 \hyphenation{ Ele-men-tar-ob-jek-te  ab-ge-tas-tet Aus-wer-tung House-holder-Matrix Le-ast-Squa-res-Al-go-ri-th-men} 		% Weitere Silbentrennung bei Bedarf angeben
 \setlength{\textheight}{1.1\textheight}
 \pagestyle{myheadings} 			% Erzeugt selbstdefinierte Kopfzeile
 \makeindex 						% Index-Erstellung
 
+\lstdefinelanguage{JSON}{
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    literate=
+     *{0}{{{\color{blue}0}}}{1}
+      {1}{{{\color{blue}1}}}{1}
+      {2}{{{\color{blue}2}}}{1}
+      {3}{{{\color{blue}3}}}{1}
+      {4}{{{\color{blue}4}}}{1}
+      {5}{{{\color{blue}5}}}{1}
+      {6}{{{\color{blue}6}}}{1}
+      {7}{{{\color{blue}7}}}{1}
+      {8}{{{\color{blue}8}}}{1}
+      {9}{{{\color{blue}9}}}{1}
+      {:}{{{\color{red}{:}}}}{1}
+      {,}{{{\color{red}{,}}}}{1}
+      {\{}{{{\color{blue}{\{}}}}{1}
+      {\}}{{{\color{blue}{\}}}}}{1}
+      {[}{{{\color{blue}{[}}}}{1}
+      {]}{{{\color{blue}{]}}}}{1},
+}
+
+\newcommand\YAMLcolonstyle{\color{red}}
+\newcommand\YAMLkeystyle{\color{black}}
+\newcommand\YAMLvaluestyle{\color{blue}}
+\newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
+
+\lstdefinelanguage{YAML}{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{blue},
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{red}
+  moredelim=[l][\color{orange}]{\&},
+  moredelim=[l][\color{magenta}]{*},
+  moredelim=**[il][\YAMLcolonstyle{:}\YAMLvaluestyle]{:},   % switch to value style at :
+  morestring=[b]',
+  morestring=[b]",
+  literate =    {---}{{\ProcessThreeDashes}}3
+                {>}{{\textcolor{red}\textgreater}}1     
+                {|}{{\textcolor{red}\textbar}}1 
+                {\ -\ }{{\mdseries\ -\ }}3,
+}
+
 %--------------------------------------------------------------------------
 \begin{document}
 %------------------------- Titelblatt -------------------------------------
-\title{Implementierung einer Enterprise Search Engine für das \\ Dietrich Online Projekt}
-\subtitle{ Implementation of an enterprise search engine for the \\ Dietrich Online project }
+\title{Evaluation und prototypische Implementierung einer Enterprise-Suchmaschine in das Dietrich Online Projekt}
+\subtitle{Evaluation and prototypical implementation of an enterprise search engine in the Dietrich Online Project}
 %---- Die Art der Dokumentation kann hier ausgewählt werden---------------
 %\project{Bachelor-Projektarbeit}
 \project{Bachelor-Abschlussarbeit}
@@ -81,10 +131,10 @@
 %\project{Seminar zur Vorlesung ...}
 %\project{Hausarbeit zur Vorlesung ...}
 %--------------------------------------------------------------------------
-\supervisor{Professor Doktor Christoph Schmitz} 		% Betreuer der Arbeit
+\supervisor{Prof. Dr. Christoph Schmitz} 		% Betreuer der Arbeit
 \author{ Florian Reitz } 							% Autor der Arbeit
-\address{Trier, den 15.10.2019} 							% Im Zusammenhang mit dem Datum wird hinter dem Ort ein Komma angegeben
-\submitdate{15.3.2020} 				% Abgabedatum
+\address{Trier,} 							% Im Zusammenhang mit dem Datum wird hinter dem Ort ein Komma angegeben
+\submitdate{28.3.2020} 				% Abgabedatum
 %\begingroup
 %  \renewcommand{\thepage}{title}
 %  \mytitlepage

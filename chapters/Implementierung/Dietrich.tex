@@ -12,20 +12,20 @@ Zum Testen wird nun zuerst die Lemma-Abfrage, in einer modifizierten Fassung \re
 
 Durch die eben aktivierte X-Security von ElasticSearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines Curl Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden. 
 
-\begin{lstlisting}[language=XML, frame=single, label={lst:elaApi}] 
-    POST /_security/api_key
-    {
-      "name": "dietrich-webiste",
-      "role_descriptors": { 
-        "role-a": {
-          "cluster": ["all"],
-          "index": [
-            {
-              "names": ["dietrich_*"],
-              "privileges": ["read"]
-            }
-          ]
-    }}}
+\begin{lstlisting}[language=JSON, frame=single, label={lst:elaApi}] 
+POST /_security/api_key
+{
+  "name": "dietrich-website",
+  "role_descriptors": { 
+    "role-a": {
+      "cluster": ["all"],
+      "index": [
+        {
+          "names": ["dietrich_*"],
+          "privileges": ["read"]
+        }
+      ]
+}}}
 \end{lstlisting}
 
 
@@ -57,29 +57,29 @@ Dabei ist es wichtig, dass dieser Prozess nicht in mehreren Threads ausgeführt 
 Hier nun einmal ein Beispiel aus dem Code \ref{lst:fronendConf}.
 
 
-\begin{lstlisting}[language=XML, frame=single, label={lst:fronendConf}] 
-  [...]
-  map['bstatus_beschreibung'] ||= event.get('bstatus_beschreibung')
+\begin{lstlisting}[language=Ruby, frame=single, label={lst:fronendConf}] 
+[...]
+map['bstatus_beschreibung'] ||= event.get('bstatus_beschreibung')
 
-  map['ddc_entries'] ||= []
-  if event.get('ddc_notation') != nil
-      duplicate = false
-      map['ddc_entries'].each { |n|
-          if n.value?(event.get('ddc_notation'))
-             duplicate = true
-             break
-          end
-      }
-      if !duplicate
-          map['ddc_entries'] << {
-              'ddc_notation' => event.get('ddc_notation'),
-              'ddc_schlagwort' => event.get('ddc_schlagwort'),
-              'ddc_webdewey_is_checked' => 
-                event.get('ddc_webdewey_is_checked')
-          }
-      end
-  end
-  [...]
+map['ddc_entries'] ||= []
+if event.get('ddc_notation') != nil
+    duplicate = false
+    map['ddc_entries'].each { |n|
+        if n.value?(event.get('ddc_notation'))
+            duplicate = true
+            break
+        end
+    }
+    if !duplicate
+        map['ddc_entries'] << {
+            'ddc_notation' => event.get('ddc_notation'),
+            'ddc_schlagwort' => event.get('ddc_schlagwort'),
+            'ddc_webdewey_is_checked' => 
+              event.get('ddc_webdewey_is_checked')
+        }
+    end
+end
+[...]
 \end{lstlisting}
 
 Dieser Code wird nun so lange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung wird dabei zum Beispiel bei jeden Durchlauf überschrieben. 
@@ -104,36 +104,35 @@ Und zuletzt der Filter-Teil. Die gesetzten Filter sind auch Must-Befehle. Allerd
 
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:queryEla}] 
-  //Create Client with basic Params
-  $mustNotQueries = [];
-  $filters        = [];
-  $mustQueries    = [];
+//Create Client with basic Params
+$mustNotQueries = [];
+$filters        = [];
+$mustQueries    = [];
 
-  if ($character === LemmaEntity::NOT_A_TO_Z_CHARACTER) {
-      $mustQueries[] = ['regexp' => ['bezeichnung.keyword' => 
-        ['value' => '@&~(^[a-zA-Z].+)', 'flags' => 'ALL']]];
-        
-      $filters[]     = ['term' => ['ist_geloescht' => false]];
-  } elseif ($character === LemmaEntity::DELETED) {
-      $filters[] = ['term' => ['ist_geloescht' => true]];
-  } else {
-      $mustQueries = ['prefix' => ['bezeichnung.keyword' => "$character"]];
-      $filters[]   = ['term' => ['ist_geloescht' => false]];
-  }
+if ($character === LemmaEntity::NOT_A_TO_Z_CHARACTER) {
+    $mustQueries[] = ['regexp' => ['bezeichnung.keyword' => 
+      ['value' => '@&~(^[a-zA-Z].+)', 'flags' => 'ALL']]];
+      
+    $filters[]     = ['term' => ['ist_geloescht' => false]];
+} elseif ($character === LemmaEntity::DELETED) {
+    $filters[] = ['term' => ['ist_geloescht' => true]];
+} else {
+    $mustQueries = ['prefix' => ['bezeichnung.keyword' => "$character"]];
+    $filters[]   = ['term' => ['ist_geloescht' => false]];
+}
 
-  switch ($filter) {
-      case self::STATUS_FILTER_KLAR:
-          $filters[] = ['term' => ['bstatusbezeichnung' => 'klar']];
-          break;
-      //[Other Filters]
-  }
+switch ($filter) {
+    case self::STATUS_FILTER_KLAR:
+        $filters[] = ['term' => ['bstatusbezeichnung' => 'klar']];
+        break;
+    //[Other Filters]
+}
 
-  $params['body']['query']['bool']['must']     = $mustQueries;
-  $params['body']['query']['bool']['must_not'] = $mustNotQueries;
-  $params['body']['query']['bool']['filter']   = $filters;
+$params['body']['query']['bool']['must']     = $mustQueries;
+$params['body']['query']['bool']['must_not'] = $mustNotQueries;
+$params['body']['query']['bool']['filter']   = $filters;
 
-  return $client->search($params)['hits']['hits'];
-  
+return $client->search($params)['hits']['hits'];
 \end{lstlisting}
 
 In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Abfrage, welcher in der vorherigen Abfrage \ref{lst:phpElastic} verwendet wurde, ein Prefix-Abfrage verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.

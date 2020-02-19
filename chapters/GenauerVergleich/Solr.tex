@@ -9,11 +9,11 @@ Als Systemvoraussetzungen ist eine Java Version $> 8$ gegeben. Es wurde sich hie
 Nach dem ersten Starten wurden 2 Warnungen gemeldet, dass die User-Limits für Solr zu gering sind \ref{lst:warningSolr}. Nachdem diese entsprechend erhöht wurden, verschwanden die Warnungen.
 
 \begin{lstlisting}[language=bash, frame=single, label={lst:warningSolr}] 
-  *** [WARN] *** Your open file limit is currently 1024.
-  It should be set to 65000 to avoid operational disruption.
+*** [WARN] *** Your open file limit is currently 1024.
+It should be set to 65000 to avoid operational disruption.
 
-  *** [WARN] ***  Your Max Processes Limit is currently 63918.
-  It should be set to 65000 to avoid operational disruption.
+*** [WARN] ***  Your Max Processes Limit is currently 63918.
+It should be set to 65000 to avoid operational disruption.
 \end{lstlisting}
 
 Bei der richtigen Installation installiert sich Solr als Service und legt einen eignen Nutzer an. Ein entsprechendes Installations-Skript findet sich dafür im entpackten Solr-Ordner. Sobald dieses mit Root-Rechten aufgerufen wird installiert sich Solr automatisch in das Opt-Verzeichnis.
@@ -32,32 +32,31 @@ Entitys können unbegrenzt ineinander verschachtelt werden. Damit Änderungen an
 
 Der DataImportHandler muss, bevor er benutzt werden kann, jedoch noch mit dem Core verbunden werden. Dafür wird dieser, zusammen mit einem JDBC-Treiber in die solrconfig.xml eingetragen. Als JDBC-Treiber wurde in diesem Beispiel der Treiber von MariaDB verwendet.
 
-\begin{lstlisting}[language=xml, frame=single, label={lst:dih}, 
-    morekeywords={entity,query,deltaQuery,parentDeltaQuery,field,column, name}] 
-    <entity name="lemma" 
-      query="select * from lemma" 
-      deltaQuery="select eid from lemma 
-        where last_modified > '${dataimporter.last_index_time}'"> 
-		<field column="bezeichnung" name="bezeichnung" />
-    [...]
-    <entity name="lemma_gnd" 
-      query="select * from lemma_gnd where fk_lemma='${lemma.id}'"
-      deltaQuery="select * from lemma_gnd 
+\begin{lstlisting}[language=xml, frame=single, label={lst:dih}, morekeywords={entity,query,deltaQuery,parentDeltaQuery,field,column, name}] 
+<entity name="lemma" 
+  query="select * from lemma" 
+  deltaQuery="select eid from lemma 
+    where last_modified > '${dataimporter.last_index_time}'"> 
+<field column="bezeichnung" name="bezeichnung" />
+[...]
+<entity name="lemma_gnd" 
+  query="select * from lemma_gnd where fk_lemma='${lemma.id}'"
+  deltaQuery="select * from lemma_gnd 
+    where last_modified > '${dataimporter.last_index_time}'"
+  parentDeltaQuery="select * from lemma 
+    where id=${lemma_gnd.fk_lemma}">
+  
+    <entity name="gnd" 
+      query="select * from gnd where id = '${lemma_gnd.fk_gnd}'"
+      deltaQuery="select * from gnd 
         where last_modified > '${dataimporter.last_index_time}'"
-      parentDeltaQuery="select * from lemma 
-        where id=${lemma_gnd.fk_lemma}">
-			
-        <entity name="gnd" 
-          query="select * from gnd where id = '${lemma_gnd.fk_gnd}'"
-          deltaQuery="select * from gnd 
-            where last_modified > '${dataimporter.last_index_time}'"
-          parentDeltaQuery="select * from lemma_gnd where fk_gnd=${gnd.id}">
-          <field column="nummer" name="gnd_nummer" />
-          <field column="schlagwort" name="gnd_schlagword" />
-          [...]
-        </entity>
-      </entity>  
+      parentDeltaQuery="select * from lemma_gnd where fk_gnd=${gnd.id}">
+      <field column="nummer" name="gnd_nummer" />
+      <field column="schlagwort" name="gnd_schlagword" />
+      [...]
     </entity>
+  </entity>  
+</entity>
 \end{lstlisting}
 
 Wie schon eben angesprochen, muss das Solr-Schema für die entsprechende Elemente auch angepasst werden. Dieses Schema dient dazu die Dateitypen für eine möglichst gute Indexierung auszuweisen. Dafür wird zuerst der Dateityp für die Tabellen-Spalte angegeben. Hierbei werden bei den Grundtypen, zum Beispiel unter anderem String und Text\_de gelistet. Dabei wurde angenommen, dass die beiden nur bei Abfragen von unterschiedliche Sprachen einen Unterschied besitzen. Dies ist allerdings falsch. Als eine Abfrage gestellt wurde, die alle Lemmata mit den Buchstaben S finden sollten, kamen mehr Ergebnisse als erwartet zurück. Dies liegt daran, dass Text\_de, das Feld aus Volltext ausweist. 
@@ -68,16 +67,14 @@ Es gibt mehrere Möglichkeiten diese Einträge auszuweisen. In diesem Ersteindru
 
 \begin{lstlisting}[language=xml, frame=single, label={lst:managedSchema}, 
     morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
-
-    [...]
-    <field name="ddc_webdewey_is_checked" type="boolean" 
-        uninvertible="false" indexed="true" stored="true"/>
-    <field name="description" type="text_de" uninvertible="false" 
-        multiValued="true" indexed="true" stored="true"/>
-    <field name="erweiterung" type="text_de" 
-        uninvertible="false" indexed="true" stored="true"/>
-    [...]
-
+[...]
+<field name="ddc_webdewey_is_checked" type="boolean" 
+    uninvertible="false" indexed="true" stored="true"/>
+<field name="description" type="text_de" uninvertible="false" 
+    multiValued="true" indexed="true" stored="true"/>
+<field name="erweiterung" type="text_de" 
+    uninvertible="false" indexed="true" stored="true"/>
+[...]
 \end{lstlisting}
 
 Die Indexierung lief eine Minute und 34 Sekunden für rund 14 Tausend Einträge \ref{img:solrIndexTime}. Dabei wurde der gegebene Arbeitsspeicher nicht komplett ausgenutzt, was darauf schließen lässt, dass die Datenbank der limitierende Faktor war. Die hohe Anzahl der Abfragen ist darauf zurückzuführen, dass Solr keine Joins verwendet, sondern bei jeder verschachtelten Entity die gesamten Tabellen wieder und wieder nach passenden Einträgen durchsucht.
@@ -115,7 +112,6 @@ Die Query ist herbei sehr einfach, da die Daten beim Import schon dementsprechen
 
 \begin{lstlisting}[language=php, frame=single, label={lst:SolrPhp}, 
   morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
-
   [...] # Imports and variable declarations
 
   $config = array(

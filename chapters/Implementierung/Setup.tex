@@ -27,22 +27,22 @@ ElasticSearch verwendet die UID und GUID von 1000. Auf dem Host System ist dies 
 
 Die beiden ElasticSearch Instanzen bilden das Kernstück dieses Setups. Sie werden die Daten verwalten und sich untereinander synchronisieren. Dafür werden die beiden Instanzen geclustert.
 
-\begin{lstlisting}[language=XML, frame=single, label={lst:es01}] 
-	es01:
-	image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
-	container_name: es01
-	environment:
-		- "ES_JAVA_OPTS=-Xms4g -Xmx4g"
-	ulimits:
-		memlock: -1
-	volumes:
-		- /srv/elk/elasticSearch01/:/usr/share/elasticsearch/data
-		- /srv/elk/config/elasticsearch.yml:
-			/usr/share/elasticsearch/config/elasticsearch.yml
-	ports:
-		- 9200:9200
-	networks:
-		- elastic
+\begin{lstlisting}[language=YAML, frame=single, label={lst:es01}] 
+es01:
+image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+container_name: es01
+environment:
+	- "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+ulimits:
+	memlock: -1
+volumes:
+	- /srv/elk/elasticSearch01/:/usr/share/elasticsearch/data
+	- /srv/elk/config/elasticsearch.yml:
+		/usr/share/elasticsearch/config/elasticsearch.yml
+ports:
+	- 9200:9200
+networks:
+	- elastic
 \end{lstlisting}
 
 In diesem Auschnitt aus der Docker-Compose werden nun die ersten grundlegenden Einstellungen getroffen.
@@ -57,13 +57,13 @@ Der Port wird zum Host-System durchgereicht, damit das System auch von außerhal
 
 In der ElasticSearch-Konfigurationsdatei werden nun die Einstellungen, die speziell für das ElasticSearch-System relevant sind verwaltet \ref{lst:es01-yml}. 
 
-\begin{lstlisting}[language=XML, frame=single, label={lst:es01-yml}] 
-	cluster.name: dietrich-online-cluster
-	node.name: es01
-	bootstrap.memory_lock: true
-	network.host: 0.0.0.0
-	discovery.seed_hosts: ["es02"]
-	cluster.initial_master_nodes: ["es01", "es02"]
+\begin{lstlisting}[language=YAML, frame=single, label={lst:es01-yml}] 
+cluster.name: dietrich-online-cluster
+node.name: es01
+bootstrap.memory_lock: true
+network.host: 0.0.0.0
+discovery.seed_hosts: ["es02"]
+cluster.initial_master_nodes: ["es01", "es02"]
 \end{lstlisting}
 
 Darin wird zuerst der Cluster-Name definiert. Dieser dient dazu, dass die Server wissen, dass Sie dieselben Daten betreuen. 
@@ -102,11 +102,11 @@ Die Lösung dieses Problems war es schon bei der Zertifikat-Erstellung eine Opti
 
 Um nun alle Zertifikate gleichzeitig zu generieren, kann eine YAML Datei mitgegeben werden. In dieser werden dann die Details für die Zertifikate wie zum Beispiel DNS-Name und IP des Servers mitgegeben werden. In diesem Fall wurde nur der DNS-Name angegeben \ref{lst:certs-yml}.
 
-\begin{lstlisting}[language=XML, frame=single, label={lst:certs-yml}] 
-	instances:
-	- name: 'es01'
-	  dns: [ 'es01', 'bib55', 'bib55.uni-trier.de' ]
-	  [...]
+\begin{lstlisting}[language=YAML, frame=single, label={lst:certs-yml}] 
+instances:
+- name: 'es01'
+	dns: [ 'es01', 'bib55', 'bib55.uni-trier.de' ]
+[...]
 \end{lstlisting}
 
 Damit diese Zertifikate auch genutzt werden können, musste nun jeder Container das zugehörige Zertifikat mounten. Zudem wurde in den dazugehörigen Konfigurationsdateien die jeweiligen Optionen zur Nutzung der CA und Private Keys gesetzt werden.
@@ -118,7 +118,7 @@ Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer 
 Um nun einen Query gegen das ElasticSearch System zu stellen, muss zum einen eine BasicAuth sowie das CA mitgegeben werden \ref{lst:curlQuery}.
 
 \begin{lstlisting}[language=BASH, frame=single, label={lst:curlQuery}] 
-	curl https://bib55:9200 --cacert ca.crt -uuser:pass
+curl https://bib55:9200 --cacert ca.crt -uuser:pass
 \end{lstlisting}
 
 Damit nun auch Logstash wieder Daten an ElasticSearch senden kann, wird ein Nutzer erstellt, welcher nur auf Indices mit dem Präfix dietrich\_ Zugriff erhält. Die Erstellung dieses Nutzers wurde dabei die Benutzer-Oberfläche von Kibana gemacht \ref{img:kibanaRoles}. 

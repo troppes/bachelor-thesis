@@ -53,28 +53,20 @@ Die dabei verwendete Abfrage ist die bisher am langsamsten laufenden Abfrage der
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single] 
-    SELECT
-    lemma.id
+SELECT lemma.id
 FROM lemma
-WHERE
-    lemma.bezeichnung LIKE 'S%'
-    AND lemma.ist_geloescht = 0
-ORDER BY
-    lemma.bezeichnung ASC,
-    lemma.id ASC;
+WHERE lemma.bezeichnung LIKE 'S%' AND lemma.ist_geloescht = 0
+ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 \end{lstlisting}
 
-Im zweiten Schritt werden dann die gerade geholten ID’s mit vielen JOIN’s für die Darstellung vorbereitet.
+Im zweiten Schritt werden dann die gerade geholten ID's der Einträge mithilfe von JOIN’s für die Darstellung vorbereitet.
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single, label={lst:sqlQuery}] 
-SELECT  lemma.id,                        
-        [...] #Lemma, GND und DCC-Spalten        
+SELECT  lemma.id, [...] #Lemma, GND und DCC-columns        
 FROM lemma lemma
-      
 INNER JOIN lemmabearbeitungsstatus lemmaBStatus
 ON lemma.fk_lemmabearbeitungsstatus = lemmaBStatus.id
-
 LEFT JOIN lemma_gnd lemma_gnd_map ON lemma.id = lemma_gnd_map.fk_lemma
 LEFT JOIN gnd gnd ON lemma_gnd_map.fk_gnd = gnd.id
 LEFT JOIN gnd_ddc gnd_ddc_map ON gnd.id = gnd_ddc_map.fk_gnd

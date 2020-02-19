@@ -12,9 +12,9 @@ Artikeltitel und die dazugehörige Sigle werden in zwei unterschiedlichen Felder
 Dafür wird in dem Aggregationsfilter von Logstash definiert, der das Feld zusammenbaut \ref{lst:stringConcat}. Nun wird daraus entstandene String in das Suggestions-Feld von ElasticSearch gegeben. ElasticSearch indexiert daraufhin des String so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann. Als Ausgabe wird allerdings immer der komplette String zurückgegeben.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}] 
-    map['artikel_titel_suggest'] ||= 
-        '['+event.get('lemma_bezeichnung').to_s+']'
-            +event.get('artikel_titel').to_s
+map['artikel_titel_suggest'] ||= 
+    '['+event.get('lemma_bezeichnung').to_s+']'
+        +event.get('artikel_titel').to_s
 \end{lstlisting}
 
 Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich auch ein Array von Daten an das Auto-Vervollständigungsfeld von ElasticSearch weiterzugeben.
@@ -39,12 +39,12 @@ Diese Einschränkung kann nun mit ElasticSearch entfernt werden. Dazu wird zuers
 Durch diesen wird eine Paginierung generiert. Dafür wird mithilfe der Seitennummer ein Offset für die Abfrage generiert, sodass ElasticSearch immer nur die aktuellen Ergebnisse für die Suche liefert.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:generierung}] 
-    $result = $repo->findUserSearchResult(
-        //array with all search-querys and junctors
-        $this->userSearchItemArray, 
-        //offset for the results
-        ($request->query->getInt('pageNumber', 1) * 30 - 30)
-    );
+$result = $repo->findUserSearchResult(
+    //array with all search-querys and junctors
+    $this->userSearchItemArray, 
+    //offset for the results
+    ($request->query->getInt('pageNumber', 1) * 30 - 30)
+);
 \end{lstlisting}
 
 \subsection{Query String}
@@ -74,27 +74,27 @@ Zum anderen ist es möglich eine boolesche Logik bei der Suche zu verwenden. Um 
 Bei jeder Suche wird ein Array mit allen Suchanfragen weitergegeben. Das erste Item im Array hat dabei niemals einen Junktor. Dafür existiert der erste Fall. Existiert eine weitere Stelle im Array ist auch ein Junktor mit angegeben. Dieser wird dann in dem unten gezeigten Switch-Case ausgelesen. Dann wird eine weitere Boolean-Abfrage geschrieben, welcher zum einen den zweiten Teil der Suche, sowie die bisherige Suche enthält.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:booleanEla}] 
-    switch ($userSearchItem->getJunktor()) {
-        case UserSearchItem::JUNKTOR_NO: //First Entry
-            $this->fullQuery = [
-                'bool' => [
-                    'must' => [
-                        $this->addTypeValue($userSearchItem), //Add Search
-                    ],
+switch ($userSearchItem->getJunktor()) {
+    case UserSearchItem::JUNKTOR_NO: //First Entry
+        $this->fullQuery = [
+            'bool' => [
+                'must' => [
+                    $this->addTypeValue($userSearchItem), //Add Search
                 ],
-            ];
-            break;
-        case UserSearchItem:: JUNKTOR_AND: //MUST
-            $this->fullQuery = [
-                'bool' => [
-                    'must' => [
-                        $this->addTypeValue($userSearchItem), //Add Search
-                        $this->fullQuery, //First Part of Query
-                    ],
+            ],
+        ];
+        break;
+    case UserSearchItem:: JUNKTOR_AND: //MUST
+        $this->fullQuery = [
+            'bool' => [
+                'must' => [
+                    $this->addTypeValue($userSearchItem), //Add Search
+                    $this->fullQuery, //First Part of Query
                 ],
-            ];
-            break;
-    [...] // More Cases like OR or AND NOT
+            ],
+        ];
+        break;
+[...] // More Cases like OR or AND NOT
 \end{lstlisting}
 
 \subsection{Auto-Vervollständigung}
@@ -103,18 +103,18 @@ Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geh
 
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:autocompleParams}] 
-    $params = [
-        'index' => 'dietrich_frontend',
-        'body' => [
-            '_source' => '', //Empty Source since we need only the String
-            'suggest' => [
-                'auto_complete' => [
-                    'prefix' => $matchAgainst,
-                    'completion' => [
-                        'field' => SEA::AUTOCOMPLETE_COLUMNS[$categoryIndex],
-                        'size' => $maxMatches,
-                        'skip_duplicates' => true,
-    ]]]]];
+$params = [
+    'index' => 'dietrich_frontend',
+    'body' => [
+        '_source' => '', //Empty Source since we need only the String
+        'suggest' => [
+            'auto_complete' => [
+                'prefix' => $matchAgainst,
+                'completion' => [
+                    'field' => SEA::AUTOCOMPLETE_COLUMNS[$categoryIndex],
+                    'size' => $maxMatches,
+                    'skip_duplicates' => true,
+]]]]];
 \end{lstlisting}
 
 \subsection{Vollständige Suche}
@@ -128,11 +128,11 @@ Nach einer Besprechung mit einem Mitarbeiter wurde eine Liste mit relevanten Spa
 Bei jeder Suche soll eine Auswertung mitgeschickt werden, welche Autoren in der aktuellen Suche die meisten Artikel verfasst haben. Dazu wird eine Aggregation bei jeder Suche auf dem Autoren-Feld durchgeführt. Die Abfrage wird dafür um einen Parameter erweitert \ref{lst:bestAuthors}.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:bestAuthors}] 
-    'aggs' => [
-        'best_authors' => [
-            'terms' => [
-                'field' => 'artikel_autor.keyword',
-    ]]],
+'aggs' => [
+    'best_authors' => [
+        'terms' => [
+            'field' => 'artikel_autor.keyword',
+]]],
 \end{lstlisting}
 
 

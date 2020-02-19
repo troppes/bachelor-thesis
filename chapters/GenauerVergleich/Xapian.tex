@@ -14,50 +14,48 @@ Allerdings ist der Server bisher nur Lokal ansprechbar, um dies zu ändern, muss
 
 Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, wurde erstmal ein Beispiel zum Import einer CSV-Datei durchgearbeitet. Darin war dann zu sehen, dass der komplette Datenimport manuell geschrieben werden musste. Auf dieser Basis wurde dann ein eigener Importer für MySQL geschrieben \ref{lst:XapPhp}.
 
-\begin{lstlisting}[language=php, frame=single, label={lst:XapPhp}, 
-	morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
-	<?php
-	require_once("xapian.php");
-	
-	//Open MYSQL-Connection and Run Query. Save the Output in $result
-	
-	// Create or open the database we're going to be writing to.
-	$db = new XapianWritableDatabase($xapianDb, Xapian::DB_CREATE_OR_OPEN);
-	// Set up a TermGenerator that we'll use in indexing.
-	$termgenerator = new XapianTermGenerator();
-	$termgenerator->set_stemmer(new XapianStem('de')); //Setup Stemmer
-	
-	while ($row = $result->fetch_assoc()) { //Loop through MySQL-Rows
-	
-		$identifier = $row['id'];
-		unset($row['id']);
-		// Create new Row for the starting Letter
-		$searchIndexLetter = $row['original_bezeichnung'][0];
+\begin{lstlisting}[language=php, frame=single, label={lst:XapPhp}, morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
+<?php
+require_once("xapian.php");
 
-		$doc = new XapianDocument(); // Create new Document
-		$termgenerator->set_document($doc); //Put it into the Term-Generator
-	
-		// Index the field with a suitable prefix.
-		$termgenerator->index_text($searchIndexLetter, 1, 'K'); 
-		// Make it available for Search
-		$termgenerator->index_text($searchIndexLetter); 
-	
-		foreach ($row as $index) {
-			if ($index = '') { //Xapian cant Index Empty Fields
-				$index = 'EMPTY';
-			}
-			$termgenerator->increase_termpos(); // Make Space between Entries
-			$termgenerator->index_text($index); // Add Every Field
+//Open MYSQL-Connection and Run Query. Save the Output in $result
+
+// Create or open the database we're going to be writing to.
+$db = new XapianWritableDatabase($xapianDb, Xapian::DB_CREATE_OR_OPEN);
+// Set up a TermGenerator that we'll use in indexing.
+$termgenerator = new XapianTermGenerator();
+$termgenerator->set_stemmer(new XapianStem('de')); //Setup Stemmer
+
+while ($row = $result->fetch_assoc()) { //Loop through MySQL-Rows
+
+	$identifier = $row['id'];
+	unset($row['id']);
+	// Create new Row for the starting Letter
+	$searchIndexLetter = $row['original_bezeichnung'][0];
+
+	$doc = new XapianDocument(); // Create new Document
+	$termgenerator->set_document($doc); //Put it into the Term-Generator
+
+	// Index the field with a suitable prefix.
+	$termgenerator->index_text($searchIndexLetter, 1, 'K'); 
+	// Make it available for Search
+	$termgenerator->index_text($searchIndexLetter); 
+
+	foreach ($row as $index) {
+		if ($index = '') { //Xapian cant Index Empty Fields
+			$index = 'EMPTY';
 		}
-		$doc->set_data(json_encode($row)); // Store all the fields
-	
-		$idterm = "Q".$identifier; //Set ID to not have Duplicates
-		$doc->add_boolean_term($idterm);
-		$db->replace_document($idterm, $doc);
+		$termgenerator->increase_termpos(); // Make Space between Entries
+		$termgenerator->index_text($index); // Add Every Field
 	}
-	$conn->close();
-	
-  \end{lstlisting}
+	$doc->set_data(json_encode($row)); // Store all the fields
+
+	$idterm = "Q".$identifier; //Set ID to not have Duplicates
+	$doc->add_boolean_term($idterm);
+	$db->replace_document($idterm, $doc);
+}
+$conn->close();
+\end{lstlisting}
 
 In Zeile 10 wird ein Stemmer verwendet, welcher dazu dient, wenn zum Beispiel der Plural eines Wortes gesucht wird, auch den Singular zu finden.
 

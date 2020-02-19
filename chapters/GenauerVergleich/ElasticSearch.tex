@@ -23,38 +23,38 @@ In dem ElasticSearch-Segment wird zum einen eine ID definiert, welche verhindert
 Als die Indexierung nun gestartet wurde, kam es allerdings zu einem Fehler. Die MySQL-Abfrage sei nicht gültig. Dies lag daran, dass um zu ermitteln, wie viele Daten indiziert werden müssen, die Abfrage mit einer Count-Abfrage umhüllt wird. Dabei verwendete Logstash Double anstelle von Single-Quotes, was bei MariaDB zu einem Fehler führte. Dies konnte behoben werden, indem eine Einstellung in der Datenbank vorgenommen wurde, um auch Double-Quotes zu erlauben. 
 Danach verlief die Indexierung ohne weitere Probleme.
 
-\begin{lstlisting}[language=xml, frame=single, label={lst:lsConf}] 
-  input {
-    jdbc {
-      jdbc_validate_connection => true
-      jdbc_driver_library => ""
-      jdbc_driver_class => "Java::org.mariadb.jdbc.Driver"
-      jdbc_connection_string =>
-          "jdbc:mariadb://localhost:3306/dietrichonline"
-      jdbc_user => "USER"
-      jdbc_password => "PW"
-      tracking_column => "timestamp"
-      use_column_value=>true
-      statement => "MYSQL-Query WHERE timestamp > :sql_last_value"
-      schedule => "0 */6 * * *"
-    }
+\begin{lstlisting}[language=Ruby, frame=single, label={lst:lsConf}] 
+input {
+  jdbc {
+    jdbc_validate_connection => true
+    jdbc_driver_library => ""
+    jdbc_driver_class => "Java::org.mariadb.jdbc.Driver"
+    jdbc_connection_string =>
+        "jdbc:mariadb://localhost:3306/dietrichonline"
+    jdbc_user => "USER"
+    jdbc_password => "PW"
+    tracking_column => "timestamp"
+    use_column_value=>true
+    statement => "MYSQL-Query WHERE timestamp > :sql_last_value"
+    schedule => "0 */6 * * *"
   }
-  
-  output {
-    stdout { codec => json_lines }
-    elasticsearch {
-      document_id => "%{id}"
-      index => "lemma"
-      hosts => "localhost:9200"
-    }
+}
+
+output {
+  stdout { codec => json_lines }
+  elasticsearch {
+    document_id => "%{id}"
+    index => "lemma"
+    hosts => "localhost:9200"
   }
+}
 \end{lstlisting}
 
 Nun ist die Frage jedoch, wie weiß ElasticSearch, was für ein Datentyp das Feld besitzt. Dafür verwendet ElasticSearch ein sogenanntes Dynamic-Mapping, indem es versucht den am besten passenden Datentyp für das Feld zu ermitteln.
 
 Sollen nun bestimmte Feld-Typen verwendet werden, muss der Index von Hand erstellt werden. Um ein Feld zu definieren, muss ein Mapping manuell erstellt werden \ref{lst:mapping}. Dieses enthält zumindest den Feld-Namen und den Typen. Zudem können noch andere Optionen angegeben werden, um die Indexierung nach dem eigenen Ermessen anzupassen. Es kann zum Beispiel deklariert werden, dass ein Feld zwar existiert, allerdings nicht Suchbar ist. Sowas wäre für interne IDs zur Verwaltung interessant,welche nicht nach außen hin herausgegeben werden sollten. Wichtig ist, dass nun nur alle definierten Felder in die Datenbank geschrieben werden. Felder, die aus der Datenbank geladen werden, allerdings nicht im Index vorhanden sind, werden ignoriert.
 
-\begin{lstlisting}[language=xml, frame=single, label={lst:mapping}] 
+\begin{lstlisting}[language=JSON, frame=single, label={lst:mapping}] 
 PUT lemma
 {
   "mappings": {
@@ -66,7 +66,7 @@ PUT lemma
 
 Sollen nicht alle Felder von Hand erstellt werden, ist es zudem möglich eine Vorlage für ein dynamisches Feld zu generieren \ref{lst:mappingTemplate}. So kann für ein Feld eine bestimmte Regel gesetzt werden, ohne alle Felder manuell anlegen zu müssen. Als Beispiel habe wurde hier definiert, dass das Feld original\_bezeichnung immer nur als Keyword gespeichert wird.
 
-\begin{lstlisting}[language=xml, frame=single, label={lst:mappingTemplate}] 
+\begin{lstlisting}[language=JSON, frame=single, label={lst:mappingTemplate}] 
 PUT lemma
 {
   "mappings": {
@@ -107,32 +107,30 @@ Gut gelöst dabei ist, dass es möglich ist mit einem Klick den Befehl direkt in
 ElasticSearch bietet für PHP einen eigenen Klienten an. Es ist möglich, diesen unter anderem auch mit Composer zu installieren. Um die indexierten Dateien abzufragen, muss ein ClientBuilder gebaut werden, welcher einen oder mehrere Hosts mitgegeben bekommt. Der Server sendet, insofern nicht anders konfiguriert, 10 Resultate zurück. Um diese Limitierung aufzuheben, muss hierbei an 2 Stellen etwas verändert werden. In PHP muss dem Klienten bei der Anfrage ein Parameter mitgegeben werden, welcher die Menge der Ergebnisse bestimmt. Dies funktioniert allerdings nur bis zu 10.000 Ergebnissen. Sollten mehr Ergebnisse erwünscht sein, muss auch noch etwas am Index geändert werden. Dies kann entweder über eine HTTP Anfrage oder über die Oberfläche geändert werden. Für den Test wurde dieses Limit nun erhöht \ref{img:elasticIndexSettings}. 
 
 
-\begin{lstlisting}[language=php, frame=single, label={lst:phpElastic}, 
-  morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
-  <?php
-  [...] # Imports and variable declarations
+\begin{lstlisting}[language=php, frame=single, label={lst:phpElastic}, morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
+<?php
+[...] # Imports and variable declarations
 
-  $clientBuilder = ClientBuilder::create()->setHosts(['136.199.34.55']);
-  $client        = $clientBuilder->build();
+$clientBuilder = ClientBuilder::create()->setHosts(['136.199.34.55']);
+$client        = $clientBuilder->build();
 
-  $params = [
-      'index' => 'lemma',
-      'body' => [
-          'size' => 1000000,
-          'query' => [
-              "wildcard" => ["bezeichnung.keyword" => "S*"],
-  ]]];
-  
-  $results = $client->search($params);
-  [...] # Loop with Timer  
-  $results = $client->search($params);
+$params = [
+    'index' => 'lemma',
+    'body' => [
+        'size' => 1000000,
+        'query' => [
+            "wildcard" => ["bezeichnung.keyword" => "S*"],
+]]];
 
-  $count=0;
-    foreach ($results['hits']['hits'] as $hit){
-      $count++;
-    }
-  [...] # Output Runtime
-  
+$results = $client->search($params);
+[...] # Loop with Timer  
+$results = $client->search($params);
+
+$count=0;
+  foreach ($results['hits']['hits'] as $hit){
+    $count++;
+  }
+[...] # Output Runtime
 \end{lstlisting}
 
 Zum Code ist noch zu sagen, dass im Ergebnis keine Summe der Ergebnisse liegt, sondern dafür ein eigener Query vonnöten ist. Deswegen werden hier die Ergebnisse in einer Schleife gezählt.
