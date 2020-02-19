@@ -22,7 +22,7 @@ Bei der richtigen Installation installiert sich Solr als Service und legt einen 
 
 Um mit der Indexierung starten zu können, muss zuerst ein sogenannter Core erstellt werden. Dieser ist ein Index mit dazugehörigen Transaktions-Log und den Konfigurationsdateien. Nur mit diesen ist es möglich Dateien zu indexieren und auf ihnen zu suchen. Nach der Erstellung lässt sich der Core über die Oberfläche einsehen und zum Teil konfigurieren.
 
-Damit Solr nun die Daten von der Datenbank liest, muss ein DataImportHandler (DIH) \ref{lst:dih} geschrieben werden. In diesen werden die Daten, welche indexiert werden sollen, mit MySQL-Queries eingelesen. Das System setzt dabei auf eine XML-Struktur mit sogenannten Entitys. Diese besitzen jeweils mehrere Attribute, wie den Namen, welcher auf der Oberfläche zur Indexierung angezeigt wird, den MySQL-Query mit dem die Daten gelesen werden und einen Delta-Query, welcher dazu dient, nur die Einträge zu laden, welche Änderungen seit dem letzten Import erlebt haben. 
+Damit Solr nun die Daten von der Datenbank liest, muss ein DataImportHandler (DIH) \ref{lst:dih} geschrieben werden. In diesen werden die Daten, welche indexiert werden sollen, mit MySQL-Queries eingelesen. Das System setzt dabei auf eine XML-Struktur mit sogenannten Entitys. Diese besitzen jeweils mehrere Attribute, wie den Namen, welcher auf der Oberfläche zur Indexierung angezeigt wird, den MySQL-Abfrage mit dem die Daten gelesen werden und einen Delta-Query, welcher dazu dient, nur die Einträge zu laden, welche Änderungen seit dem letzten Import erlebt haben. 
 
 Der Delta-Query benötigt hierbei eine eigene Zeitstempel-Spalte in der Datenbank, welche angezeigt, wann die Spalte das letzte Mal editiert wurde. Da die Tabellen im Projekt aktuell keine solche Spalte besitzen, kann die Funktion nicht getestet werden.
 
@@ -108,7 +108,7 @@ Die Dokumentation ist gut bebildert und bietet einen guten Einstiegspunkt in das
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
 Um nicht direkt mit der JSON-API arbeiten zu müssen, gibt es diverse Bibliotheken, die ein wenig der Arbeit abnehmen. Eine der größten ist hierbei Solarium, welches sich mit Composer\footnote{Abhängigkeiten-Manger für PHP} installieren lässt. Da die Composer Technologie schon im Projekt verwendet wird, ist dies vom Vorteil.
-Die Query ist herbei sehr einfach, da die Daten beim Import schon dementsprechend indexiert wurden.
+Die Abfrage ist herbei sehr einfach, da die Daten beim Import schon dementsprechend indexiert wurden.
 
 \begin{lstlisting}[language=php, frame=single, label={lst:SolrPhp}, 
   morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
