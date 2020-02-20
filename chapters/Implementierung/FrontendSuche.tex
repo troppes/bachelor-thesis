@@ -24,11 +24,11 @@ Diese Größe wurde hierbei schon ein wenig dadurch reduziert, dass jeder Feldty
 
 So wurde zum Beispiel die URL nur als String und nicht als Volltext gespeichert. Auch werden Felder, die unter 255 Zeichen lang sind als Keyword und Volltext gleichzeitig indexiert. Es wurde sich hier für nur einen Typen entschieden, um mehr Platz zu sparen.
 
-Als nun allerdings die Pipeline das erste mal gelaufen ist, kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht.
+Als nun allerdings die Pipeline das erste Mal gelaufen ist, kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht.
 
 \section{Integration}
 
-Die Integration folgte demselben Muster, wie die Lemma-Administration. Auf ein paar Unterschiede wird hier jedoch genauer eingegeangen. 
+Die Integration folgte demselben Muster, wie die Lemma-Administration. Auf ein paar Unterschiede wird hier jedoch genauer eingegangen. 
 
 \subsection{Paginierung}
 
@@ -48,7 +48,7 @@ $result = $repo->findUserSearchResult(
 \end{lstlisting}
 
 \subsection{Query String}
-Für die diversen Suchen wurde eine Query-String Suche verwendet, da diese erlaubt, dass Wildcard Symbole zu verwenden. Dadurch geben sich zwar Performanzeinbusen, allerdings sind Wildcard-Suchen ein oft genutztes Element in diesem Projekt und daher erforderlich.
+Für die diversen Suchen wurde eine Query-String Suche verwendet, da diese erlaubt, dass Wildcard Symbole zu verwenden. Dadurch geben sich zwar Performanz-Einbußen, allerdings sind Wildcard-Suchen ein oft genutztes Element in diesem Projekt und daher erforderlich.
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:aufbauQueryString}] 
 $subQuery = [
@@ -65,7 +65,7 @@ $subQuery = [
 ];
 \end{lstlisting}
 
-Ein Augenmerk muss auch noch auf die Lenient-Option gelegt werden. Ist dieser Wert nicht gesetzt, bricht die Suche mit einem Format-Fehler, wie das Suchen eines Strings in einem Zahlen-Feld, ab. Diese Funktion wurde daher bei allen Suchen abgeschaltet. Gerade wie bei diesem Beispiel, muss die Suche Felder mit diversen Inhalt gleichzeitig durchsuchen, ohne abzubrechen. 
+Ein Augenmerk muss auch noch auf die Lenient-Option gelegt werden. Ist dieser Wert nicht gesetzt, bricht die Suche mit einem Format-Fehler, wie das Suchen eines Strings in einem Zahlen-Feld, ab. Diese Funktion wurde daher bei allen Suchen abgeschaltet. Gerade wie bei diesem Beispiel, muss die Suche Felder mit diversem Inhalt gleichzeitig durchsuchen, ohne abzubrechen. 
 
 \subsection{Boolesche Logik}
 
@@ -137,7 +137,7 @@ Bei jeder Suche soll eine Auswertung mitgeschickt werden, welche Autoren in der 
 
 
 Nun kann kommt bei jeder Suchanfrage eine Aggregation namens 'best\_authors' mit zurück. Diese enthält zum einen den Namen, sowie die Anzahl der gefundenen Dokumente des Autors in der jeweiligen Suche. 
-Mit diesen Daten war es nun möglich Buttons zu generieren   , welche eine neue Suche mit den Autoren starten \ref{img:erweiterteSuche}.
+Mit diesen Daten war es nun möglich Buttons zu generieren, welche eine neue Suche mit den Autoren starten \ref{img:erweiterteSuche}.
 
 
 \begin{figure}

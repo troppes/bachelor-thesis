@@ -2,7 +2,7 @@
 
 In diesem Kapitel werden nun diverse Suchmaschinen nach einer vorher mit den Mitarbeitern erstellten Anforderungsliste evaluiert.
 
-Die nun folgende Liste zeigt alle Auschlusskriterien für die Suchmaschinen an.
+Die nun folgende Liste zeigt alle Ausschlusskriterien für die Suchmaschinen an.
 \begin{itemize}
     \item Open-Source oder kostenlos
     \item Unterstützung von Facetten
@@ -83,7 +83,7 @@ Da Solr zur Apache Foundation gehört, ist es Open Source. Es bietet viele Funkt
 \section{Elasticsearch}
 \label{elasticsearch}
 
-Eine weitere große Enterprise-Suchmaschine ist Elasticsearch. Auch dieses Projekt arbeitet auf der Basis von Lucene. Zu den bekanntesten Kunden zählen Ebay\footnote{Online-Marktplatz \url{https://www.ebay.de/}} und Adobe\footnote{Softwarefirma \url{https://www.adobe.com/}}. Gestartet wurde das Projekt in den jungen 2000ern von Shay Banon, um eine Verwaltung für die Rezepte seiner Frau zu schaffen. Im Juni 2012 haben sich dann Logstash, ein Logging Dienst, Kibana, ein UI für Elasticsearch, und Elasticsearch zusammengetan. So enstand der ELK-Stack. Die enstandene Firma nennt sich Elasticsearch Incorporated. Seitdem wurden der Produktkatalog stetig erweitert und die Produkte weiterentwickelt. Viele der weiteren Produkte sind allerdings nicht mehr Open-Source oder kostenlos. Der ELK-Stack ist allerdings weiterhin und es wurde versprochen, dass es so bleibt, kostenlos und Elasticsearch zudem auch als Open-Source Variante zu haben. Eine genauere Aussage, welche Features nur in der kostenlosen und nicht in der Open-Source Variante zu finden sind, finden sich in der Tabelle \ref{vglTable}.
+Eine weitere große Enterprise-Suchmaschine ist Elasticsearch. Auch dieses Projekt arbeitet auf der Basis von Lucene. Zu den bekanntesten Kunden zählen Ebay\footnote{Online-Marktplatz \url{https://www.ebay.de/}} und Adobe\footnote{Softwarefirma \url{https://www.adobe.com/}}. Gestartet wurde das Projekt in den jungen 2000ern von Shay Banon, um eine Verwaltung für die Rezepte seiner Frau zu schaffen. Im Juni 2012 haben sich dann Logstash, ein Logging Dienst, Kibana, ein UI für Elasticsearch, und Elasticsearch zusammengetan. So entstand der ELK-Stack. Die entstandene Firma nennt sich Elasticsearch Incorporated. Seitdem wurden der Produktkatalog stetig erweitert und die Produkte weiterentwickelt. Viele der weiteren Produkte sind allerdings nicht mehr Open-Source oder kostenlos. Der ELK-Stack ist allerdings weiterhin und es wurde versprochen, dass es so bleibt, kostenlos und Elasticsearch zudem auch als Open-Source Variante zu haben. Eine genauere Aussage, welche Features nur in der kostenlosen und nicht in der Open-Source Variante zu finden sind, finden sich in der Tabelle \ref{vglTable}.
 
 Elasticsearch erfüllt alle der Grundanforderungen, auch in der Open-Source Variante. Auch viele der optionalen Features sind in der Open-Source Variante verfügbar. Einzig die Sicherheitsfunktionen, wie rollen-basierte Authentifizierung sind der kostenlosen Variante vorbehalten. Eine Möglichkeit auf bezahlten Support besteht auch. \cite{Elasticsearch.2019}
 
@@ -186,7 +186,7 @@ Nach diesem ersten Feature-Vergleich haben 7 Suchmaschinen die Anforderungen erf
 
 \subsection{Lucene Core}
 
-Lucene Core scheidet dadurch aus das es zum einen keine direkte Schnittstelle liefert, die gut mit PHP zur erreichen ist. Die einzige Möglichkeit wären direkte System-Calls, wodurch es schwerer ist, die Systeme voneinander zu separieren, zum Beispiel auf verschiedenen Server zu legen. Zum anderen existiert mit Solr eine Lucene-Eweiterung, welche die Probleme löst. \cite{TheApacheSoftwareFoundation.2019b}
+Lucene Core scheidet dadurch aus das es zum einen keine direkte Schnittstelle liefert, die gut mit PHP zur erreichen ist. Die einzige Möglichkeit wären direkte System-Calls, wodurch es schwerer ist, die Systeme voneinander zu separieren, zum Beispiel auf verschiedenen Server zu legen. Zum anderen existiert mit Solr eine Eweiterung von Lucene, welche die Probleme löst. \cite{TheApacheSoftwareFoundation.2019b}
 
 \subsection{Sphinx}
 

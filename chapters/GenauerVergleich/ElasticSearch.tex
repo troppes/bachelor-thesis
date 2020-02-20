@@ -5,7 +5,7 @@
 
 Die Installation ist bei Elasticsearch dreigeteilt. Um die Suchmaschine in dem Umfang nutzen zu können, wie es hier benötigt wird, muss der komplette ELK-Stack installiert werden. Elasticsearch ist hierbei das Kernstück und dient als Datenbank. Kibana ist eine grafische Benutzeroberfläche und Logstash bildet die Brücke zwischen der Datenquelle und Elasticsearch. Während Elasticsearch Java mitgeliefert hat, muss für Logstash Java Version 8 oder 11 nachinstalliert werden. Um die drei Dienste für den Development Modus zu installieren, müssen nur die Archive entpackt und die entsprechenden Anwendungen gestartet werden. Ohne die Konfigurationsdateien zu ändern, haben die Anwendungen direkt miteinander kommunizieren können. Allerdings hat Logstash ein paar Warnungen beim Start geworfen, welche mit JRuby zusammenhingen und den Entwicklern schon bekannt sind. Daher können diese hier ignoriert werden.
 
-Für eine richtige Installation gibt es mehrere Wege. Für den Test wurde das Debian-Packet verwendet. Alternativ ist es allerdings auch möglich, entweder das Repository von Elasticsearch einzupflegen oder einen Docker-Container zu nutzen. Die Installtion verlief hierbei ohne Probleme.
+Für eine richtige Installation gibt es mehrere Wege. Für den Test wurde das Debian-Packet verwendet. Alternativ ist es allerdings auch möglich, entweder das Repository von Elasticsearch einzupflegen oder einen Docker-Container zu nutzen. Die Installation verlief hierbei ohne Probleme.
 
 \subsection{Indexierung}
 \label{elaVgl:index}
@@ -52,7 +52,7 @@ output {
 
 Nun ist die Frage jedoch, wie weiß Elasticsearch, was für ein Datentyp das Feld besitzt. Dafür verwendet Elasticsearch ein sogenanntes Dynamic-Mapping, indem es versucht den am besten passenden Datentyp für das Feld zu ermitteln.
 
-Sollen nun bestimmte Feld-Typen verwendet werden, muss der Index von Hand erstellt werden. Um ein Feld zu definieren, muss ein Mapping manuell erstellt werden \ref{lst:mapping}. Dieses enthält zumindest den Feld-Namen und den Typen. Zudem können noch andere Optionen angegeben werden, um die Indexierung nach dem eigenen Ermessen anzupassen. Es kann zum Beispiel deklariert werden, dass ein Feld zwar existiert, allerdings nicht Suchbar ist. Sowas wäre für interne IDs zur Verwaltung interessant,welche nicht nach außen hin herausgegeben werden sollten. Wichtig ist, dass nun nur alle definierten Felder in die Datenbank geschrieben werden. Felder, die aus der Datenbank geladen werden, allerdings nicht im Index vorhanden sind, werden ignoriert.
+Sollen nun bestimmte Feld-Typen verwendet werden, muss der Index von Hand erstellt werden. Um ein Feld zu definieren, muss ein Mapping manuell erstellt werden \ref{lst:mapping}. Dieses enthält zumindest den Feld-Namen und den Typen. Zudem können noch andere Optionen angegeben werden, um die Indexierung nach dem eigenen Ermessen anzupassen. Es kann zum Beispiel deklariert werden, dass ein Feld zwar existiert, allerdings nicht Suchbar ist. Sowas wäre für interne IDs zur Verwaltung interessant, welche nicht nach außen hin herausgegeben werden sollten. Wichtig ist, dass nun nur alle definierten Felder in die Datenbank geschrieben werden. Felder, die aus der Datenbank geladen werden, allerdings nicht im Index vorhanden sind, werden ignoriert.
 
 \begin{lstlisting}[language=JSON, frame=single, label={lst:mapping}] 
 PUT lemma
@@ -133,7 +133,7 @@ $count=0;
 [...] # Output Runtime
 \end{lstlisting}
 
-Zum Code ist noch zu sagen, dass im Ergebnis keine Summe der Ergebnisse liegt, sondern dafür ein eigener Abfrage vonnöten ist. Deswegen werden hier die Ergebnisse in einer Schleife gezählt.
+Zum Code ist noch zu sagen, dass im Ergebnis keine Summe der Ergebnisse liegt, sondern dafür eine eigener Abfrage vonnöten ist. Deswegen werden hier die Ergebnisse in einer Schleife gezählt.
 
 Auch hier wurde nun die Abfrage 100-Mal ausgeführt, um einen Median Wert zu ermitteln. Dieser lag bei Elasticsearch bei 0.58 Sekunden pro Abfrage.
 

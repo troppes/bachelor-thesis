@@ -3,7 +3,7 @@
 In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt, um einen Ersteindruck zu erstellen. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit weiter betreuen kann, ist es auch wichtig zu schauen, wie leicht  es für einen neuen Administrator ist, sich in dieses System einzuarbeiten. Deshalb wird ein besonderes Augenmerk auf die Dokumentation und Oberfläche, insofern vorhanden, gelegt. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt.
 
 \section{Testsystem}
-Das Testsystem besitzt die folgende Spezifikationen:
+Das Testsystem besitzt die folgenden Spezifikationen:
 
 \begin{itemize}
     \item CPU: 4 Kerne
@@ -29,13 +29,13 @@ In diesem Schritt wird geschaut, wie übersichtlich und funktional die Oberfläc
 
 \subsection{Dokumentation}
 
-Im dritten Schritt wird die Dokumentation analysiert. Hier  bei wird Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Da in diesem Kurztest nicht alle Bereiche der Dokumentation genau durchgelesen und daraufhin auch Testweise implementiert werden können, wird sich dabei auf die Schritte dieses Ersteindrucks bezogen.
+Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Da in diesem Kurztest nicht alle Bereiche der Dokumentation genau durchgelesen und daraufhin auch Testweise implementiert werden können, wird sich dabei auf die Schritte dieses Ersteindrucks bezogen.
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
 Im letzten Schritt wird eine Abfrage an das System von einem PHP-Skript abgesetzt. Dabei wird die Zeit gemessen, wie lange die Abfrage braucht um die Daten zu liefern.
 
-Die dabei verwendete Abfrage ist die bisher am langsamsten laufenden Abfrage der DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen, welche für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und der zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn diese Funktionalität wird direkt mitgeliefert.
+Die dabei verwendete Abfrage ist die bisher am langsamsten laufenden Abfrage des DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen, welche für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und der zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn diese Funktionalität wird direkt mitgeliefert.
 
 \begin{figure}
 	\centering
@@ -59,7 +59,7 @@ WHERE lemma.bezeichnung LIKE 'S%' AND lemma.ist_geloescht = 0
 ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 \end{lstlisting}
 
-Im zweiten Schritt werden dann die gerade geholten IDs der Einträge mithilfe von JOINs für die Darstellung vorbereitet.
+Im zweiten Schritt werden dann die gerade geholten IDs der Einträge mithilfe von Joins für die Darstellung vorbereitet.
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single, label={lst:sqlQuery}] 
