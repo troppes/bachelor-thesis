@@ -85,7 +85,7 @@ In der Konfigurationsdatei werden nun die Einstellungen für Kibana gesetzt. Dar
 
 \section{Logstash}
 
-Für die Grundkonfiguration von Logstash muss, wie schon im Ersteindruck, der Treiber in die Core-Bibliothek gelegt werden. Zudem werden die Konfigurationsdateien für die Pipelines, also die Prozesse des Daten sammeln und an Elasticsearch gemountet.
+Für die Grundkonfiguration von Logstash muss, wie schon im Ersteindruck, der Treiber in die Core-Bibliothek gelegt werden. Zudem werden die Konfigurationsdateien für die Pipelines\footnote{Eine Konfigurationsdatei, welche Daten von wo geholt werden sollen und wohin diese geschoben werden} gemountet.
 
 In der Konfigurationsdatei für Logstash wird dann der Name, die Pipeline.id und die Pipeline-Worker festgelegt. Die Pipeline-Worker sind die Threads, in denen eine der konfigurierten Pipelines abgearbeitet wird. Generell sollte die Anzahl der Cores auch die maximale Anzahl der Worker sein.
 
