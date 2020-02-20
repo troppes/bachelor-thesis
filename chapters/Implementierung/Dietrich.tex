@@ -137,7 +137,7 @@ return $client->search($params)['hits']['hits'];
 
 In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Abfrage, welcher in der vorherigen Abfrage \ref{lst:phpElastic} verwendet wurde, ein Prefix-Abfrage verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.
 
-\section{Vergleich}
+\section{Vergleich von der Geschwindigkeit der Abfragen}
 
 Die oben beschriebenen Abfragen wurden jetzt jeweils 100-Mal mit einem Timer laufen gelassen. 
 

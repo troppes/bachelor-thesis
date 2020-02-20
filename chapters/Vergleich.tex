@@ -12,7 +12,7 @@ Die nun folgende Liste zeigt alle Ausschlusskriterien für die Suchmaschinen an.
     \item Logging-Möglichkeit
 \end{itemize}
 
-Des Weiteren sind die folgenden Funktionen stark erwünscht, allerdings nicht ausschlaggebend für eine Disqualifikation.
+Des Weiteren sind die folgenden Funktionen stark erwünscht, allerdings nicht ausschlaggebend für eine Disqualifikation:
 
 \begin{itemize}
     \item Unterstützung von PostgreSQL
@@ -23,106 +23,106 @@ Des Weiteren sind die folgenden Funktionen stark erwünscht, allerdings nicht au
     \item bezahlter Support
 \end{itemize}
 
-Durch die lange Projektlaufzeit und begrenzten finanziellen Mitteln besteht die Notwendigkeit, eine kostenfreie, im besten Fall sogar eine Open-Source Suchmaschine zu finden. 
+Durch die lange Projektlaufzeit und begrenzten finanziellen Mittel besteht die Notwendigkeit, eine kostenfreie, im besten Fall sogar eine Open-Source Suchmaschine, zu finden. 
 
-Auch äußerst wichtig ist die Unterstützung von Facetten, da DietrichOnline als Suchmaschine den Nutzern einige Tools zum Verfeinern seiner Suchergebnisse zur Verfügung stellen soll.
+Außerdem ist die Unterstützung von Facetten äußerst wichtig, da DietrichOnline als Suchmaschine den Nutzern einige Tools zum Verfeinern seiner Suchergebnisse zur Verfügung stellen soll.
 
 Da hier mit großen Datenmengen gearbeitet wird, ist ein Ranking von großer Bedeutung. Es können nicht alle Daten gleichzeitig dargestellt werden. Deshalb sollten die besten Treffer auch zuerst angezeigt werden.
 
-Die Volltextsuche wird es möglich machen, auch nach Schlüsselwörtern innerhalb des Titels oder in Beschreibungen zu suchen.
+Die Volltextsuche wird es ermöglichen, auch nach Schlüsselwörtern innerhalb des Titels oder in Beschreibungen zu suchen.
 
-Der Unterstützung von verschiedenen Dateiformaten ergibt sich dadurch, dass dieses Projekt stark gewachsen ist. Es gibt viele Prozessschritte, welche auf denselben Daten in verschiedenen Formen arbeiten. Darunter werden alle Einträge im XML-Format bearbeitet. Alls Scans liegen im PDF-Format vor. Zudem sind für die Webseite nochmals alle Daten in der Datenbank vorhanden.
+Der Unterstützung von verschiedenen Dateiformaten wird benötigt, da dieses Projekt stark gewachsen ist. So gibt es viele Prozessschritte, welche auf denselben Daten in unterschiedlichen Formen arbeiten. Alls Scans liegen im PDF-Format vor. Die Fehler dieser Scans werden in einer XML-Datei korrigiert. Zudem sind für die Webseite alle Daten auch in der Datenbank vorhanden.
 
-Als letztes ist es noch wichtig, dass zumindest ein Fehler-Logging geboten wird, damit schnell und effizient Probleme mit dem System erkannt und gelöst werden können. Ein erweitertes Monitoring ist ein Bonuspunkt.
+Als letztes ist es noch wichtig, dass zumindest ein Fehler-Logging geboten wird, damit schnell und effizient Probleme mit dem System erkannt und gelöst werden können. Ein erweitertes Monitoring ist ein Bonus.
 
-Eine Unterstützung von PostgreSQL ist nicht für dieses Projekt nötig. Allerdings könnte es sein, dass dieser Server später auch andere Projektdaten verwalten soll. Daher wäre eine Unterstützung für dieses Datenbankmanagementsystem wünschenswert.
+Eine Unterstützung von PostgreSQL ist nicht für dieses Projekt nötig. Trotzdem wäre ein Support für dieses Datenbankmanagementsystem wünschenswert, sollten im weiteren Verlauf auch andere Projektdaten mit dem Server verwaltet werden. 
 
-Die Maschinen der Bibliothek werden generell täglich mit Backups gesichert. Allerdings ist zudem eine manuelle Backup-Lösung wünschenswert, um die Suchmaschine losgelöst zu sichern und gegebenenfalls auch einfach auf einen anderen Server umziehen zu können. 
+Die Maschinen der Bibliothek werden täglich mit Backups gesichert. Trotzdem wäre eine manuelle Backup-Lösung wünschenswert, um die Suchmaschine losgelöst zu sichern und gegebenenfalls einfach auf einen anderen Server umziehen zu können. 
 
-Funktionen zur Auto-Korrektur und Auto-Vervollständigung können den Nutzer mehr Komfort bei der Suche bieten.
+Funktionen zur Auto-Korrektur und Auto-Vervollständigung können den Nutzer mehr Komfort bei der Suche bieten und sind deswegen auch angestrebt.
 
-Die Sicherheitsfunktionen sind für die Suchmaschinen mit Web-Oberfläche interessant. Generell wird der Server im ersten Schritt nur intern anzusprechen sein. Wenn es allerdings eine Web-Oberfläche gibt, kann es sein, dass diese zu einem späteren Zeitpunkt mithilfe eines Reverse-Proxys ansprechbar gemacht wird, um eine Administration aus dem Internet zu ermöglichen. Daher wäre es gut, wenn der Server ein Login-System bietet.
+Die Sicherheitsfunktionen sind vor allem für die Suchmaschinen mit Web-Oberfläche interessant. Der Server wird im ersten Schritt nur intern anzusprechen sein. Wenn es allerdings eine Web-Oberfläche gibt, kann es sein, dass diese zu einem späteren Zeitpunkt mithilfe eines Reverse-Proxys extern ansprechbar gemacht wird, um eine Administration aus dem Internet zu ermöglichen. Daher wäre es gut, wenn der Server ein Authentifizierungs-System bietet.
 
-Einen PHP-Connector, welcher Objekte zum Umgang mit der Suchmaschine bietet, wäre auch wünschenswert. Alternativ wäre zumindest eine Möglichkeit, Anfragen über JSON oder ähnliches zu stellen, positiv. Es sollte zumindest eine der beiden Methoden verfügbar sein, damit die Suchmaschine einfach von PHP aus zu erreichen ist.
+Einen PHP-Connector, welcher Objekte zum Umgang mit der Suchmaschine bietet, wäre auch wünschenswert. Alternativ wäre zumindest eine Möglichkeit, Anfragen über JSON oder ähnliche Formate zu stellen, positiv. Es sollte zumindest eine der beiden Methoden verfügbar sein, damit die Suchmaschine einfach von PHP aus zu erreichen ist.
 
 Sollte es zu Problemen mit der Suchmaschine kommen, wäre ein bezahlter Support zudem auch wünschenswert.
 
-\section{Apache Lucene Core}
+\section{Lucene Core}
 \label{lucenecore}
 
 Lucene Core ist eine Open-Source Enterprise-Suchmaschine von der Apache Foundation, geschrieben in Java.
 
 Das Lucene Projekt wurde im Jahre 1997 vom Entwickler Doug Cutting gestartet. 2001 ist es dann der Apache Foundation als Teil des Jakarta-Projekts beigetreten und wurde 2005 ein eigenes Hauptprojekt der Foundation. \cite{Wikipedia.2019c}
 
-Lucene Core erfüllt alle der Grundanforderungen. Für das Monitoring gibt es eine Klasse, die es auch ermöglicht, dass langsame Abfragen geloggt werden. Zudem besitzt es eine Unterstützung von PostgreSQL und Auto-Korrektur/Auto-Vervollständigung. Da es keine Web-Oberfläche besitzt, gibt es auch keine weiteren Sicherheitsfunktionen. Einen PHP-Connector gibt es leider auch nicht, man müsste daher mit PHP direkte Systemaufrufe an Java machen. Ein bezahlter Support ist nicht vorhanden, da dieses Projekt zur Apache Foundation gehört. \cite{TheApacheSoftwareFoundation.2019b}
+Lucene Core erfüllt alle der Grundanforderungen. Für das Monitoring existiert es eine Klasse, die es unter anderem auch ermöglicht langsame Abfragen geloggt werden. Zudem besitzt es eine Unterstützung von PostgreSQL und Auto-Korrektur/Auto-Vervollständigung. Da es keine Web-Oberfläche besitzt, gibt es auch keine weiteren Sicherheitsfunktionen. Einen PHP-Connector existiert nicht, es müssten daher mit PHP direkte Systemaufrufe an Java gemacht werden. Ein bezahlter Support ist nicht vorhanden, da dieses Projekt zur Apache Foundation gehört. \cite{TheApacheSoftwareFoundation.2019b}
 
 \section{Terrier}
 \label{terrier}
 
 Terrier ist eine Open-Source Enterprise-Suchmaschine, geschrieben in Java. Entwickelt und gepflegt wird diese von der University of Glasgow. Sie existiert bereits seit 10 Jahren und besitzt, laut Webseite, eine breite Nutzerbasis. 
-Terrier erfüllt leider nicht alle Grundanforderungen, da es keine direkte Möglichkeit gibt, SQL-Tabellen zu indexieren. Es gibt allerdings eine Möglichkeit, SQL-Tabellen in JSON zu konvertieren und diese dann in die Suchmaschine einzupflegen. Auch scheint es keinen Support für Facetten gegeben.
+Terrier erfüllt nicht alle Grundanforderungen, da es keine direkte Möglichkeit gibt, SQL-Tabellen zu indexieren. Allerdings besteht die Option, die SQL-Tabellen in JSON zu konvertieren und diese dann in die Suchmaschine einzupflegen. Weiterhin scheint es keinen Support für Facetten gegeben.
 \cite{McCreadie.2019}
 
 \section{Sphinx}
 \label{sphinx}
 
-Sphinx ist eine Suchmaschine, entwickelt von Andrew Aksyonoff. Das Akronym steht für „SQL Phrase Index“ \cite{SphinxTechnologiesInc.b}. Bis zur Version 2 wurde sie aktiv als Open-Source-Software entwickelt. Ab Version 3 wurde die Entwicklung allerdings Closed-Source weitergeführt. Auf der Github-Seite steht: „The sources for 3.0 will also be posted here when we decide to make those publicly available.“ \cite{sphinxserach.2019}, also gibt es kein genaues Datum ob und wann die Version 3 als Open-Source Variante zur Verfügung steht. Version 3.1.1 wurde im Oktober 2018 veröffentlicht und seitdem lässt sich auch nichts mehr über den Status des Projektes finden. Von daher ist davon auszugehen, dass das Projekt nicht mehr weitergeführt wird. 
+Sphinx ist eine Suchmaschine, entwickelt von Andrew Aksyonoff. Das Akronym steht für „SQL Phrase Index“ \cite{SphinxTechnologiesInc.b}. Bis zur Version 2 wurde sie aktiv als Open-Source-Software entwickelt. Ab Version 3 wurde die Entwicklung allerdings Closed-Source weitergeführt. Auf der Github-Seite steht: „The sources for 3.0 will also be posted here when we decide to make those publicly available.“ \cite{sphinxserach.2019}, also gibt es kein genaues Datum ob und wann die Version 3 als Open-Source Variante zur Verfügung steht. Seit Oktober 2018 sind keine neuen Informationen über den Status des Projektes anzufinden, weswegen angenommen werden kann, dass dieses nicht mehr weitergeführt wird.
 
-Zu den Features ist festzuhalten, dass es keine native PDF-Unterstützung in der Open-Source Variante gibt. Erst in Version 3 wurde ein Dokumenten-Speicher eingebaut. Allerdings werden die anderen Anforderungen alle erfüllt. Es existiert, laut Webseite, sogar ein bezahlter Support, allerdings ist fraglich, ob mit der Firma noch in Kontakt getreten werden kann. \cite{SphinxTechnologiesInc.2019}
+Es gibt keine native PDF-Unterstützung in der Open-Source Variante. Erst in Version 3 wurde ein Dokumenten-Speicher eingebaut. Die anderen Anfroderungen werden alle erfüllt. Es existiert, laut Webseite, sogar ein bezahlter Support, allerdings ist fraglich, ob mit der Firma noch in Kontakt getreten werden kann. \cite{SphinxTechnologiesInc.2019}
 
-\section{Apache Solr}
+\section{Solr}
 \label{solr}
 
 Apache Solr ist eine auf Lucene Core \ref{lucenecore} basierende, viel eingesetzte Suchmaschine von der Apache Foundation. Sie erweitert Lucene Core um eine grafische Benutzeroberfläche und einige weitere Funktionen. 
-Die Entwicklung dafür begann 2004 als ein internes Projekt von CNET\footnote{Amerikanische Medienwebseite \url{https://www.cnet.com/}} um eine bessere Suche für die eigene Webseite zu bieten. Später im Jahre 2006 hat CNET dann den Source Code an die Apache Foundation weitergegeben. Zuerst wurde es dort ein eigenständiges Projekt. Im Jahre 2009 wurde Solr dann in das Apache Lucene Projekt eingefügt. Dort wird es auch aktuell noch weiterentwickelt. \cite{Wikipedia.2019b}
+Die Entwicklung von Solr begann 2004 als ein internes Projekt von CNET\footnote{Amerikanische Medienwebseite \url{https://www.cnet.com/}}, um eine bessere Suche für die eigene Webseite zu bieten. Später im Jahre 2006 hat CNET dann den Source Code an die Apache Foundation weitergegeben. Zuerst wurde es dort ein eigenständiges Projekt. Im Jahre 2009 wurde Solr dann in das Apache Lucene Projekt eingefügt. Dort wird es auch aktuell noch weiterentwickelt. \cite{Wikipedia.2019b}
 
 Solr wird unter anderem von DuckDuckGo\footnote{Suchmaschine \url{https://duckduckgo.com/}} und Best Buy\footnote{Amerikanische Ladenkette \url{https://www.bestbuy.com/}} eingesetzt. Durch die Unterstützung von der Apache Foundation ist eine längerfristige Weiterentwicklung abzusehen. 
 
-Da Solr zur Apache Foundation gehört, ist es Open Source. Es bietet viele Funktionen von Haus aus, womit es alle Grundanforderungen erfüllt. Zusätzlich bietet es auch eine Unterstützung für fast alle Bonus-Funktionen. Einzig und allein gibt es keinen bezahlten Support, dafür allerdings eine große Community, welche durch Mailing Listen oder IRC erreichbar sind. \cite{TheApacheSoftwareFoundation.2019}
+Da Solr zur Apache Foundation gehört, ist es Open Source. Die Suchmaschine erfüllt dabei alle Grundanforderungen. Zusätzlich existiert es auch eine Unterstützung für fast alle Bonus-Funktionen, außer den bezahlten Support. Dafür gibt allerdings eine große Community, welche durch Mailing Listen oder IRC erreichbar ist. \cite{TheApacheSoftwareFoundation.2019}
 
 \section{Elasticsearch}
 \label{elasticsearch}
 
-Eine weitere große Enterprise-Suchmaschine ist Elasticsearch. Auch dieses Projekt arbeitet auf der Basis von Lucene. Zu den bekanntesten Kunden zählen Ebay\footnote{Online-Marktplatz \url{https://www.ebay.de/}} und Adobe\footnote{Softwarefirma \url{https://www.adobe.com/}}. Gestartet wurde das Projekt in den jungen 2000ern von Shay Banon, um eine Verwaltung für die Rezepte seiner Frau zu schaffen. Im Juni 2012 haben sich dann Logstash, ein Logging Dienst, Kibana, ein UI für Elasticsearch, und Elasticsearch zusammengetan. So entstand der ELK-Stack. Die entstandene Firma nennt sich Elasticsearch Incorporated. Seitdem wurden der Produktkatalog stetig erweitert und die Produkte weiterentwickelt. Viele der weiteren Produkte sind allerdings nicht mehr Open-Source oder kostenlos. Der ELK-Stack ist allerdings weiterhin und es wurde versprochen, dass es so bleibt, kostenlos und Elasticsearch zudem auch als Open-Source Variante zu haben. Eine genauere Aussage, welche Features nur in der kostenlosen und nicht in der Open-Source Variante zu finden sind, finden sich in der Tabelle \ref{vglTable}.
+Eine weitere große Enterprise-Suchmaschine ist Elasticsearch. Auch dieses Projekt arbeitet auf der Basis von Lucene Core. Zu den bekanntesten Kunden zählen Ebay\footnote{Online-Marktplatz \url{https://www.ebay.de/}} und Adobe\footnote{Softwarefirma \url{https://www.adobe.com/}}. Gestartet wurde das Projekt in den jungen 2000ern von Shay Banon, um eine Verwaltung für die Rezepte seiner Frau zu schaffen. Im Juni 2012 haben sich dann Logstash, ein Logging Dienst, Kibana, ein UI für Elasticsearch, und Elasticsearch zusammengetan. So entstand der ELK-Stack. Die entstandene Firma nennt sich Elasticsearch Incorporated. Seitdem wurden der Produktkatalog stetig erweitert und die Produkte weiterentwickelt. Viele der weiteren Produkte sind allerdings nicht mehr Open-Source oder kostenlos. Der ELK-Stack ist allerdings weiterhin und es wurde versprochen, dass es so bleibt, kostenlos und Elasticsearch zudem auch als Open-Source Variante zu haben. Eine genauere Aussage, welche Features nur in der kostenlosen und nicht in der Open-Source Variante zu finden sind, finden sich in der Tabelle \ref{vglTable}.
 
-Elasticsearch erfüllt alle der Grundanforderungen, auch in der Open-Source Variante. Auch viele der optionalen Features sind in der Open-Source Variante verfügbar. Einzig die Sicherheitsfunktionen, wie rollen-basierte Authentifizierung sind der kostenlosen Variante vorbehalten. Eine Möglichkeit auf bezahlten Support besteht auch. \cite{Elasticsearch.2019}
+Elasticsearch erfüllt alle der Grundanforderungen, auch in der Open-Source Variante. Auch sind viele der optionalen Features in der Open-Source Variante verfügbar. Einzig die Sicherheitsfunktionen, wie rollen-basierte Authentifizierung sind der kostenlosen Variante vorbehalten. Zudem besteht eine Möglichkeit auf bezahlten Support. \cite{Elasticsearch.2019}
 
 \section{Fess}
 \label{fess}
 
 Fess ist eine Enterprise-Suchmaschine basierend auf Elasticsearch, entwickelt von dem japanischen Unternehmen CodeLibs. Die Suchmaschine ist komplett Open-Source und wird unter der Apache-Lizenz entwickelt.
 
-Die Suchmaschine erfüllt alle Grundanforderungen. Darüber hinaus bietet sie Unterstützung für PostgreSQL, Backups (sogar über die Web-Oberfläche) und Auto-Korrektur und Vervollständigung. Es gibt keinen direkten PHP Support, allerdings können Anfragen über JSON geschickt werden. Ein bezahlter Support ist auch über die Firma N2SM Incorporated \cite{N2SM.2019} möglich. Bei dieser Arbeiten anscheinend auch einige der Entwickler von Fess. Sicherheitsfunktionen werden über rollen-basierte Authentifizierung mitgeliefert. \cite{CodeLibs.2019}
+Die Suchmaschine erfüllt alle Grundanforderungen. Darüber hinaus bietet sie Unterstützung für PostgreSQL, Backups, welche sogar über die Web-Oberfläche einspielbar sind, sowie Auto-Korrektur und Vervollständigung. Es gibt keinen direkten PHP Support, allerdings können Anfragen über JSON geschickt werden. Ein bezahlter Support ist auch über die Firma N2SM Incorporated möglich. \cite{N2SM.2019} Bei dieser Arbeiten anscheinend auch einige der Entwickler von Fess. Sicherheitsfunktionen werden über rollen-basierte Authentifizierung mitgeliefert. \cite{CodeLibs.2019}
 
 \section{Algolia}
 \label{algolia}
 
-Algolia ist eine cloud-basierte Suchmaschine, welche unter anderem von Twitch\footnote{Streaming-Platform \url{https://www.twitch.tv/}} und Lacoste\footnote{Kleidungsgeschäft \url{https://www.lacoste.com/de/}} verwendet wird. Die Suchmaschine wird hierbei als SAAS (Software as a Service) angeboten. Hierbei werden die Daten auf den Algolia Server geladen und indexiert. Daraufhin kann eine Suche über eine API-Schnittstelle in der Cloud ausgeführt werden.
+Algolia ist eine cloud-basierte Suchmaschine, welche unter anderem von Twitch\footnote{Streaming-Platform \url{https://www.twitch.tv/}} und Lacoste\footnote{Kleidungsgeschäft \url{https://www.lacoste.com/de/}} verwendet wird. Die Suchmaschine wird als Software as a Service angeboten. Hierbei werden die Daten auf den Algolia Server geladen und indexiert. Daraufhin kann eine Suche über eine API-Schnittstelle in der Cloud ausgeführt werden.
 
-Sie erfüllt alle Grundanforderungen, wobei allerdings in der kostenlosen Variante grade einmal 10 Tausend Einträge und 50 Tausend Operationen im Monat erlaubt sind. Auch die optionalen Anforderungen werden so weit alle erfüllt. Der bezahlte Support wird ab der Starter Edition für 30 Dollar im Monat mitgeliefert. \cite{Algolia.2019}
+Die Suchmaschine erfüllt alle Grundanforderungen, wobei allerdings in der kostenlosen Variante grade einmal 10 Tausend Einträge und 50 Tausend Operationen im Monat erlaubt sind. Auch die optionalen Anforderungen werden alle erfüllt. Der bezahlte Support wird ab der Starter Edition für 30 Dollar im Monat mitgeliefert. \cite{Algolia.2019}
 
 \section{Manticore Search}
 \label{manticore}
 
 Manticore Search Engine ist eine Open-Source Lösung basierend auf Sphinx \ref{sphinx}. Nachdem Sphinx Closed-Source gegangen ist, wurde auf der letzten offenen Version die erste Version von Manticore Search entwickelt. Zu den großen Kunden zählen unter anderem Craigslist\footnote{Amerikanische Anzeigenwebseite \url{https://craigslist.org/}} und Boardreader\footnote{Tool zum Monitoring von Internetforen. \url{http://boardreader.com/}}.
 
-Manticore erfüllt fast alle Grundanforderungen, allerdings ist kein nativer PDF-Support gegeben. Es muss daher auf eine Konvertierung der Daten auf XML gesetzt werden. Es findet sich außerdem eine Unterstützung von PostgreSQL, sowie Auto-Korrektur und Vervollständigung. Auch ist ein Logging vorhanden. Zudem existiert eine Option auf bezahlten Support. Die Supportkosten sind dabei direkt auf der Webseite angegeben und belaufen sich auf 3000 Dollar im Jahr für den Standard Support. \cite{ManticoreSoftwareLtd.2019}
+Manticore erfüllt fast alle Grundanforderungen, außer einem nativer PDF-Support. Es muss daher auf eine Konvertierung der Daten auf XML gesetzt werden. Weiterhin unterstützt es PostreSQL und enthält Funktionen für Auto-Korrektur und Vervollständigung. Auch ist ein Logging vorhanden. Zudem existiert eine Option auf bezahlten Support. \cite{ManticoreSoftwareLtd.2019}
 
 \section{Xapian}
 \label{xapian}
 
 Xapian ist eine Open-Source Enterprise-Suchmaschine, welche von Zeit-Online\footnote{Webseite einer deutschen Wochenzeitung \url{https://www.zeit.de/index}}, der Universitätsbibliothek Köln\footnote{Bibliothek \url{https://www.ub.uni-koeln.de/index.html}} und der Debian Webseite genutzt wird. Die Suchmaschine basiert auf Open Muscat, einer Suchmaschine, welche an der Cambridge Universität in den 1980ern von Dr. Martin Porter entwickelt wurde. In 2001, als Open Muscat Closed-Source ging, haben sich einige Entwickler die letzte offene Version genommen und diese weiterentwickelt.
 
-Sie erfüllt alle der Grundanforderungen, wenn auch Logging nur im Grundsinne erfüllt wird, da nur Fehlermeldungen ausgegeben werden. Des Weiteren bietet die Suchmaschine Support für PostgreSQL. Auch eine Replikations-Funktion wird mitgeliefert. Sie bietet auch Auto-Korrektur und Auto-Vervollständigung. Ein Login-System mit Sicherheitsfunktionen gibt es durch das Fehlende Frontend Administration nicht. Es gibt allerdings die Möglichkeit mit Omega eine CGI\footnote{Common Gateway Interface}-Suche zu nutzen. Diese Suche bietet allerdings keine Administration, sondern nur eine grafische Oberfläche für Suchanfragen.
+Die Grundanfrderungen werden abgedeckt, jedoch ist Logging nur im Grundsinne erfüllt, da es auf die Ausgabe von Fehlermeldungen beschränkt ist. Des Weiteren bietet die Suchmaschine Support für PostgreSQL. Auch eine Replikations-Funktion wird mitgeliefert. Sie bietet auch Auto-Korrektur und Auto-Vervollständigung. Ein Login-System mit Sicherheitsfunktionen gibt es durch das Fehlende Frontend Administration nicht. Es gibt allerdings die Möglichkeit mit Omega eine CGI\footnote{Common Gateway Interface}-Suche zu nutzen. Diese Suche bietet allerdings keine Administration, sondern nur eine grafische Oberfläche für Suchanfragen.
 
-Auch gibt es eine Möglichkeit für bezahlten Support. Auf der Webseite werden zwei Firmen angegeben, welche bezahlten Support bieten. Allerdings funktioniert der Link aktuell nur für eine der beiden Firmen. Zudem ist ein PHP-Connector für die Suchmaschine vorhanden, was die Einbindung ist das Projekt vereinfacht. \cite{XAP.2019}
+Bezahlter Support ist für die Suchmaschine durch zwei verschiedene Firmen gegeben. Von denen jedoch nur bei einer ein funktionierender Link zur Verfügung steht. Zudem ist ein PHP-Connector vorhanden, was die Einbindung in das Projekt vereinfacht. \cite{XAP.2019}
 
 \section{Datafari}
 \label{datafari}
 
-Datafari ist eine Open-Source Enterprise-Suchmaschine vom französischen Entwickler France Labs. Das Entwicklerstudio wurde 2011 gegründet und hat sich es sich zum Ziel gemacht, die beste Open-Source Enterprise-Suchmaschine zu erstellen \cite{Labs.2019}. Als Fundament dafür wurde hierbei Solr verwendet. Dies wurde dann mit dem ELK-Stack für die Analyse gemischt. Zu den Kunden zählt unter anderem das Linux Magazin\footnote{Deutsches Magazin \url{https://www.linux-magazin.de/}}, welches diese Suchmaschine in einer ihrer Ausgaben vorstellt \cite{MichaelBrandenburg.2019}. 
+Datafari ist eine Open-Source Enterprise-Suchmaschine vom französischen Entwickler France Labs. Das Entwicklerstudio wurde 2011 gegründet und hat sich es sich zum Ziel gemacht, die beste Open-Source Enterprise-Suchmaschine zu erstellen \cite{Labs.2019}. Als Fundament dafür wurde hierbei Solr verwendet. Dies wurde dann mit dem ELK-Stack für die Analyse gemischt. Zu den Kunden zählt unter anderem das Linux Magazin\footnote{Deutsches Magazin \url{https://www.linux-magazin.de/}} \cite{MichaelBrandenburg.2019}. 
 
-Die Suchmaschine erfüllt alle Grundanforderungen. Darüber hinaus bietet sie auch Support für PostgreSQL, Auto-Korrektur und Vervollständigung, sowie den bezahlten Support. Eine Backup-Funktion gehört zu den Premium-Funktionen, genauso wie erweiterte Sicherheitsfunktionen. Allerdings ist zumindest die Rollenbasierte-Authentifizierung auch in der Open-Source Variante zu haben. Einen direkt PHP-Connector gibt es nicht, allerdings wird eine HTTP-API zu Verfügung gestellt. \cite{Labs.b}
+Die Suchmaschine erfüllt alle Grundanforderungen. Darüber hinaus bietet sie auch Support für PostgreSQL, Auto-Korrektur und Vervollständigung, sowie einen bezahlten Support. Auch existiert eine Rollenbasierte-Authentifizierung in der Open-Source Variante. Eine Backup-Funktion gehört zu den Premium-Funktionen, genauso wie erweiterte Sicherheitsfunktionen. Einen PHP-Connector gibt es nicht, allerdings wird eine HTTP-API zur Verfügung gestellt. \cite{Labs.b}
 
 \section{Tabellarischer Vergleich}
 
@@ -143,26 +143,25 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
         Support für PostgreSQL                      & x & x  & x  & x  & x & x  & x & x \\
         Backup                                      & - & -  & x  & x  & x & x+ & - & - \\
         Auto-Korrektur und Vervollständigung        & x & x  & x  & x  & x & x  & x & x \\
-        Security Features                           & - & -  & x- & x* & x & x  & - & x \\
+        Security Features                           & - & -  & x++ & x* & x & x  & - & x \\
         PHP Support                                 & - & x  & x  & x  & - & x  & x & - \\
         bezahlter Support                           & - & x  & -  & x  & x & x  & x & x \\
         \hline
-        unter aktiver Entwicklung**                 & x & -  & x  & x  & x & x  & x & x \\
+        unter aktiver Entwicklung                   & x & -  & x  & x  & x & x  & x & x \\
         offizielles Docker Image                    & - & -  & x  & x  & x & -  & - & x \\
         Synonym Support                             & x & x  & x  & x  & x & x  & x & x \\
         Web-Interface                               & - & -  & x  & x  & x & x  & - & x \\
         Plugin Support                              & - & x  & x  & x  & x & -  & - & - \\
-        JSON oder RESTful API                       & - & x* & x  & x  & x & -  & x-- & x \\
+        JSON oder RESTful API                       & - & x* & x  & x  & x & -  & x** & x \\
         Unterstützung von SQL-artigen Abfragen      & - & x  & -  & x  & - & -  & - & - \\
 		\end{tabular}
     \caption{Feature-Vergleich der verschiedenen Enterprise-Suchmaschinen }
     \label{vglTable}
 
     *  = Feature nur in der kostenlosen Variante verfügbar. \\
-    ** = Update innerhalb des letzten halben Jahres \\
-    -- = Nur mit Omega CGI installiert \\
+    ** = Nur mit Omega CGI installiert \\
     +  = Anbieter kümmert sich um das Feature \\
-    -  = Funktion nur per Plugin Implementiert \\
+    ++  = Funktion nur per Plugin Implementiert \\
 
     Die Tabelle vergleicht einige Features der ausgewählten Suchmaschinen. Dabei wurden die Namen aus Platzgründen wie folgt abgekürzt:
 
@@ -186,7 +185,8 @@ Nach diesem ersten Feature-Vergleich haben 7 Suchmaschinen die Anforderungen erf
 
 \subsection{Lucene Core}
 
-Lucene Core scheidet dadurch aus das es zum einen keine direkte Schnittstelle liefert, die gut mit PHP zur erreichen ist. Die einzige Möglichkeit wären direkte System-Calls, wodurch es schwerer ist, die Systeme voneinander zu separieren, zum Beispiel auf verschiedenen Server zu legen. Zum anderen existiert mit Solr eine Eweiterung von Lucene, welche die Probleme löst. \cite{TheApacheSoftwareFoundation.2019b}
+
+Lucene Core ist für das Projekt ungeeignet, da die Erreichbarkeit mit PHP nicht durch eine direkte Schnittstelle gegeben ist, sondern nur durch System-Calls möglich ist. Dies erschwert jedoch die Separierung von den Systemen auf zum Beispiel bei verschiedenen Servern. Des Weiterhin liegt mit Solr eine Lucene-Erweiterung vor, welche das genannte Problem löst. \cite{TheApacheSoftwareFoundation.2019b}
 
 \subsection{Sphinx}
 
@@ -194,24 +194,24 @@ Sphinx wäre eine interessante Alternative gewesen. Allerdings ist durch den Kom
 
 \subsection{Solr}
 
-Wie schon bei Lucene Core kurz angesprochen, liefert Solr viele der Funktionen, die in diesem Projekt benötigt werden, direkt mit. Dazu besitzt es eine Web-Oberfläche zur Administration. Durch die aktive Entwicklung unter der Apache-Lizenz und die große Community ist auch eine Langzeit-Entwicklung sehr wahrscheinlich. Daher ist Solr die erste der vier Kandidaten für das genauere Testen. \cite{TheApacheSoftwareFoundation.2019}
+Wie schon bei Lucene Core kurz angesprochen, liefert Solr die noch fehlenden Bedingungen für das Projekt mit. Durch die aktive Entwicklung unter der Apache-Lizenz und die große Community ist auch eine Langzeit-Entwicklung sehr wahrscheinlich. Daher wird Solr genauer Verglichen. \cite{TheApacheSoftwareFoundation.2019}
 
 \subsection{Elasticsearch}
 
-Auch Elasticsearch basiert auf Lucene, ist aber im Gegensatz nicht komplett Open-Source und bietet auch eine kommerzielle Version an, was allerdings auch bedeutet, dass es bezahlten Support gibt. Die Community und der Kundenkreis sind groß, was eine Weiterentwicklung sehr wahrscheinlich macht. Auch diese Suchmaschine bietet eine Web-Oberfläche mit besonderem Augenmerk auf die Visualisierung der Daten, was für spätere Administratoren einen einfacheren Einstieg in die Administration liefern könnte. Daher wird auch Elasticsearch den genaueren Vergleich mit eingebunden. \cite{Elasticsearch.2019}
+Auch Elasticsearch basiert auf Lucene, ist aber im Gegensatz zu Solr nicht komplett Open-Source und bietet auch eine kommerzielle Version an. Die Community und der Kundenkreis sind groß, was eine Weiterentwicklung sehr wahrscheinlich macht. Daher wird auch Elasticsearch den genaueren Vergleich mit eingebunden. \cite{Elasticsearch.2019}
 
 \subsection{Fess}
 
-Fess ist eine Suchmaschine, welche auf Elasticsearch basiert, was seinerseits auf Lucene basiert. Von den Funktionen her bietet Fess, dank der Basis, viele Möglichkeiten. Es gibt auch kommerziellen Support, allerdings nur von einer japanischen Firma. Dadurch kann es schwerer werden mit dem Support in Kontakt zu treten, was mich dazu veranlasst Datafari \ref{datafari} dieser Suchmaschine vorzuziehen. \cite{CodeLibs.2019}
+Fess ist eine Suchmaschine, welche auf Elasticsearch basiert. Allerdings wird Fess von einer japanischen Firma gebaut und betreut. Daher könnte es zu Kommunikationsproblemen kommen. Des Weiteren ist durch die Zeitverschiebung der Support schwerer erreichbar. Aus den genannten Gründen wird Datafari\ref{datafari} dieser Suchmaschine vorgezogen. \cite{CodeLibs.2019}
 
 \subsection{Algolia}
 
-Als einziger SAAS-Dienst im Vergleich, bietet Algolia einen Alternativansatz in die Enterprise-Suchmaschinen Welt. Leider sind im kostenlosen Bereich nicht genügend Einträge speicherbar. Auch sind 50.000 Operationen zu wenig für die das DietrichOnline-Projekt. Von daher fällt diese Suchmaschine durch diese Limitationen heraus. \cite{Algolia.2019}
+Als einziger SAAS-Dienst im Vergleich, bietet Algolia einen Alternativansatz in der Enterprise-Suchmaschinen Welt. Leider sind im kostenlosen Bereich nicht genügend Einträge speicherbar. Auch sind 50.000 Operationen nicht aussreichend für die das DietrichOnline-Projekt. Von daher ist diese Suchmaschine für das Projekt ungeeignet und verfällt als Option. \cite{Algolia.2019}
 
-\subsection{Xapian}
+\subsection{Xapian} 
 
-Xapian ist als einzige Suchmaschine ohne Web-Administration im engeren Vergleich. Durch die Nutzung der Suchmaschine für die Bibliothek Köln gibt es einen Kunden der Software, welcher einen ähnlichen Anwendungsfall besitzt \cite{Xapian.2019}. Dadurch und die Erfüllung vieler weiterer Kriterien kommt diese Suchmaschine auch in die engere Auswahl. \cite{XAP.2019}
+Xapian ist als einzige Suchmaschine ohne Web-Administration im engeren Vergleich. Durch die Nutzung der Suchmaschine für die Bibliothek Köln gibt es einen Kunden der Software, welcher einen ähnlichen Anwendungsfall besitzt \cite{Xapian.2019}. Dadurch kommt diese Suchmaschine auch in die engere Auswahl. \cite{XAP.2019}
 
 \subsection{Datafari}
 
-Datafari ist der letzte Kandidat, der es in die engere Auswahl schafft. Wie oben schon erwähnt gewinnt diese Suchmaschine gegen Fess, durch die Entwicklung in Frankreich und der daher besser zu erreichende Support. Darüber hinaus ist es interessant zu sehen, ob das Entwicklerstudio schafft, Solr sinnvoll zu erweitern und die Datenaufbereitung mit Elasticsearch so zu liefern, dass sich die Suchmaschine wie aus einem Guss anfühlt. \cite{Labs.b}
+Datafari ist der letzte Kandidat, der es in die engere Auswahl schafft. Dabei ist festzustellen, ob es die Firma schafft Solr und Elasticsearch sinnvoll zu verbinden.\cite{Labs.b}

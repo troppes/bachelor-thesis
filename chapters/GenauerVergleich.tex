@@ -1,6 +1,6 @@
 \chapter{Genauer Vergleich}
 
-In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt, um einen Ersteindruck zu erstellen. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit weiter betreuen kann, ist es auch wichtig zu schauen, wie leicht  es für einen neuen Administrator ist, sich in dieses System einzuarbeiten. Deshalb wird ein besonderes Augenmerk auf die Dokumentation und Oberfläche, insofern vorhanden, gelegt. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt.
+In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt, um einen Ersteindruck zu erstellen. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit weiter betreuen kann, ist es auch wichtig zu schauen, wie leicht  es für einen neuen Administrator ist, sich in diese Systeme einzuarbeiten. Deshalb wird ein besonderes Augenmerk auf die Dokumentation und Oberfläche, sofern vorhanden, gelegt. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt.
 
 \section{Testsystem}
 Das Testsystem besitzt die folgenden Spezifikationen:
@@ -12,30 +12,31 @@ Das Testsystem besitzt die folgenden Spezifikationen:
     \item Betriebssystem: Ubuntu 18.04.03 LTS
 \end{itemize} 
 
-Auf das System wird zudem die MariaDB Datenbank des DietrichOnline-Projektes als Datenquelle eingespielt. Zudem mussten einige Programme während der Vorbereitung des Servers durch die Administratoren aufgespielt werden. Darunter fallen Programme wie VIM oder Git. Eine genaue Liste findet sich im Anhang. Diese Programme werden als gegeben vorausgesetzt.
+Auf das System wird die MariaDB Datenbank des DietrichOnline-Projektes als Datenquelle eingespielt. Zudem mussten einige Programme während der Vorbereitung des Servers durch die Administratoren aufgespielt werden. Darunter fallen Programme wie VIM oder Git. Eine genaue Liste findet sich im Anhang. Sie werden als gegeben vorausgesetzt.
 
 \section{Aufbau der Tests}
 
 \subsection{Installation}
 
-Im ersten Schritt wird die Installation bewertet. Dabei wird geschaut, wie einfach es ist die Software zu installieren. Existiert zum Beispiel ein Installations-Wizard? Wie viel muss manuell in den Dateien geändert werden?
+Im ersten Schritt wird die Installation bewertet. Dabei wird die Nutzerfreundlichkeit des Installationsprozesses überprüft. Existiert zum Beispiel ein Installations-Wizard? Wie viel muss manuell in den Dateien geändert werden?
 
 \subsection{Indexierung}
 
-Hierbei wird geschaut, wie einfach die Indexierung von den Daten aus der Datenbank ausfällt. Dabei wird auch geschaut, ob es möglich ist, Daten direkt von der Oberfläche zu indexieren und ob es möglich ist die Indexierung in einen Zeitplan zu legen.
+Hierbei wird geschaut, wie einfach die Indexierung von den Daten aus der Datenbank ausfällt. Weiterhin wird die Möglichkeit überprüft, Daten direkt von der Oberfläche zu indexieren und die Indexierung in einen Zeitplan zu legen.
 
 \subsection{Oberfläche}
-In diesem Schritt wird geschaut, wie übersichtlich und funktional die Oberfläche gebaut ist. Dabei geht es darum, wie viele Funktionen über die Oberfläche zu administrieren sind und ob es Komfort-Funktionen wie Responsiveness\footnote{Eine Webseite ist responsive, wenn sie für alle Endgeräte richtig skaliert und gut zu benutzen ist.} gibt.
+
+Fortfahrend wird die Übersichtlichkeit und Funktionalität der Oberfläche ausgewertet. Dazu wird überprüft wie viele Funktionen über die Oberfläche zu administrieren sind und ob es Komfort-Funktionen, wie Responsiveness\footnote{Eine Webseite ist responsive, wenn sie für alle Endgeräte richtig skaliert und gut zu benutzen ist.}, gibt.
 
 \subsection{Dokumentation}
 
-Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Da in diesem Kurztest nicht alle Bereiche der Dokumentation genau durchgelesen und daraufhin auch Testweise implementiert werden können, wird sich dabei auf die Schritte dieses Ersteindrucks bezogen.
+Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk auf die Übersichtlichkeit und Verständlichkeit gelegt. Da in diesem Kurztest nicht alle Bereiche der Dokumentation genau durchgelesen und daraufhin auch Testweise implementiert werden können, wird sich dabei auf die Schritte dieses Vergleiches bezogen.
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
 Im letzten Schritt wird eine Abfrage an das System von einem PHP-Skript abgesetzt. Dabei wird die Zeit gemessen, wie lange die Abfrage braucht um die Daten zu liefern.
 
-Die dabei verwendete Abfrage ist die bisher am langsamsten laufenden Abfrage des DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen, welche für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und der zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn diese Funktionalität wird direkt mitgeliefert.
+Die verwendete Abfrage, ist die bisher am langsamsten laufende Abfrage des DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen, welche für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und die zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn diese Funktionalität wird direkt mitgeliefert.
 
 \begin{figure}
 	\centering
