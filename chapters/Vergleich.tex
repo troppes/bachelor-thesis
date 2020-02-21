@@ -104,29 +104,29 @@ Die Suchmaschine erfüllt alle Grundanforderungen, wobei allerdings in der koste
 \section{Manticore Search}
 \label{manticore}
 
-Manticore Search Engine ist eine Open-Source Lösung basierend auf Sphinx \ref{sphinx}. Nachdem Sphinx Closed-Source gegangen ist, wurde auf der letzten offenen Version die erste Version von Manticore Search entwickelt. Zu den großen Kunden zählen unter anderem Craigslist\footnote{Amerikanische Anzeigenwebseite \url{https://craigslist.org/}} und Boardreader\footnote{Tool zum Monitoring von Internetforen. \url{http://boardreader.com/}}.
+Manticore Search Engine ist eine Open-Source Lösung basierend auf Sphinx \ref{sphinx}. Nachdem Sphinx Closed-Source geworden ist, wurde auf der letzten offenen Version die erste Version von Manticore Search entwickelt. Zu den großen Kunden zählen unter anderem Craigslist\footnote{Amerikanische Anzeigenwebseite \url{https://craigslist.org/}} und Boardreader\footnote{Tool zum Monitoring von Internetforen. \url{http://boardreader.com/}}.
 
-Manticore erfüllt fast alle Grundanforderungen, außer einem nativer PDF-Support. Es muss daher auf eine Konvertierung der Daten auf XML gesetzt werden. Weiterhin unterstützt es PostreSQL und enthält Funktionen für Auto-Korrektur und Vervollständigung. Auch ist ein Logging vorhanden. Zudem existiert eine Option auf bezahlten Support. \cite{ManticoreSoftwareLtd.2019}
+Manticore erfüllt fast alle Grundanforderungen, außer einer nativen PDF-Unterstützung. Es muss daher auf eine Konvertierung der Daten nach XML gesetzt werden. Weiterhin unterstützt es PostreSQL und enthält Funktionen für Auto-Korrektur und Vervollständigung. Auch ist ein Logging vorhanden. Zudem existiert eine Option auf bezahlten Support. \cite{ManticoreSoftwareLtd.2019}
 
 \section{Xapian}
 \label{xapian}
 
-Xapian ist eine Open-Source Enterprise-Suchmaschine, welche von Zeit-Online\footnote{Webseite einer deutschen Wochenzeitung \url{https://www.zeit.de/index}}, der Universitätsbibliothek Köln\footnote{Bibliothek \url{https://www.ub.uni-koeln.de/index.html}} und der Debian Webseite genutzt wird. Die Suchmaschine basiert auf Open Muscat, einer Suchmaschine, welche an der Cambridge Universität in den 1980ern von Dr. Martin Porter entwickelt wurde. In 2001, als Open Muscat Closed-Source ging, haben sich einige Entwickler die letzte offene Version genommen und diese weiterentwickelt.
+Xapian ist eine Open-Source Enterprise-Suchmaschine, welche von Zeit-Online\footnote{Webseite einer deutschen Wochenzeitung \url{https://www.zeit.de/index}}, der Universitätsbibliothek Köln\footnote{Bibliothek \url{https://www.ub.uni-koeln.de/index.html}} und der Debian Webseite genutzt wird. Die Suchmaschine basiert auf Open Muscat, einer Suchmaschine, welche an der Cambridge Universität in den 1980ern von Dr. Martin Porter entwickelt wurde. In 2001, als Open Muscat Closed-Source geworden ist, haben sich einige Entwickler basierend auf der letzten offenen Version das Projekt Xapian gegründet.
 
-Die Grundanfrderungen werden abgedeckt, jedoch ist Logging nur im Grundsinne erfüllt, da es auf die Ausgabe von Fehlermeldungen beschränkt ist. Des Weiteren bietet die Suchmaschine Support für PostgreSQL. Auch eine Replikations-Funktion wird mitgeliefert. Sie bietet auch Auto-Korrektur und Auto-Vervollständigung. Ein Login-System mit Sicherheitsfunktionen gibt es durch das Fehlende Frontend Administration nicht. Es gibt allerdings die Möglichkeit mit Omega eine CGI\footnote{Common Gateway Interface}-Suche zu nutzen. Diese Suche bietet allerdings keine Administration, sondern nur eine grafische Oberfläche für Suchanfragen.
+Die Grundanfrderungen werden abgedeckt, jedoch ist Logging nur im Grundsinne erfüllt, da es auf die Ausgabe von Fehlermeldungen beschränkt ist. Des Weiteren bietet die Suchmaschine eine Unterstützung für PostgreSQL. Auch eine Replikations-Funktion wird mitgeliefert. Sie bietet auch Auto-Korrektur und Auto-Vervollständigung. Ein Login-System mit Sicherheitsfunktionen gibt es durch die fehlende Frontend Administration nicht. Es gibt allerdings die Möglichkeit, mit Omega eine CGI\footnote{Common Gateway Interface}-Suche zu nutzen. Diese Suche bietet allerdings keine Administration, sondern nur eine grafische Oberfläche für Suchanfragen.
 
 Bezahlter Support ist für die Suchmaschine durch zwei verschiedene Firmen gegeben. Von denen jedoch nur bei einer ein funktionierender Link zur Verfügung steht. Zudem ist ein PHP-Connector vorhanden, was die Einbindung in das Projekt vereinfacht. \cite{XAP.2019}
 
 \section{Datafari}
 \label{datafari}
 
-Datafari ist eine Open-Source Enterprise-Suchmaschine vom französischen Entwickler France Labs. Das Entwicklerstudio wurde 2011 gegründet und hat sich es sich zum Ziel gemacht, die beste Open-Source Enterprise-Suchmaschine zu erstellen \cite{Labs.2019}. Als Fundament dafür wurde hierbei Solr verwendet. Dies wurde dann mit dem ELK-Stack für die Analyse gemischt. Zu den Kunden zählt unter anderem das Linux Magazin\footnote{Deutsches Magazin \url{https://www.linux-magazin.de/}} \cite{MichaelBrandenburg.2019}. 
+Datafari ist eine Open-Source Enterprise-Suchmaschine vom französischen Entwickler France Labs. Das Entwicklerstudio wurde 2011 gegründet und hat es sich zum Ziel gemacht, die beste Open-Source Enterprise-Suchmaschine zu erstellen \cite{Labs.2019}. Als Fundament dafür wurde hierbei Solr verwendet. Dies wurde dann mit dem ELK-Stack für die Analyse gemischt. Zu den Kunden zählt unter anderem das Linux Magazin\footnote{Deutsches Magazin \url{https://www.linux-magazin.de/}} \cite{MichaelBrandenburg.2019}. 
 
-Die Suchmaschine erfüllt alle Grundanforderungen. Darüber hinaus bietet sie auch Support für PostgreSQL, Auto-Korrektur und Vervollständigung, sowie einen bezahlten Support. Auch existiert eine Rollenbasierte-Authentifizierung in der Open-Source Variante. Eine Backup-Funktion gehört zu den Premium-Funktionen, genauso wie erweiterte Sicherheitsfunktionen. Einen PHP-Connector gibt es nicht, allerdings wird eine HTTP-API zur Verfügung gestellt. \cite{Labs.b}
+Die Suchmaschine erfüllt alle Grundanforderungen. Darüber hinaus bietet sie auch Unterstützung für PostgreSQL, Auto-Korrektur und Vervollständigung, sowie einen bezahlten Support. Auch existiert eine Rollenbasierte-Authentifizierung in der Open-Source Variante. Eine Backup-Funktion gehört zu den Premium-Funktionen, genauso wie erweiterte Sicherheitsfunktionen. Einen PHP-Connector gibt es nicht, allerdings wird eine HTTP-API zur Verfügung gestellt. \cite{Labs.b}
 
 \section{Tabellarischer Vergleich}
 
-Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier in der Tabelle \ref{vglTable} nun nochmals aufgeführt für einen leichteren Vergleich.
+Alle Suchmaschinen, die zumindest die Grundanforderungen erfüllen, werden hier in der Tabelle \ref{vglTable} nun nochmals aufgeführt für einen leichteren Vergleich.
 
 \begin{table} %[hbtp]
 	\centering
@@ -141,9 +141,9 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
         Monitoring / Logging                        & x & x  & x & x  & x & x  & x & x \\
         \hline
         Support für PostgreSQL                      & x & x  & x  & x  & x & x  & x & x \\
-        Backup                                      & - & -  & x  & x  & x & x+ & - & - \\
+        Backup                                      & - & -  & x  & x  & x & x & - & - \\
         Auto-Korrektur und Vervollständigung        & x & x  & x  & x  & x & x  & x & x \\
-        Security Features                           & - & -  & x++ & x* & x & x  & - & x \\
+        Security Features                           & - & -  & x+ & x* & x & x  & - & x \\
         PHP Support                                 & - & x  & x  & x  & - & x  & x & - \\
         bezahlter Support                           & - & x  & -  & x  & x & x  & x & x \\
         \hline
@@ -160,8 +160,7 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
 
     *  = Feature nur in der kostenlosen Variante verfügbar. \\
     ** = Nur mit Omega CGI installiert \\
-    +  = Anbieter kümmert sich um das Feature \\
-    ++  = Funktion nur per Plugin Implementiert \\
+    + = Funktion nur per Plugin Implementiert \\
 
     Die Tabelle vergleicht einige Features der ausgewählten Suchmaschinen. Dabei wurden die Namen aus Platzgründen wie folgt abgekürzt:
 
@@ -181,7 +180,7 @@ Alle Suchmaschinen die zumindest die Grundanforderungen erfüllen, werden hier i
 
 \section{Vorauswahl}
 
-Nach diesem ersten Feature-Vergleich haben 7 Suchmaschinen die Anforderungen erfüllt. Davon werden nun 4 Stück in den genaueren Vergleich genommen, bei dem die Systeme aufgesetzt und genauer angeschaut werden. Es folgt nun zu allen Suchmaschinen eine Begründung, warum oder warum sie es nicht in den Vergleich geschafft haben.
+Nach diesem ersten Feature-Vergleich haben acht Suchmaschinen die Anforderungen erfüllt. Davon werden nun 4 Stück in den genaueren Vergleich genommen, bei dem die Systeme aufgesetzt und genauer angeschaut werden. Es folgt nun zu allen Suchmaschinen eine Begründung, warum oder warum sie es nicht in den Vergleich geschafft haben.
 
 \subsection{Lucene Core}
 
@@ -190,7 +189,7 @@ Lucene Core ist für das Projekt ungeeignet, da die Erreichbarkeit mit PHP nicht
 
 \subsection{Sphinx}
 
-Sphinx wäre eine interessante Alternative gewesen. Allerdings ist durch den Kommunikationsverlust und die gestoppten Updates dieses Projekt als tot anzusehen. \cite{SphinxTechnologiesInc.2019}
+Sphinx wäre eine interessante Alternative gewesen. Allerdings ist durch den Kommunikationsverlust und die gestoppten Updates dieses Projekt als eingestellt anzusehen. \cite{SphinxTechnologiesInc.2019}
 
 \subsection{Solr}
 
@@ -198,7 +197,7 @@ Wie schon bei Lucene Core kurz angesprochen, liefert Solr die noch fehlenden Bed
 
 \subsection{Elasticsearch}
 
-Auch Elasticsearch basiert auf Lucene, ist aber im Gegensatz zu Solr nicht komplett Open-Source und bietet auch eine kommerzielle Version an. Die Community und der Kundenkreis sind groß, was eine Weiterentwicklung sehr wahrscheinlich macht. Daher wird auch Elasticsearch den genaueren Vergleich mit eingebunden. \cite{Elasticsearch.2019}
+Auch Elasticsearch basiert auf Lucene, ist aber im Gegensatz zu Solr nicht komplett Open-Source und bietet auch eine kommerzielle Version an. Die Community und der Kundenkreis sind groß, was eine Weiterentwicklung sehr wahrscheinlich macht. Daher wird auch Elasticsearch in den genaueren Vergleich mit eingebunden. \cite{Elasticsearch.2019}
 
 \subsection{Fess}
 
@@ -206,7 +205,7 @@ Fess ist eine Suchmaschine, welche auf Elasticsearch basiert. Allerdings wird Fe
 
 \subsection{Algolia}
 
-Als einziger SAAS-Dienst im Vergleich, bietet Algolia einen Alternativansatz in der Enterprise-Suchmaschinen Welt. Leider sind im kostenlosen Bereich nicht genügend Einträge speicherbar. Auch sind 50.000 Operationen nicht aussreichend für die das DietrichOnline-Projekt. Von daher ist diese Suchmaschine für das Projekt ungeeignet und verfällt als Option. \cite{Algolia.2019}
+Als einziger SaaS-Dienst im Vergleich, bietet Algolia einen Alternativansatz in der Enterprise-Suchmaschinen Welt. Leider sind im kostenlosen Bereich nicht genügend Einträge speicherbar. Auch sind 50.000 Operationen nicht ausreichend für das DietrichOnline-Projekt. Von daher ist diese Suchmaschine für das Projekt ungeeignet und verfällt als Option. \cite{Algolia.2019}
 
 \subsection{Xapian} 
 

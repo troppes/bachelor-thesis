@@ -1,12 +1,12 @@
 \chapter{Genauer Vergleich}
 
-In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt, um einen Ersteindruck zu erstellen. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit weiter betreuen kann, ist es auch wichtig zu schauen, wie leicht  es für einen neuen Administrator ist, sich in diese Systeme einzuarbeiten. Deshalb wird ein besonderes Augenmerk auf die Dokumentation und Oberfläche, sofern vorhanden, gelegt. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt.
+In diesem Kapitel werden die vorher ausgewählten Suchmaschinen genauer verglichen. Dafür werden alle vier Suchmaschinen aufgesetzt, um einen Ersteindruck zu gewinnen. Da ich dieses Projekt nicht nach meiner Bachelor-Arbeit weiter betreuen kann, ist es auch wichtig zu schauen, wie leicht  es für einen neuen Administrator ist, sich in diese Systeme einzuarbeiten. Deshalb wird ein besonderes Augenmerk auf die Dokumentation und Oberfläche, sofern vorhanden, gelegt. Die genaueren Kriterien werden nun im Folgenden mit Erklärungen aufgeführt.
 
 \section{Testsystem}
 Das Testsystem besitzt die folgenden Spezifikationen:
 
 \begin{itemize}
-    \item CPU: 4 Kerne
+    \item CPU: 4 Kerne mit 2,3 GHz
     \item RAM: 16 Gigabyte
     \item Festplattenspeicher: 20 GB
     \item Betriebssystem: Ubuntu 18.04.03 LTS
@@ -26,7 +26,7 @@ Hierbei wird geschaut, wie einfach die Indexierung von den Daten aus der Datenba
 
 \subsection{Oberfläche}
 
-Fortfahrend wird die Übersichtlichkeit und Funktionalität der Oberfläche ausgewertet. Dazu wird überprüft wie viele Funktionen über die Oberfläche zu administrieren sind und ob es Komfort-Funktionen, wie Responsiveness\footnote{Eine Webseite ist responsive, wenn sie für alle Endgeräte richtig skaliert und gut zu benutzen ist.}, gibt.
+Fortfahrend wird die Übersichtlichkeit und Funktionalität der Oberfläche ausgewertet. Dazu wird überprüft, wie viele Funktionen über die Oberfläche zu administrieren sind und ob es Komfort-Funktionen, wie Responsiveness\footnote{Eine Webseite ist responsive, wenn sie für alle Endgeräte richtig skaliert und gut zu benutzen ist.}, gibt.
 
 \subsection{Dokumentation}
 
@@ -36,7 +36,7 @@ Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk
 
 Im letzten Schritt wird eine Abfrage an das System von einem PHP-Skript abgesetzt. Dabei wird die Zeit gemessen, wie lange die Abfrage braucht um die Daten zu liefern.
 
-Die verwendete Abfrage, ist die bisher am langsamsten laufende Abfrage des DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden zusammen \ref{img:lAdminSample}. Die Tabellen, welche für diese Ansicht gebraucht werden, sind in diesem Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und die zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn diese Funktionalität wird direkt mitgeliefert.
+Die verwendete Abfrage, ist die bisher am längsten laufende Abfrage des DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden, zusammen. Die Tabellen, welche für diese Ansicht gebraucht werden, sind im Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und die zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn, diese Funktionalität wird direkt mitgeliefert.
 
 \begin{figure}
 	\centering
@@ -53,7 +53,7 @@ Die verwendete Abfrage, ist die bisher am langsamsten laufende Abfrage des Dietr
 \end{figure}
 
 \lstset{language=SQL}
-\begin{lstlisting}[frame=single] 
+\begin{lstlisting}[frame=single, caption=Abfrage aller Lemmata mit den Buchstaben S (Part 1),captionpos=b] 
 SELECT lemma.id
 FROM lemma
 WHERE lemma.bezeichnung LIKE 'S%' AND lemma.ist_geloescht = 0
@@ -63,7 +63,7 @@ ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 Im zweiten Schritt werden dann die gerade geholten IDs der Einträge mithilfe von Joins für die Darstellung vorbereitet.
 
 \lstset{language=SQL}
-\begin{lstlisting}[frame=single, label={lst:sqlQuery}] 
+\begin{lstlisting}[frame=single, label={lst:sqlQuery}, caption=Abfrage aller Lemmata mit den Buchstaben S (Part 2),captionpos=b] 
 SELECT  lemma.id, [...] #Lemma, GND und DCC-columns        
 FROM lemma lemma
 INNER JOIN lemmabearbeitungsstatus lemmaBStatus

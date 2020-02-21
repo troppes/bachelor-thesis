@@ -6,7 +6,7 @@
 Als Systemvoraussetzungen ist eine Java Version $> 8$ gegeben. Es wurde sich hierbei für OpenJDK 11 entschieden. Um Solr im Entwicklermodus auszuführen, kann das entpackte Programm einfach gestartet werden. 
 Nach dem ersten Starten wurden 2 Warnungen gemeldet, dass die User-Limits für Solr zu gering sind \ref{lst:warningSolr}. Nachdem diese entsprechend erhöht wurden, verschwanden die Warnungen.
 
-\begin{lstlisting}[language=bash, frame=single, label={lst:warningSolr}] 
+\begin{lstlisting}[language=bash, frame=single, label={lst:warningSolr},  caption=Warnungen von Solr zu den User-Limits,captionpos=b] 
 *** [WARN] *** Your open file limit is currently 1024.
 It should be set to 65000 to avoid operational disruption.
 
@@ -14,23 +14,22 @@ It should be set to 65000 to avoid operational disruption.
 It should be set to 65000 to avoid operational disruption.
 \end{lstlisting}
 
-Bei der richtigen Installation installiert sich Solr als Service und legt einen eignen Nutzer an. Ein entsprechendes Installations-Skript findet sich dafür im entpackten Solr-Ordner. Sobald dieses mit Root-Rechten aufgerufen wird installiert sich Solr automatisch in das Opt-Verzeichnis.
+Bei der richtigen Installation installiert sich Solr als Service und legt einen eignen Nutzer an. Ein entsprechendes Installations-Skript findet sich dafür im entpackten Solr-Ordner. Sobald dieses mit Root-Rechten aufgerufen wird, installiert sich Solr automatisch in das opt-Verzeichnis.
 
 \subsection{Indexierung}
 
-Um mit der Indexierung starten zu können, muss zuerst ein sogenannter Core erstellt werden. Dieser ist ein Index mit dazugehörigen Transaktions-Log und den Konfigurationsdateien. Nur mit diesen ist es möglich Dateien zu indexieren und auf ihnen zu suchen. Nach der Erstellung lässt sich der Core über die Oberfläche einsehen und zum Teil konfigurieren.
+Um mit der Indexierung starten zu können, muss zuerst ein sogenannter Core erstellt werden. Dieser ist ein Index mit dazugehörigen Transaktions-Log und den Konfigurationsdateien. Nur mit diesen ist es möglich, Dateien zu indexieren und auf ihnen zu suchen. Nach der Erstellung lässt sich der Core über die Oberfläche einsehen und zum Teil konfigurieren.
 
-Damit Solr nun die Daten von der Datenbank liest, muss ein DataImportHandler (DIH) \ref{lst:dih} geschrieben werden. In diesen werden die Daten, welche indexiert werden sollen, mit MySQL-Querys eingelesen. Das System setzt dabei auf eine XML-Struktur mit sogenannten Entitys. Diese besitzen jeweils mehrere Attribute, wie den Namen, welcher auf der Oberfläche zur Indexierung angezeigt wird, den MySQL-Abfrage mit dem die Daten gelesen werden und einen Delta-Query, welcher dazu dient, nur die Einträge zu laden, welche Änderungen seit dem letzten Import erlebt haben. 
+Damit Solr nun die Daten von der Datenbank liest, muss ein DataImportHandler (DIH) \ref{lst:dih} geschrieben werden. In diesen werden die Daten, welche indexiert werden sollen, mit MySQL-Abfragen eingelesen. Das System setzt dabei auf eine XML-Struktur mit sogenannten Entitys. Diese besitzen jeweils mehrere Attribute, wie den Namen, welcher auf der Oberfläche zur Indexierung angezeigt wird, die MySQL-Abfrage, mit der die Daten gelesen werden und einen Delta-Query, welcher dazu dient, nur die Einträge zu laden, welche Änderungen seit dem letzten Import erlebt haben. 
 
 Der Delta-Query benötigt hierbei eine eigene Zeitstempel-Spalte in der Datenbank, welche angezeigt, wann die Spalte das letzte Mal editiert wurde. Da die Tabellen im Projekt aktuell keine solche Spalte besitzen, kann die Funktion nicht getestet werden.
 
 Innerhalb des Entity-Elements gibt es entweder weitere Entitys, dazu gleich mehr, oder Field-Elemente. Diese besitzen ein Attribut, welches die Spalte der Tabelle ausweist und einen Namen, der das zugehörige Solr-Schema-Element ausweist. 
 
-Entitys können unbegrenzt ineinander verschachtelt werden. Damit Änderungen an einer verschachtelten Entity nach oben richtig weitergegeben werden, gibt es Parent-Delta-Querys. Diese geben die betroffenen Werte an die übergeordnete Entity weiter. Dafür führt der Parent-Delta-Query einen Aufruf an die überliegende Entity-Tabelle aus, in der er mithilfe der Fremdschlüssel-IDs in den betroffen Zeilen herausfindet.
+Entitys können unbegrenzt ineinander verschachtelt werden. Damit Änderungen an einer verschachtelten Entity nach oben richtig weitergegeben werden, gibt es Parent-Delta-Querys. Diese geben die betroffenen Werte an die übergeordnete Entity weiter. Dafür führt der Parent-Delta-Query einen Aufruf an die überliegende Entity-Tabelle aus, in der er die betroffenen Zeilen, mithilfe der Fremdschlüssel-IDs herausfindet.
 
-Der DataImportHandler muss, bevor er benutzt werden kann, jedoch noch mit dem Core verbunden werden. Dafür wird dieser, zusammen mit einem JDBC-Treiber in die solrconfig.xml eingetragen. Als JDBC-Treiber wurde in diesem Beispiel der Treiber von MariaDB verwendet.
-
-\begin{lstlisting}[language=xml, frame=single, label={lst:dih}, morekeywords={entity,query,deltaQuery,parentDeltaQuery,field,column, name}] 
+\begin{lstlisting}[language=xml, frame=single, label={lst:dih}, morekeywords={entity,query,deltaQuery,parentDeltaQuery,field,column, name}, 
+  caption=Ausschnitt aus dem DataImportHandler),captionpos=b] 
 <entity name="lemma" 
   query="select * from lemma" 
   deltaQuery="select eid from lemma 
@@ -57,14 +56,16 @@ Der DataImportHandler muss, bevor er benutzt werden kann, jedoch noch mit dem Co
 </entity>
 \end{lstlisting}
 
-Wie schon eben angesprochen, muss das Solr-Schema für die entsprechende Elemente auch angepasst werden. Dieses Schema dient dazu die Dateitypen für eine möglichst gute Indexierung auszuweisen. Dafür wird zuerst der Dateityp für die Tabellen-Spalte angegeben. Hierbei werden bei den Grundtypen, zum Beispiel unter anderem String und Text\_de gelistet. Dabei wurde angenommen, dass die beiden nur bei Abfragen von unterschiedliche Sprachen einen Unterschied besitzen. Dies ist allerdings falsch. Als eine Abfrage gestellt wurde, die alle Lemmata mit den Buchstaben S finden sollten, kamen mehr Ergebnisse als erwartet zurück. Dies liegt daran, dass Text\_de, das Feld aus Volltext ausweist. 
-Bei Volltexten wird jedes Wort einzeln betrachtet und so kamen Lemma, in welchen eines der Wörter mit S begann in die Auflistung. Deswegen wurde daraufhin das Feld als String deklariert, was es ermöglicht hat nur Ergebnisse herauszufiltern, welche mit S beginnen.
+Der DataImportHandler muss, bevor er benutzt werden kann, jedoch noch mit dem Core verbunden werden. Dafür wird dieser, zusammen mit einem JDBC-Treiber, in die solrconfig.xml eingetragen. Als JDBC-Treiber wurde in diesem Beispiel der Treiber von MariaDB verwendet.
 
-Es gibt mehrere Möglichkeiten diese Einträge auszuweisen. In diesem Ersteindruck wurden die Einträge über die Administrations-Oberfläche angelegt. Es ist allerdings auch möglich eine eigene Schema-Datei zu erstellen. Diese Methode soll allerdings nicht mehr verwendet werden, da es die Möglichkeit gibt, die Einträge per API zu generieren. Dadurch wird direkt überprüft, ob die Einträge formal stimmen. So können keine fehlerhaften Schemata gebaut werden. Die Einträge, welcher über die API oder die Administrations-Oberfläche gestellt werden, werden in einer Datei namens managed\_schema \ref{lst:managedSchema} im XML-Format angelegt.
+Wie schon eben angesprochen, muss das Solr-Schema für die entsprechende Elemente auch angepasst werden. Dieses Schema dient dazu, die Dateitypen für eine möglichst gute Indexierung auszuweisen. Dafür wird zuerst der Dateityp für die Tabellen-Spalte angegeben. Hierbei werden bei den Grundtypen, zum Beispiel unter anderem String und Text\_de gelistet. Dabei wurde angenommen, dass die beiden nur bei Abfragen von unterschiedliche Sprachen einen Unterschied besitzen. Dies ist allerdings falsch. Als eine Abfrage gestellt wurde, die alle Lemmata mit den Buchstaben S finden sollten, kamen mehr Ergebnisse als erwartet zurück. Dies liegt daran, dass Text\_de, das Feld aus Volltext ausweist. 
+Bei Volltexten wird jedes Wort einzeln betrachtet und so kamen Lemma, in welchen eines der Wörter mit S begann, in die Auflistung. Deswegen wurde daraufhin das Feld als String deklariert, was es ermöglicht hat, nur Ergebnisse herauszufiltern, welche mit S beginnen.
+
+Es gibt mehrere Möglichkeiten diese Einträge auszuweisen. In diesem Ersteindruck wurden die Einträge über die Administrations-Oberfläche angelegt. Es ist allerdings auch möglich, eine eigene Schema-Datei zu erstellen. Diese Methode soll allerdings nicht mehr verwendet werden, da es die Möglichkeit gibt, die Einträge per API zu generieren. Dadurch wird direkt überprüft, ob die Einträge formal stimmen. So können keine fehlerhaften Schemata gebaut werden. Die Einträge, welche über die API oder die Administrations-Oberfläche gestellt werden, werden in einer Datei namens managed\_schema \ref{lst:managedSchema} im XML-Format angelegt.
 
 
 \begin{lstlisting}[language=xml, frame=single, label={lst:managedSchema}, 
-    morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
+    morekeywords={type,uninvertible,indexed,stored,field,multiValued, name},  caption=Auschnitt auf dem managed\_schema,captionpos=b] 
 [...]
 <field name="ddc_webdewey_is_checked" type="boolean" 
     uninvertible="false" indexed="true" stored="true"/>
@@ -75,7 +76,7 @@ Es gibt mehrere Möglichkeiten diese Einträge auszuweisen. In diesem Ersteindru
 [...]
 \end{lstlisting}
 
-Die Indexierung lief eine Minute und 34 Sekunden für rund 14 Tausend Einträge \ref{img:solrIndexTime}. Dabei wurde der gegebene Arbeitsspeicher nicht komplett ausgenutzt, was darauf schließen lässt, dass die Datenbank der limitierende Faktor war. Die hohe Anzahl der Abfragen ist darauf zurückzuführen, dass Solr keine Joins verwendet, sondern bei jeder verschachtelten Entity die gesamten Tabellen wieder und wieder nach passenden Einträgen durchsucht.
+Die Indexierung braucht eine Minute und 34 Sekunden für rund 14 Tausend Einträge \ref{img:solrIndexTime}. Dabei wurde der gegebene Arbeitsspeicher nicht komplett ausgenutzt, was darauf schließen lässt, dass die Datenbank der limitierende Faktor war. Die hohe Anzahl der Abfragen ist darauf zurückzuführen, dass Solr keine Joins verwendet, sondern bei jeder verschachtelten Entity die gesamten Tabellen wieder und wieder nach passenden Einträgen durchsucht.
 
 \begin{figure}
 	\centering
@@ -86,8 +87,8 @@ Die Indexierung lief eine Minute und 34 Sekunden für rund 14 Tausend Einträge 
 
 \subsection{Oberfläche}
 
-Die Startseite des Solr-Systems bietet direkten Einblick in auf die Auslastung des Systems \ref{img:solrInterface}. Der Fehler-Log ist auch sehr einfach mit einem Klick zu erreichen. Um an die Statistiken des aktuellen Cores zu kommen, kann dieser aus einen Drop-Down-Menu ausgewählt werden. Positiv anzumerken ist, dass es möglich ist Schema Einträge direkt in der Weboberfläche zu löschen und anzulegen. Es ist jedoch nicht möglich, den DataImportHandler direkt zu verändern, ohne weitere Einstellungen im System vorzunehmen. Es gibt eine Möglichkeit Abfragen direkt über die Web-Oberfläche zu senden, was das Testen der Abfragen erleichtert. Auch bei der Indexierung kann ein Debug-Modus dazu geschaltet werden \ref{img:solrIndexTime}. Zudem besteht die Möglichkeit die Konfigurationsdateien des Cores auf der Weboberfläche einzusehen. Die Dateien dort direkt zu editieren, ist jedoch nicht möglich.
-Es gibt keine Möglichkeit Updates direkt über die Weboberfläche einzuspielen. Auch ist diese Seite nicht Responsive geschrieben. 
+Die Startseite des Solr-Systems bietet direkten Einblick auf die Auslastung des Systems \ref{img:solrInterface}. Der Fehler-Log ist auch sehr einfach mit einem Klick zu erreichen. Um an die Statistiken des aktuellen Cores zu kommen, kann dieser aus einem Drop-Down-Menu ausgewählt werden. Positiv anzumerken ist, dass es möglich ist, Schema-Einträge direkt in der Weboberfläche anzulegen und zu löschen. Es ist jedoch nicht möglich, den DataImportHandler direkt zu verändern, ohne weitere Einstellungen im System vorzunehmen. Es gibt eine Möglichkeit, Abfragen direkt über die Web-Oberfläche zu senden, was das Testen der Abfragen erleichtert. Auch bei der Indexierung kann ein Debug-Modus dazugeschaltet werden \ref{img:solrIndexTime}. Zudem besteht die Möglichkeit, die Konfigurationsdateien des Cores auf der Weboberfläche einzusehen. Die Dateien dort direkt zu editieren, ist jedoch nicht möglich.
+Es können keine Updates direkt über die Weboberfläche eingespielt werden. Auch ist diese Seite nicht responsive geschrieben. 
 \begin{figure}
 	\centering
 	\includegraphics[width=1\linewidth]{images/solr_interface.png}
@@ -105,11 +106,11 @@ Die Dokumentation ist gut bebildert und bietet einen guten Einstiegspunkt in das
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-Um nicht direkt mit der JSON-API arbeiten zu müssen, gibt es diverse Bibliotheken, die ein wenig der Arbeit abnehmen. Eine der größten ist hierbei Solarium, welches sich mit Composer\footnote{Abhängigkeiten-Manger für PHP} installieren lässt. Da die Composer Technologie schon im Projekt verwendet wird, ist dies vom Vorteil.
+Um nicht direkt mit der JSON-API arbeiten zu müssen, gibt es diverse Bibliotheken, die ein wenig der Arbeit abnehmen. Eine der größten ist hierbei Solarium, welches sich mit Composer\footnote{Abhängigkeiten-Manger für PHP} installieren lässt. Da die Composer-Technologie schon im Projekt verwendet wird, ist dies vom Vorteil.
 Die Abfrage ist herbei sehr einfach, da die Daten beim Import schon dementsprechend indexiert wurden.
 
 \begin{lstlisting}[language=php, frame=single, label={lst:SolrPhp}, 
-  morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
+  morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}, caption=Auschnitt auf dem PHP-Code zur Abfrage,captionpos=b] 
   [...] # Imports and variable declarations
 
   $config = array(
@@ -130,4 +131,4 @@ Die Abfrage ist herbei sehr einfach, da die Daten beim Import schon dementsprech
   [...] # Output Runtime
 \end{lstlisting}
 
-Die maximale Anzahl der Zeilen die von Solr geladen werden, sind standardmäßig auf 10 limitiert. Erst mit setRows kann die Anzahl erhöht werden. Für diesen Test wurde der maximale Integer-Wert gewählt, um immer alle Ergebnisse zu bekommen. Damit nun ein guter Median-Wert gebildet werden kann, wurde die Abfrage 100 mal laufen gelassen. Dabei lief die Abfrage durchschnittlich 1.01 Sekunden um die 15838 Ergebnisse herauszusuchen. 
+Die maximale Anzahl der Zeilen, die von Solr geladen werden, sind standardmäßig auf 10 limitiert. Erst mit setRows kann die Anzahl erhöht werden. Für diesen Test wurde der maximale Integer-Wert gewählt, um immer alle Ergebnisse zu bekommen. Damit nun ein guter Median-Wert gebildet werden kann, wurde die Abfrage 100 mal ausgeführt. Dabei brauchte die Abfrage durchschnittlich 1.01 Sekunden, um die 15838 Ergebnisse herauszusuchen. 
