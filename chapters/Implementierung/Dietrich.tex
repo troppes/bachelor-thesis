@@ -1,18 +1,18 @@
 \chapter{Implementation in das DietrichOnline-Projekt}
 
-In diesem Kapitel wird die Implementation ins DietrichOnline-Projekt genauer erläutert.
+In diesem Kapitel wird die Implementation in das DietrichOnline-Projekt genauer erläutert.
 
 \section{Vorbereitung}
 
-Um den Elasticsearch-Klienten zu nutzen, muss dieser zuerst einmal per Composer installiert werden. Die geschieht durch einen Eintrag in die composer.json.
+Um den Elasticsearch-Klienten zu nutzen, muss dieser zuerst einmal per Composer installiert werden. Dies geschieht durch einen Eintrag in der composer.json.
 
-Um für den nun folgenden Vergleich ein faires Spielfeld aufzubauen, wurde eine Datenbank, welche auf demselben Server wie Elasticsearch liegt verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
+Um für den nun folgenden Vergleich ein faires Spielfeld aufzubauen, wurde eine Datenbank, welche auf demselben Server wie Elasticsearch liegt, verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
 
 Zum Testen wird nun zuerst die Lemma-Abfrage, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet.
 
-Durch die eben aktivierte X-Security von Elasticsearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines Curl Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich-Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden. 
+Durch die eben aktivierte X-Security von Elasticsearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines curl-Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich-Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden:
 
-\begin{lstlisting}[language=JSON, frame=single, label={lst:elaApi}] 
+\begin{lstlisting}[language=JSON, frame=single, label={lst:elaApi}, caption=Code zur Generierung eines API-Keys,captionpos=b] 
 POST /_security/api_key
 {
   "name": "dietrich-website",
@@ -34,10 +34,10 @@ POST /_security/api_key
 
 Um nun alle Daten in richtiger Form in das Projekt zu laden, muss die Indexierung von damals umgeschrieben werden. 
 
-Bei den Joins wurden M zu N Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M zu N Beziehung gibt. 
+Bei den Joins wurden M:N-Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M:N-Beziehung gibt. 
 
 Zur Verdeutlichung hier ein Beispiel.
-Es gibt eine Tabelle Artikel, welche eine M zu N Beziehung mit der Tabelle DDC bezieht. In der Artikel Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz verbunden wird. Bei einem Join wird nun alles in eine flache Hierachie gezogen. Deswegen würde die Tabelle der Ergebnisse des Joins nun die Folgenden Einträge enthalten \ref{tbl:join}.
+Es gibt eine Tabelle Artikel, welche eine M:N-Beziehung mit der Tabelle DDC bezieht. In der Artikel Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz, verbunden wird. Bei einem Join wird nun alles in eine flache Hierachie gezogen. Deswegen würde die Tabelle der Ergebnisse des Joins nun die Folgenden Einträge enthalten \ref{tbl:join}.
 
 \begin{table} %[hbtp]
 	\centering
@@ -51,13 +51,13 @@ Es gibt eine Tabelle Artikel, welche eine M zu N Beziehung mit der Tabelle DDC b
     \label{tbl:join}
 \end{table}
 
-Um nun einen solchen Eintrag in Elasticsearch abzubilden wird ein Array in Elasticsearch benötigt. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser aggregiert auf Basis der ID die Daten. So ist es nun möglich Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst.
+Um nun einen solchen Eintrag in Elasticsearch abzubilden, wird ein Array benötigt. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser aggregiert auf Basis der ID die Daten. So ist es nun möglich, Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst.
 
 Dabei ist es wichtig, dass dieser Prozess nicht in mehreren Threads ausgeführt wird. Daher erhält jede Pipeline in diesem Projekt auch maximal einen Thread.
-Hier nun einmal ein Beispiel aus dem Code \ref{lst:fronendConf}.
+Hier nun einmal ein Beispiel aus dem Code \ref{lst:fronendConf}:
 
 
-\begin{lstlisting}[language=Ruby, frame=single, label={lst:fronendConf}] 
+\begin{lstlisting}[language=Ruby, frame=single, label={lst:fronendConf}, caption=Auschnitt aus dem Aggregat-Filter von Logstash,captionpos=b] 
 [...]
 map['bstatus_beschreibung'] ||= event.get('bstatus_beschreibung')
 
@@ -82,28 +82,28 @@ end
 [...]
 \end{lstlisting}
 
-Dieser Code wird nun so lange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung wird dabei zum Beispiel bei jeden Durchlauf überschrieben. 
+Dieser Code wird nun so lange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung wird dabei zum Beispiel bei jedem Durchlauf überschrieben. 
 
-Damit die sich ändernden Wert aggregiert werden, wurde ein Code geschrieben, welche Einträge in eine Array schreibt. Da bei dieser Abfrage \ref{lst:sqlQuery} nun allerdings mehrere Left-Joins aufeinander ausgeführt werden, kann es dazu kommen, das sich Zeilen wiederholen. Um dieses Problem zu lösen wurde ein Code geschrieben der Duplikate und NULL Werte erkennt und nicht nochmals in das Array einträgt.
+Damit die sich ändernden Wert aggregiert werden, wurde Code geschrieben, welche Einträge in ein Array schreibt. Da bei dieser Abfrage \ref{lst:sqlQuery} nun allerdings mehrere Left-Joins aufeinander ausgeführt werden, kann es dazu kommen, dass sich Zeilen wiederholen. Um dieses Problem zu lösen, werden Duplikate und NULL-Werte erkannt und nicht nochmals in das Array einträgt.
 
 \section{Aufbau der Abfrage}
 
-Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt. Die hier betrachtete Abfrage wurde schonmal von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den verbleibenden Datensätzen ausgeführt werden.
+Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt. Die hier betrachtete Abfrage wurde schon einmal von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den verbleibenden Datensätzen ausgeführt werden.
 
 Die Elasticsearch-Abfrage anderseits besteht nur aus einer Abfrage, da hier alle Daten schon auf einer flachen Ebene existieren.
 
 Verwendet wird hier ein sogenannter Boolean-Query. Dieser enthält vier verschieden Untergruppierungen.
 
-Zuerst einmal der Must-Teil. Alle hier Angegeben Parameter müssen in jedem Ergebnis vorhanden sein. Dies ist gleichzustellen mit einem booleschen AND. 
+Zuerst einmal der Must-Teil. Alle hier angegeben Parameter müssen in jedem Ergebnis vorhanden sein. Dies ist gleichzustellen mit einem booleschen AND. 
 
 Als Zweites der Must-Not-Teil. Dieser Teil ist den Must-Teil sehr ähnlich, allerdings sind die Parameter negiert.
 
-Danach der Shoud-Teil. In diesem Teil muss nur einer der Parameter vorhanden sein. Dies ist zu vergleichen mit einem booleschen OR. 
+Danach der Should-Teil. In diesem Teil muss nur einer der Parameter vorhanden sein. Dies ist zu vergleichen mit einem booleschen OR. 
 
 Und zuletzt der Filter-Teil. Die gesetzten Filter sind auch Must-Befehle. Allerdings werden diese nicht bei der Gewichtung der Ergebnisse mit eingerechnet. Für diese Arbeit hat dies erstmal keinen Einfluss, da alle Ergebnisse alphabetisch sortiert werden. Daher ist diese Abfrage mit Must gleichzustellen. \cite{ElasticsearchB.V..17.12.2019}
 
 
-\begin{lstlisting}[language=PHP, frame=single, label={lst:queryEla}] 
+\begin{lstlisting}[language=PHP, frame=single, label={lst:queryEla}, caption=Abfrage an Elasticsearch in PHP,captionpos=b] 
 //Create Client with basic Params
 $mustNotQueries = [];
 $filters        = [];
@@ -150,14 +150,13 @@ Bei dem Vergleich kamen die folgenden Durchschnittswerte zustande:
         MariaDB + Doctrine & 3.49 \\
         Elasticsearch      & 1.45  \\
 		\end{tabular}
-    \caption{Vergleich der Laufzeit zur Abfrage aller Daten für Buchstabe S der Lemma-Administration (15.846 Einträge)}
+    \caption{Vergleich der Laufzeit zur Abfrage aller Daten für den Buchstaben S der Lemma-Administration (15.846 Einträge)}
     \label{vlgTimeDBvsEla}
 \end{table}
 
 Dabei ist zu sehen, dass Elasticsearch eine Reduktion der Zeit um 58,45 \% ermöglicht.
 
-Diese Abfrage wurde auch noch in einer nachgebauten Produktionsumgebung ausgeführt. Daran erkennt man, dass die Abfrage durchaus schneller agiert, allerdings im Gesamtkontext kaum einen Unterschied macht. Elasticsearch lädt mit 46,49 Sekunden durchaus als Doctrine mit 50,1 Sekunden, allerdings fällt dies bei der langen Ladezeit kaum ins Gewicht.
-
+Diese Abfrage wurde auch noch in einer nachgebauten Produktionsumgebung ausgeführt. 
 
 \begin{figure}
 	\centering
@@ -165,6 +164,8 @@ Diese Abfrage wurde auch noch in einer nachgebauten Produktionsumgebung ausgefü
 	\caption{Geschwindigkeit: Elasticsearch}
 	\label{img:timeProdEla}
 \end{figure}
+
+Daran erkennt man, dass die Abfrage durchaus schneller agiert, allerdings im Gesamtkontext kaum einen Unterschied macht. Elasticsearch lädt mit 46,49 Sekunden durchaus schneller als Doctrine mit 50,1 Sekunden, allerdings fällt dies bei der langen Gesamtladezeit kaum ins Gewicht.
 
 \begin{figure}
 	\centering

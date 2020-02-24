@@ -1,28 +1,28 @@
 \chapter{Frontend-Suche}
 
-Diese Kapitel handelt von der Implementierung des Elasticsearch-Systems in die DietrichOnline Frontend-Suche. Dabei soll zuerst einmal die Suche und die automatische Vervollständigung komplett übertragen werden. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben.
+Dieses Kapitel handelt von der Implementierung des Elasticsearch-Systems in die DietrichOnline Frontend-Suche. Dabei soll zuerst einmal die Suche und die automatische Vervollständigung komplett übertragen werden. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben.
 
 \section{Indexierung}
 
-Um die Daten zu indexieren, wurde eine statische Code-Analyse durchgeführt, welche Daten aktuell alle im Frontend angezeigt werden. Dafür wird der gesamte Code zur Suche untersucht und alle Werte aufgeschrieben. Aufgrund dieser Basis wurde eine Abfrage gebaut, welche alle Daten an den Aggregat-Filter weiterreicht. Dann werden diese zum einen aggregiert, wie schon im letzten Kapitel beschrieben, allerdings auch transformiert. So wird zum Beispiel eine URL, welche vorher immer zur Laufzeit zusammengesetzt wurde nun direkt schon zusammengebaut in die Suchmaschine eingepflegt. 
+Um die Daten zu indexieren, wurde eine statische Code-Analyse durchgeführt, welche Daten aktuell im Frontend angezeigt werden. Dafür wird der gesamte Code zur Suche untersucht und alle Werte aufgeschrieben. Aufgrund dieser Basis wurde eine Abfrage gebaut, welche alle Daten an den Aggregat-Filter weiterreicht. Dann werden diese aggregiert, wie schon im letzten Kapitel beschrieben, und auch transformiert. So wird zum Beispiel eine URL, welche vorher immer zur Laufzeit zusammengesetzt wurde direkt schon zusammengebaut in die Suchmaschine eingepflegt. 
 
 Für die Auto-Vervollständigung mussten auch neue Felder angelegt werden. Es gibt im Projekt für jede Suchart eine eigene Vervollständigung. Um dies auch im Index abzubilden, wurden diverse Vervollständigungs-Felder angelegt, welche zum Teil einzelne Felder oder Feldmengen durchsuchen. Diese Felder wurden dann mithilfe des Aggregat-Filters befüllt. Ein Beispiel:
 
 Artikeltitel und die dazugehörige Sigle werden in zwei unterschiedlichen Felder gespeichert, sollten allerdings für die Vervollständigung zusammengesetzt werden.
-Dafür wird in dem Aggregationsfilter von Logstash definiert, der das Feld zusammenbaut \ref{lst:stringConcat}. Nun wird daraus entstandene String in das Suggestions-Feld von Elasticsearch gegeben. Elasticsearch indexiert daraufhin des String so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann. Als Ausgabe wird allerdings immer der komplette String zurückgegeben.
+Dafür wird in dem Aggregationsfilter von Logstash definiert, dass dieses Feld zusammengebaut werden soll \ref{lst:stringConcat}. Der daraus entstandene String in das Suggestions-Feld von Elasticsearch gegeben. Elasticsearch indexiert daraufhin den String so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann. Als Ausgabe wird allerdings immer der komplette String zurückgegeben.
 
-\begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}] 
+\begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}, caption=String-Konkatination im Aggregat Filter von Logstash ,captionpos=b] 
 map['artikel_titel_suggest'] ||= 
     '['+event.get('lemma_bezeichnung').to_s+']'
         +event.get('artikel_titel').to_s
 \end{lstlisting}
 
-Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich auch ein Array von Daten an das Auto-Vervollständigungsfeld von Elasticsearch weiterzugeben.
+Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich, auch ein Array von Daten an das Auto-Vervollständigungsfeld von Elasticsearch weiterzugeben.
 
 Der Index ist hierbei der aktuell Größte im DietrichOnline-Projekt mit rund 1.4 Millionen Einträgen. Die aktuelle Größe des Indexes zusammen mit den Feldern zur Auto-Vervollständigung beläuft sich auf rund 4.2 Gigabyte. 
 Diese Größe wurde hierbei schon ein wenig dadurch reduziert, dass jeder Feldtyp vorher definiert wurde.
 
-So wurde zum Beispiel die URL nur als String und nicht als Volltext gespeichert. Auch werden Felder, die unter 255 Zeichen lang sind als Keyword und Volltext gleichzeitig indexiert. Es wurde sich hier für nur einen Typen entschieden, um mehr Platz zu sparen.
+So wurde zum Beispiel die URL nur als String und nicht als Volltext gespeichert. Auch werden Felder, die unter 255 Zeichen lang sind, als Keyword und Volltext gleichzeitig indexiert. Es wurde sich hier für nur einen Typen entschieden, um mehr Platz zu sparen.
 
 Als nun allerdings die Pipeline das erste Mal gelaufen ist, kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht.
 
@@ -34,11 +34,11 @@ Die Integration folgte demselben Muster, wie die Lemma-Administration. Auf ein p
 
 Die bisherige Paginierung holte bis zu 1001 Ergebnisse aus der Datenbank und generierte daraufhin die Paginierung. Die Begrenzung ergibt sich daher, dass die vollen Datensätze aus der Datenbank geholt wurden, und dies bei größeren Zahlen zu einer langen Laufzeit führte.
 
-Diese Einschränkung kann nun mit Elasticsearch entfernt werden. Dazu wird zuerst einmal eine Abfrage abgesetzt, der alle Ergebnisse zählt. Für diesen Fall liefert Elasticsearch eine Count-Abfrage mit.
+Diese Einschränkung kann mit Elasticsearch entfernt werden. Dazu wird zuerst einmal eine Abfrage abgesetzt, die alle Ergebnisse zählt. Für diesen Fall liefert Elasticsearch eine Count-Abfrage mit.
 
 Durch diesen wird eine Paginierung generiert. Dafür wird mithilfe der Seitennummer ein Offset für die Abfrage generiert, sodass Elasticsearch immer nur die aktuellen Ergebnisse für die Suche liefert.
 
-\begin{lstlisting}[language=PHP, frame=single, label={lst:generierung}] 
+\begin{lstlisting}[language=PHP, frame=single, label={lst:generierung},  caption=Generierung des Offsets für die Paginierung,captionpos=b] 
 $result = $repo->findUserSearchResult(
     //array with all search-querys and junctors
     $this->userSearchItemArray, 
@@ -48,9 +48,9 @@ $result = $repo->findUserSearchResult(
 \end{lstlisting}
 
 \subsection{Query String}
-Für die diversen Suchen wurde eine Query-String Suche verwendet, da diese erlaubt, dass Wildcard Symbole zu verwenden. Dadurch geben sich zwar Performanz-Einbußen, allerdings sind Wildcard-Suchen ein oft genutztes Element in diesem Projekt und daher erforderlich.
+Für die diversen Suchen wurde eine Query-String-Suche verwendet, da diese erlaubt, Wildcard-Symbole zu verwenden. Dadurch ergeben sich zwar Performanz-Einbußen, allerdings sind Wildcard-Suchen ein oft genutztes Element in diesem Projekt und daher erforderlich.
 
-\begin{lstlisting}[language=PHP, frame=single, label={lst:aufbauQueryString}] 
+\begin{lstlisting}[language=PHP, frame=single, label={lst:aufbauQueryString}, caption=Beispiel eines Query-Strings,captionpos=b] 
 $subQuery = [
     'query_string' => [
         'query' => $userSearchItem->getValue(),
@@ -65,15 +65,13 @@ $subQuery = [
 ];
 \end{lstlisting}
 
-Ein Augenmerk muss auch noch auf die Lenient-Option gelegt werden. Ist dieser Wert nicht gesetzt, bricht die Suche mit einem Format-Fehler, wie das Suchen eines Strings in einem Zahlen-Feld, ab. Diese Funktion wurde daher bei allen Suchen abgeschaltet. Gerade wie bei diesem Beispiel, muss die Suche Felder mit diversem Inhalt gleichzeitig durchsuchen, ohne abzubrechen. 
+Ein Augenmerk muss auch noch auf die Lenient-Option gelegt werden. Ist dieser Wert nicht gesetzt, bricht die Suche mit einem Format-Fehler, wie das Suchen eines Strings in einem Zahlen-Feld, ab. Diese Funktion wurde daher bei allen Suchen abgeschaltet. Gerade wie bei diesem Beispiel, muss die Suche Felder mit diversem Inhalten gleichzeitig durchsuchen, ohne abzubrechen. 
 
 \subsection{Boolesche Logik}
 
-Zum anderen ist es möglich eine boolesche Logik bei der Suche zu verwenden. Um diese Umzusetzen, werden die Teile der Abfrage ineinander verschachtelt \ref{lst:booleanEla}. 
+Es ist möglich eine boolesche Logik bei der Frontend-Suche im DietrichOnline zu verwenden. Um diese umzusetzen, werden die Teile der Abfrage ineinander verschachtelt \ref{lst:booleanEla}:
 
-Bei jeder Suche wird ein Array mit allen Suchanfragen weitergegeben. Das erste Item im Array hat dabei niemals einen Junktor. Dafür existiert der erste Fall. Existiert eine weitere Stelle im Array ist auch ein Junktor mit angegeben. Dieser wird dann in dem unten gezeigten Switch-Case ausgelesen. Dann wird eine weitere Boolean-Abfrage geschrieben, welcher zum einen den zweiten Teil der Suche, sowie die bisherige Suche enthält.
-
-\begin{lstlisting}[language=PHP, frame=single, label={lst:booleanEla}] 
+\begin{lstlisting}[language=PHP, frame=single, label={lst:booleanEla}, caption=Auschnitt aus der boolischen Logik für das DietrichOnline-Projekt,captionpos=b] 
 switch ($userSearchItem->getJunktor()) {
     case UserSearchItem::JUNKTOR_NO: //First Entry
         $this->fullQuery = [
@@ -97,6 +95,10 @@ switch ($userSearchItem->getJunktor()) {
 [...] // More Cases like OR or AND NOT
 \end{lstlisting}
 
+Bei jeder Suche wird ein Array mit allen Suchanfragen weitergegeben. Das erste Item im Array hat dabei niemals einen Junktor. Dafür existiert der erste Fall. Existiert eine weitere Stelle im Array, ist auch ein Junktor mit angegeben. Dieser wird dann in dem unten gezeigten Switch-Case ausgelesen. Dann wird eine weitere Boolean-Abfrage geschrieben, welcher zum einen den neuen Teil der Suche, sowie die bisherige Suche enthält.
+
+
+
 \subsection{Auto-Vervollständigung}
 
 Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geht es nun darum, wie eine Abfrage an dieses System aussieht. Damit das System weiß, welches Suggestions-Feld verwendet werden soll, wird dieses in der Applikation als Array hinterlegt. Normalerweise wird auch der gesamte Eintrag mit aus der Datenbank geladen. Da dies bei der Projektstruktur DietrichOnlines nicht benötigt wird, wird das \_source-Feld auf leer gesetzt.
@@ -119,9 +121,9 @@ $params = [
 
 \subsection{Vollständige Suche}
 
-Die vollständige Suche soll die aktuelle Schnellsuche, welche aus Artikeltitel mit Sigle besteht ersetzen. Dazu wurde zuerst geschaut, welche Felder sonst noch von Interesse sein könnten. 
+Die vollständige Suche soll die aktuelle Schnellsuche, welche aus Artikeltitel mit Sigle besteht, ersetzen. Dazu wurde zuerst geschaut, welche Felder sonst noch von Interesse sein könnten. 
 
-Nach einer Besprechung mit einem Mitarbeiter wurde eine Liste mit relevanten Spalten erstellt. Daraufhin wurde analysiert, welche Spalten für die Auto-Vervollständigung indexiert werden sollen. Dabei wurden Felder, bei den es keinen Sinn ergibt sie automatisch zu vervollständigen, wie das ID-Feld, herausgenommen. Auf den verbleibenden Feldern wurde dann ein Auto-Vervollständigungs-Index gebaut.
+Nach einer Besprechung mit einem Mitarbeiter wurde eine Liste mit relevanten Spalten erstellt. Daraufhin wurde analysiert, welche Spalten für die Auto-Vervollständigung indexiert werden sollen. Dabei wurden Felder, bei den es keinen Sinn ergibt, sie automatisch zu vervollständigen, wie das ID-Feld, herausgenommen. Auf den verbleibenden Feldern wurde dann ein Auto-Vervollständigungs-Index gebaut.
 
 \subsection{Autoren}
 
@@ -136,8 +138,8 @@ Bei jeder Suche soll eine Auswertung mitgeschickt werden, welche Autoren in der 
 \end{lstlisting}
 
 
-Nun kann kommt bei jeder Suchanfrage eine Aggregation namens 'best\_authors' mit zurück. Diese enthält zum einen den Namen, sowie die Anzahl der gefundenen Dokumente des Autors in der jeweiligen Suche. 
-Mit diesen Daten war es nun möglich Buttons zu generieren, welche eine neue Suche mit den Autoren starten \ref{img:erweiterteSuche}.
+Nun kommt bei jeder Suchanfrage eine Aggregation namens 'best\_authors' zurück. Diese enthält den Namen, sowie die Anzahl der gefundenen Dokumente des Autors in der jeweiligen Suche. 
+Mit diesen Daten war es nun möglich, Buttons zu generieren, welche eine neue Suche mit den Autoren starten \ref{img:erweiterteSuche}.
 
 
 \begin{figure}
