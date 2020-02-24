@@ -5,16 +5,16 @@
 
 Der empfohlene Installationsweg für Xapian führt über die Paketquelle (PPA) der Entwickler. Nachdem dieses eingefügt wurde, kann Xapian entweder in einer C++ oder Python Variante installiert werden. 
 
-Um die Suchmaschine auch über PHP anzusprechen ist, ist es allerdings notwendig den PHP-Connector aus Lizenzgründen selbst zu bauen. Dabei muss vorher ein Eintrag, der ausweist, dass aus dieser Quelle auch Source-Code geladen werden kann, in der Paketquellen hinzugefügt werden. Danach kann der Klient mithilfe von Make gebaut werden.
+Um die Suchmaschine auch über PHP anzusprechen ist es notwendig, den PHP-Connector aus Lizenzgründen selbst zu bauen. Dabei muss vorher ein Eintrag, der ausweist, dass aus dieser Quelle auch Source-Code geladen werden kann, in den Paketquellen hinzugefügt werden. Danach kann der Klient mithilfe von Make gebaut werden.
 
-Allerdings ist der Server bisher nur Lokal ansprechbar, um dies zu ändern, muss ein TCP-Server für Xapian gestartet werden. Um diesen zu Nutzen ist es vonnöten ein weiteres Paket aus der Paketquelle zu installieren. Damit nun der Server gestartet werden kann, muss zuerst ein Index, der bei Xapian Database genannt wird, gebaut werden. Dazu mehr in dem Teil \ref{xap:index}. Danach kann der Server auf einen beliebigen Port gestartet werden.
+Allerdings ist der Server bisher nur lokal ansprechbar. Um dies zu ändern, muss ein TCP-Server für Xapian gestartet werden. Um diesen zu nutzen ist es vonnöten, ein weiteres Paket aus der Paketquelle zu installieren. Damit der Server gestartet werden kann, muss zuerst ein Index, der bei Xapian Database genannt wird, gebaut werden. Dazu mehr in dem Teil \ref{xap:index}. Danach kann der Server auf einen beliebigen Port gestartet werden.
 
 \subsection{Indexierung}
 \label{xap:index}
 
-Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, wurde erstmal ein Beispiel zum Import einer CSV-Datei durchgearbeitet. Darin war dann zu sehen, dass der komplette Datenimport manuell geschrieben werden musste. Auf dieser Basis wurde dann ein eigener Importer für MySQL geschrieben \ref{lst:XapPhp}.
+Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, wurde erstmal ein Beispiel zum Import einer CSV-Datei durchgearbeitet. Darin war dann zu sehen, dass der komplette Datenimport manuell geschrieben werden musste. Auf dieser Basis wurde daraufhin ein eigener Importer für MySQL geschrieben \ref{lst:XapPhp}:
 
-\begin{lstlisting}[language=php, frame=single, label={lst:XapPhp}, morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
+\begin{lstlisting}[language=php, frame=single, label={lst:XapPhp}, morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}, caption=Skript zur Indexierung der Daten in Xapian,captionpos=b] 
 <?php
 require_once("xapian.php");
 
@@ -59,11 +59,11 @@ $conn->close();
 
 In Zeile 10 wird ein Stemmer verwendet, welcher dazu dient, wenn zum Beispiel der Plural eines Wortes gesucht wird, auch den Singular zu finden.
 
-In Zeile 23 wird ein Feld mit einem Präfix indexiert. Dies dient dazu diese Zeile für die spätere Suche auszuweisen. Die Präfixe werden dabei vor die Zeile geschrieben und bei der Suche wieder herausgefiltert. 
+In Zeile 23 wird ein Feld mit einem Präfix indexiert. Dies dient dazu, diese Zeile für die spätere Suche auszuweisen. Die Präfixe werden dabei vor die Zeile geschrieben und bei der Suche wieder herausgefiltert. 
 
-Die anderen Felder wurden für die generelle Suche ohne Präfix indexiert. Zuletzt noch der Grund warum leere Strings gegen das Wort 'EMPTY' ausgetauscht werden. Dies beruht darauf, dass Xapian es nicht erlaubt, leere Strings zu indexieren.
+Die anderen Felder wurden für die generelle Suche ohne Präfix indexiert. Zuletzt noch der Grund, warum leere Strings gegen das Wort 'EMPTY' ausgetauscht werden. Dies beruht darauf, dass Xapian es nicht erlaubt, leere Strings zu indexieren.
 
-Als nun das PHP-Script auf den Server gestartet wurde, musste noch eine Warnung behoben werden. Dazu wurde die php.ini angepasst, indem der Eintrag 'enable\_dl' aktiviert wurde. Damit können jetzt Erweiterungen auch zur Laufzeit geladen werden, was die Bibliothek von Xapian benötigt.
+Als nun das PHP-Script auf dem Server gestartet wurde, musste noch eine Warnung behoben werden. Dazu wurde die php.ini angepasst, indem der Eintrag 'enable\_dl' gemacht wurde. Damit können jetzt Erweiterungen auch zur Laufzeit geladen werden, was die Bibliothek von Xapian benötigt.
 
 Die Indexierung lief dabei äußerst schnell in unter einer Minute ab.
 
@@ -77,7 +77,7 @@ Bei dem letzten Versionsupgrade wurde die Dokumentation von Xapian komplett umge
 
 Zu der Installation von dem TCP-Server war auch nichts in der neuen Dokumentation zu finden. Beim Durchsuchen des Internets, wie der Server extern ansprechbar gemacht werden kann, konnte eine Seite der alten Dokumentation gefunden werden, welche den Befehl zum Starten vermerkt hatte. Nachdem dieser Befehl ausgeführt wurde, wurde gemeldet, dass für diesen Befehl ein weiteres Paket installiert werden musste. Dieses Paket wurde in der Dokumentation nicht vermerkt. 
 
-Generell bietet die Dokumentation, in der aktuellen Form, nur einen sehr grundlegenden Einblick in das System. Positiv anzumerken ist allerdings, dass Xapian ein Beispiel zu Indexierung von Daten mit Code in allen verfügbaren Programmiersprachen auf Github bereitstellt. In der Dokumentation direkt wird allerdings nur das Python-Beispiel eingegangen.
+Generell bietet die Dokumentation, in der aktuellen Form, nur einen sehr grundlegenden Einblick in das System. Positiv anzumerken ist allerdings, dass Xapian ein Beispiel zu Indexierung von Daten mit Code in allen verfügbaren Programmiersprachen auf Github bereitstellt. In der Dokumentation wird allerdings nur das Python-Beispiel eingegangen.
 
 \begin{figure}
 	\centering
@@ -88,12 +88,12 @@ Generell bietet die Dokumentation, in der aktuellen Form, nur einen sehr grundle
 
 \subsection{Absetzen einer Anfrage und Integration in PHP}
 
-Xapian besitzt keine REST-Schnittstelle. Daher muss hier per Befehl direkt auf mit Systemaufrufen bzw. über Anfragen an den TCP Server gearbeitet werden. Dabei konnte aufgrund des Zeitkon­tin­gents die Remote Ausführung nicht getestet werden, da der Aufwand die PHP-Erweiterung auf Windows zu bauen, zu hoch war. Daher habe ich die Datei direkt auf den Server ausgeführt, was bei der Laufzeit bedacht werden muss. 
+Xapian besitzt keine REST-Schnittstelle. Daher wird der Befehl direkt auf mit PHP-Aufrufen gesendet. Dabei konnte aufgrund des Zeitkon­tin­gents die Remote Ausführung nicht getestet werden, da der Aufwand die PHP-Erweiterung auf Windows zu bauen, zu hoch war. Die Datei wurde deshalb direkt auf den Server ausgeführt, was bei der Laufzeit bedacht werden muss. 
 
-Der Grund, warum eine eigene Zeile für den Buchstaben ausgewiesen werden muss, ist, dass Xapian generell nur Volltext ausweist. Es wurde zuerst versucht mit Wildcards zu arbeiten, allerdings ergaben sich dabei dieselben Probleme, wie bei den anderen Suchmaschinen.
+Der Grund, warum eine eigene Zeile für den Buchstaben ausgewiesen werden muss, ist, dass Xapian generell nur Volltext ausweist. Es wurde zuerst versucht, mit Wildcards zu arbeiten, allerdings ergaben sich dabei dieselben Probleme, wie bei den anderen Suchmaschinen.
 
 \begin{lstlisting}[language=php, frame=single, label={lst:XapPhpQuery}, 
-	morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}] 
+	morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}, caption=Skript zur Suche von Daten in Xapian,captionpos=b] 
 // Require xapian.php and declare variables
 
 $db = new XapianDatabase('db'); //Open Database
@@ -121,7 +121,7 @@ foreach ($matches as $pointer){
 
 Nachdem die Abfrage die ersten hundert Male durchgelaufen war, war die Zeit mit 0.0044 Sekunden im Durchschnitt für die Ergebnisse sehr gering. Dies liegt daran, dass die Ergebnisse erstmal nur Pointer auf die kompletten Daten sind. 
 
-Um nun alle Daten zu erhalten, muss nochmals ein gesonderter Befehl geschickt werden. Deswegen ist im Code ab Zeile 15 auch eine For-Schleife, welche die Datensätze für alle Pointer holt. Foreach verschiebt dabei automatisch den Pointer von den Ergebnissen. Wichtig ist, dass der Count ein Programmschritt ist, der theoretisch die Laufzeit erhöht und nicht für die normale Abfrage genutzt werden würde. Allerdings habe wurde diese Erhöhung hingenommen, um festzustellen, ob immer alle Ergebnisse korrekt geliefert werden.
+Um nun alle Daten zu erhalten, muss nochmals ein gesonderter Befehl geschickt werden. Deswegen ist im Code ab Zeile 15 auch eine For-Schleife, welche die Datensätze für alle Pointer holt. Foreach verschiebt dabei automatisch den Pointer von den Ergebnissen. Wichtig ist, dass der Count ein Programmschritt ist, der theoretisch die Laufzeit erhöht und nicht für die normale Abfrage genutzt werden würde. Allerdings wurde diese Erhöhung hingenommen, um festzustellen, ob immer alle Ergebnisse korrekt geliefert werden.
 Die auskommentierte Zeile würde das Objekt nun als Array mit Indices zurückgeben. 
 
-Die Abfrage mit dem Abholen der Daten dauerte nun im Durchschnitt 0.22 Sekunden, was immer noch sehr schnell ist. Allerdings muss dabei bedacht werden, dass die Abfrage direkt auf dem Server lief, wodurch es keine Latenzzeit gab.
+Die Abfrage für das Abholen der Daten dauerte nun im Durchschnitt 0.22 Sekunden, was immer noch sehr schnell ist. Allerdings muss dabei bedacht werden, dass die Abfrage direkt auf dem Server lief, wodurch es keine Latenzzeit gab.
