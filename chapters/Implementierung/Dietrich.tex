@@ -34,10 +34,10 @@ POST /_security/api_key
 
 Um nun alle Daten in richtiger Form in das Projekt zu laden, muss die Indexierung von dem Ersteindruck \ref{elaVgl:index} umgeschrieben werden. 
 
-Bei den Joins wurden M:N-Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M:N-Beziehung gibt. 
+Bei den SQL-Joins wurden M:N-Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M:N-Beziehung gibt. 
 
 Zur Verdeutlichung hier ein Beispiel.
-Es gibt eine Tabelle Artikel, welche eine M:N-Beziehung mit der Tabelle DDC bezieht. In der Artikel Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz, verbunden wird. Bei einem Join werden beide referenzierten Beiträge auf eine flache Hierachie gezogen. Deswegen würde die Tabelle der Ergebnisse des Joins nun die folgenden Einträge enthalten \ref{tbl:join}.
+Es gibt eine Tabelle Artikel, welche eine M:N-Beziehung mit der Tabelle DDC bezieht. In der Artikel Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz, verbunden wird. Bei einem SQL-Join werden beide referenzierten Beiträge auf eine flache Hierachie gezogen. Deswegen würde die Tabelle der Ergebnisse des SQL-Joins nun die folgenden Einträge enthalten \ref{tbl:join}.
 
 \begin{table} %[hbtp]
 	\centering
@@ -47,7 +47,7 @@ Es gibt eine Tabelle Artikel, welche eine M:N-Beziehung mit der Tabelle DDC bezi
         01 & Trier & Trier \\
         01 & Trier & Rheinland-Pflaz  \\
 		\end{tabular}
-    \caption{Tabelle für ein Beispiel der Joins}
+    \caption{Tabelle für ein Beispiel der SQL-Joins}
     \label{tbl:join}
 \end{table}
 
@@ -82,11 +82,11 @@ Dabei ist es wichtig, dass dieser Prozess nicht in mehreren Threads ausgeführt 
 
 Dieser Code wird nun so lange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung in Zeile 2 wird dabei zum Beispiel bei jedem Durchlauf überschrieben. 
 
-Damit die sich ändernden Wert aggregiert werden, werden diese in ein Array geschrieben. Da bei der Abfrage \ref{lst:sqlQuery} mehrere Left-Joins aufeinander ausgeführt werden, kann es dazu kommen, dass sich Zeilen wiederholen. Um dieses Problem zu lösen, werden Duplikate und NULL-Werte erkannt und nicht nochmals in das Array einträgt.
+Damit die sich ändernden Wert aggregiert werden, werden diese in ein Array geschrieben. Da bei der Abfrage \ref{lst:sqlQuery} mehrere SQL-Joins aufeinander ausgeführt werden, kann es dazu kommen, dass sich Zeilen wiederholen. Um dieses Problem zu lösen, werden Duplikate und NULL-Werte erkannt und nicht nochmals in das Array einträgt.
 
 \section{Aufbau der Abfrage}
 
-Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt. Die hier betrachtete Abfrage wurde schon von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den verbleibenden Datensätzen ausgeführt werden.
+Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt. Die hier betrachtete Abfrage wurde schon von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle SQL-Joins auf den verbleibenden Datensätzen ausgeführt werden.
 
 Elasticsearch arbeitet mit nur einer Abfrage, da hier alle Daten schon auf einer flachen Ebene existieren.
 

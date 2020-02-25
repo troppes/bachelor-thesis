@@ -58,7 +58,7 @@ WHERE lemma.bezeichnung LIKE 'S%' AND lemma.ist_geloescht = 0
 ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 \end{lstlisting}
 
-Im zweiten Schritt werden dann die gerade geholten IDs der Einträge mithilfe von Joins für die Darstellung vorbereitet:
+Im zweiten Schritt werden dann die gerade geholten IDs der Einträge mithilfe von SQL-Joins für die Darstellung vorbereitet:
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single, label={lst:sqlQuery}, caption=Abfrage aller Lemmata mit den Buchstaben S (Part 2),captionpos=b] 
