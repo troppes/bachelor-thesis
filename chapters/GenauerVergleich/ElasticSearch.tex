@@ -79,7 +79,7 @@ PUT lemma
   }}}]}}
 \end{lstlisting}
 
-Für den Test war die Erstellung eines Mappings oder eines dynamischen Templates allerdings nicht notwendig, da Elasticsearch bei der automatischen Indexierung jedes Zeichenketten-Feld als Keyword, sowie Volltext abspeichert, insofern die Länge unter 256 Zeichen ist.
+Für den Test war die Erstellung eines Mappings oder eines dynamischen Templates allerdings nicht notwendig, da Elasticsearch bei der automatischen Indexierung jedes Zeichenketten-Feld als Keyword, sowie Volltext abspeichert, insofern die Länge unter 256 Zeichen ist. \cite{ElasticsearchB.V..13.2.2020}
 
 \subsection{Oberfläche}
 
@@ -87,7 +87,7 @@ Die Oberfläche von Kibana wirkt eine zu Beginn  sehr Überladen \ref{img:elasti
 
 Auf der Oberfläche gibt es viele Menüpunkte, welche es ermöglichen, die Daten auf diverse Arten darzustellen, darunter in Graphen-Form oder auf einer Landkarte. Unter dem Punkt Management finden sich die Einstellungen für das Elasticsearch-System. Hier kann man nicht nur Snapshots erstellen, sondern auch das System mit Updates versorgen. Zudem können hier die Indices verwaltet werden \ref{img:elasticIndexSettings}. Eine Erstellung der Indices ist allerdings nur per API möglich. Es existiert die Möglichkeit einige Einstellungen an den Indices vorzunehmen und diese auch zu löschen. Zudem gibt es die Option, Indices eine Lebensdauer zuzuweisen, was in Zeiten der Datenschutzgrundverordnung sicherlich eine nützliche Funktion darstellen wird. 
 
-Die Oberfläche ist vollkommen responsive. Es existiert auch eine Entwicklerkonsolte, in der es möglich ist, Anfragen an das Elasticsearch-System zu schicken, ohne mit Curl zu arbeiten, was das Debugging vereinfacht.
+Die Oberfläche ist vollkommen responsive. Es existiert auch eine Entwicklerkonsole, in der es möglich ist, Anfragen an das Elasticsearch-System zu schicken, ohne mit Curl zu arbeiten, was das Debugging vereinfacht.
 
 \begin{figure}
 	\centering

@@ -63,9 +63,9 @@ In Zeile 23 wird ein Feld mit einem Präfix indexiert. Dies dient dazu, diese Ze
 
 Die anderen Felder wurden für die generelle Suche ohne Präfix indexiert. Zuletzt noch der Grund, warum leere Zeichenketten gegen das Wort 'EMPTY' ausgetauscht werden. Dies beruht darauf, dass Xapian es nicht erlaubt, leere Zeichenketten zu indexieren.
 
-Als nun das PHP-Script auf dem Server gestartet wurde, musste noch eine Warnung behoben werden. Dazu wurde die php.ini angepasst, indem der Eintrag 'enable\_dl' gemacht wurde. Damit können jetzt Erweiterungen auch zur Laufzeit geladen werden, was die Bibliothek von Xapian benötigt.
+Als nun das PHP-Script auf dem Server gestartet wurde, musste noch eine Warnung behoben werden. Dazu wurde die php.ini angepasst, indem der Eintrag 'enable\_dl' gemacht wurde. Damit können jetzt Erweiterungen auch zur Laufzeit geladen werden, was die Bibliothek von Xapian benötigt. 
 
-Die Indexierung lief dabei äußerst schnell in unter einer Minute ab.
+Die Indexierung lief dabei äußerst schnell in unter einer Minute ab. \cite{Xapian.21.1.2020}
 
 \subsection{Oberfläche}
 
@@ -77,7 +77,7 @@ Bei dem letzten Versionsupgrade wurde die Dokumentation von Xapian komplett umge
 
 Zu der Installation von dem TCP-Server war auch nichts in der neuen Dokumentation zu finden. Beim Durchsuchen des Internets, wie der Server extern ansprechbar gemacht werden kann, konnte eine Seite der alten Dokumentation gefunden werden, welche den Befehl zum Starten vermerkt hatte. Nachdem dieser Befehl ausgeführt wurde, wurde gemeldet, dass für diesen Befehl ein weiteres Paket installiert werden musste. Dieses Paket wurde in der Dokumentation nicht vermerkt. 
 
-Generell bietet die Dokumentation, in der aktuellen Form, nur einen sehr grundlegenden Einblick in das System. Positiv anzumerken ist allerdings, dass Xapian ein Beispiel zu Indexierung von Daten mit Code in allen verfügbaren Programmiersprachen auf Github bereitstellt. In der Dokumentation wird allerdings nur das Python-Beispiel eingegangen.
+Generell bietet die Dokumentation, in der aktuellen Form, nur einen sehr grundlegenden Einblick in das System. Positiv anzumerken ist allerdings, dass Xapian ein Beispiel zu Indexierung von Daten mit Code in allen verfügbaren Programmiersprachen auf Github bereitstellt. \cite{Xapian.25.2.2020} In der Dokumentation wird allerdings nur das Python-Beispiel eingegangen.
 
 \begin{figure}
 	\centering
@@ -122,6 +122,6 @@ foreach ($matches as $pointer){
 Nachdem die Abfrage die ersten hundert Male durchgelaufen war, war die Zeit mit 0.0044 Sekunden im Durchschnitt für die Ergebnisse sehr gering. Dies liegt daran, dass die Ergebnisse erstmal nur Pointer auf die kompletten Daten sind. 
 
 Um nun alle Daten zu erhalten, muss nochmals ein gesonderter Befehl geschickt werden. Deswegen ist im Code ab Zeile 15 auch eine For-Schleife, welche die Datensätze für alle Pointer holt. Foreach verschiebt dabei automatisch den Pointer von den Ergebnissen. Wichtig ist, dass der Count ein Programmschritt ist, der theoretisch die Laufzeit erhöht und nicht für die normale Abfrage genutzt werden würde. Allerdings wurde diese Erhöhung hingenommen, um festzustellen, ob immer alle Ergebnisse korrekt geliefert werden.
-Die auskommentierte Zeile würde das Objekt nun als Array mit Indices zurückgeben. 
+Die auskommentierte Zeile würde das Objekt nun als Array mit Indices zurückgeben. \cite{Xapian.25.2.2020}
 
 Die Abfrage für das Abholen der Daten dauerte nun im Durchschnitt 0.22 Sekunden, was immer noch sehr schnell ist. Allerdings muss dabei bedacht werden, dass die Abfrage direkt auf dem Server lief, wodurch es keine Latenzzeit gab.

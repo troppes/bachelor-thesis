@@ -24,7 +24,7 @@ Der Index ist hierbei der aktuell Größte im DietrichOnline-Projekt mit rund 1.
 
 Durch die Definition der Feldtypen wurde die Größe des Index schon ein wenig reduziert. So wurde zum Beispiel die URL nur als Zeichenkette und nicht als Volltext gespeichert. Normalerweise werden Felder, die unter 255 Zeichen lang sind, als Keyword und Volltext gleichzeitig indexiert. Um diese doppelte Indexierung zu verhindern wurde sich für einen Typen entschieden.
 
-Beim ersten Lauf der Pipeline, kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht.
+Beim ersten Lauf der Pipeline, kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht. \cite{ElasticsearchB.V..13.2.2020}
 
 \section{Integration}
 
@@ -63,7 +63,7 @@ $subQuery = [
 ];
 \end{lstlisting}
 
-Ein Augenmerk muss auch noch auf die Lenient-Option gelegt werden. Ist dieser Wert nicht gesetzt, bricht die Suche mit einem Format-Fehler, wie das Suchen einer Zeichenkette in einem Zahlen-Feld, ab. Diese Funktion wurde daher bei allen Suchen abgeschaltet. Gerade bei diesem Beispiel, muss die Suche Felder mit diversem Inhalten gleichzeitig durchsuchen, ohne abzubrechen. 
+Ein Augenmerk muss auch noch auf die Lenient-Option gelegt werden. Ist dieser Wert nicht gesetzt, bricht die Suche mit einem Format-Fehler, wie das Suchen einer Zeichenkette in einem Zahlen-Feld, ab. Diese Funktion wurde daher bei allen Suchen abgeschaltet. Gerade bei diesem Beispiel, muss die Suche Felder mit diversem Inhalten gleichzeitig durchsuchen, ohne abzubrechen. \cite{ElasticsearchB.V..13.2.2020}
 
 \subsection{Boolesche Logik}
 
@@ -95,11 +95,9 @@ switch ($userSearchItem->getJunktor()) {
 
 Bei jeder Suche wird ein Array mit allen Suchanfragen weitergegeben. Das erste Item im Array hat dabei niemals einen Junktor. Dafür existiert der Fall in Zeile 2-10. Existiert eine weitere Stelle im Array, ist auch ein Junktor mit angegeben. Dieser wird dann in dem unten gezeigten Switch-Case ausgelesen. Dann wird eine weitere Boolean-Abfrage geschrieben, welcher zum einen den neuen Teil der Suche, sowie die bisherige Suche enthält.
 
-
-
 \subsection{Auto-Vervollständigung}
 
-Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geht es nun darum, wie eine Abfrage an dieses System aussieht. Damit das System weiß, welches Suggestions-Feld verwendet werden soll, wird dieses in der Applikation als Array hinterlegt. Normalerweise wird auch der gesamte Eintrag mit aus der Datenbank geladen. Da dies bei der Projektstruktur DietrichOnlines nicht benötigt wird, wird das \_source-Feld als leere Zeichenkette gesetzt.
+Die Indexierung dieser Felder wurde schon im obigen Kapitel besprochen. Hier geht es nun darum, wie eine Abfrage an dieses System aussieht. Damit das System weiß, welches Suggestions-Feld verwendet werden soll, wird dieses in der Applikation als Array hinterlegt. Normalerweise wird auch der gesamte Eintrag mit aus der Datenbank geladen. Da dies bei der Projektstruktur DietrichOnlines nicht benötigt wird, wird das \_source-Feld als leere Zeichenkette gesetzt. \cite{ElasticsearchB.V..13.2.2020}
 
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:autocompleParams}, caption=Auschnitt aus der Abfrage zur Auto-Vervollständigung,captionpos=b] 
@@ -137,7 +135,7 @@ Bei jeder Suche soll mit einer Auswertung angereichert werden, welche Autoren in
 
 
 Nun wird bei jeder Suchanfrage eine Aggregation namens 'best\_authors' zurück-geliefert. Diese enthält den Namen, sowie die Anzahl der gefundenen Dokumente des Autors in der jeweiligen Suche. 
-Mit diesen Daten war es nun möglich, Schaltflächen zu generieren, welche eine neue Suche mit den Autorennamen starten.
+Mit diesen Daten war es nun möglich, Schaltflächen zu generieren, welche eine neue Suche mit den Autorennamen starten. \cite{ElasticsearchB.V..13.2.2020}
 
 
 \begin{figure}

@@ -75,20 +75,20 @@ Der Network Host wird hier auf alle Interfaces der Maschine gesetzt, damit sich 
 
 Das Seed-Host Setting sagt aus, an welchen Nodes\footnote{Hier: Elasticsearch-Instanzen} die Daten synchronisiert werden sollen.
 
-Der letzte Eintrag dient dazu, dass bei der ersten Synchronisation das System weiß, welche Nodes alle Daten enthalten, also mit welchen Server sich synchronisiert werden soll. Da hier beide Systeme beim ersten Start noch keine Daten besitzen, sind alle Nodes zu beginnt Master. 
+Der letzte Eintrag dient dazu, dass bei der ersten Synchronisation das System weiß, welche Nodes alle Daten enthalten, also mit welchen Server sich synchronisiert werden soll. Da hier beide Systeme beim ersten Start noch keine Daten besitzen, sind alle Nodes zu beginnt Master. \cite{ElasticsearchB.V..13.2.2020}
 
 
 \section{Kibana}
 
 Die Grundkonfiguration von Kibana ist einfacher als die Konfiguration von Elasticsearch. Es muss nur die YAML-Datei in den Container geladen werden und der Port 5601 nach außen durchgereicht werden.
 
-In der Konfigurationsdatei werden nun die Einstellungen für Kibana gesetzt. Darunter fällt der oben genannte Port, der Server-Host, in diesem Fall auch 0.0.0.0, und die Elasticsearch-Hosts. Dabei werden alle Server-Instanzen mitgegeben, auf denen Kibana arbeiten soll. 
+In der Konfigurationsdatei werden nun die Einstellungen für Kibana gesetzt. Darunter fällt der oben genannte Port, der Server-Host, in diesem Fall auch 0.0.0.0, und die Elasticsearch-Hosts. Dabei werden alle Server-Instanzen mitgegeben, auf denen Kibana arbeiten soll. \cite{ElasticsearchB.V..12.2.2020}
 
 \section{Logstash}
 
 Für die Grundkonfiguration von Logstash muss, wie schon im Ersteindruck, der Treiber in die Core-Bibliothek gelegt werden. Zudem werden die Konfigurationsdateien für die Pipelines gemountet.
 
-In der Konfigurationsdatei für Logstash wird dann der Name, die Pipeline.id und die Pipeline-Worker festgelegt. Die Pipeline-Worker sind die Threads, in denen eine der konfigurierten Pipelines abgearbeitet wird. Generell sollte die Anzahl der Cores auch die maximale Anzahl der Worker sein.
+In der Konfigurationsdatei für Logstash wird dann der Name, die Pipeline.id und die Pipeline-Worker festgelegt. Die Pipeline-Worker sind die Threads, in denen eine der konfigurierten Pipelines abgearbeitet wird. Generell sollte die Anzahl der Cores auch die maximale Anzahl der Worker sein. \cite{ElasticsearchB.V..12.2.2020b}
 
 
 \section{X-Security}
@@ -115,7 +115,7 @@ Damit diese Zertifikate auch genutzt werden können, muss jeder Container das zu
 
 Zusätzlich zu den Zertifikaten muss noch eine Passwort-Authentifikation eingebaut werden. Dazu kann auf den Elasticsearch-Containern ein Befehl zur Erstellung der Systempasswörter aufgerufen werden. Dadurch werden alle Benutzer, welche die einzelnen Systeme wie Logstash oder Kibana zum Funktionieren brauchen, generiert.
 
-Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte ist hierbei rollenbasiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, welche daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelne Systemfunktionen, wie die Erstellung von Snapshots, spezifisch freigegeben werden. Hierbei sollte sich an das Minimalprinzip gehalten werden, also nur genau die Rechte vergeben werden, welche der Nutzer auch benötigt. Zusätzliche Rechte werden dem Nutzer dabei verwehrt.
+Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte ist hierbei rollenbasiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, welche daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelne Systemfunktionen, wie die Erstellung von Snapshots, spezifisch freigegeben werden. Hierbei sollte sich an das Minimalprinzip gehalten werden, also nur genau die Rechte vergeben werden, welche der Nutzer auch benötigt. Zusätzliche Rechte werden dem Nutzer dabei verwehrt. \cite{ElasticsearchB.V..13.2.2020}
 
 Um nun eine Abfrage gegen das Elasticsearch-System zu stellen, muss zum einen eine BasicAuth, sowie die CA mitgegeben werden:
 
