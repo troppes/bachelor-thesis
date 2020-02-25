@@ -1,6 +1,6 @@
 \chapter{Setup}
 
-Dieses Kapitel behandelt die Installation und Ersteinrichtung der Suchmaschine. Die Installation erfolgt dabei über Docker mithilfe von Docker-Compose. Es werden 2 Elasticsearch-Instanzen, eine Kibana-Instanz und eine Logstash-Instanz aufgesetzt. Das fertig Setup soll dann wie folgt aussehen \ref{img:dockerNetwork}.
+Dieses Kapitel behandelt die Installation und Ersteinrichtung der Suchmaschine. Die Installation erfolgt dabei über Docker mithilfe von Docker-Compose. Es werden 2 Elasticsearch-Instanzen, eine Kibana-Instanz und eine Logstash-Instanz aufgesetzt. Das fertig Setup soll dann wie folgt aussehen:
 
 \begin{figure}
 	\centering
@@ -101,7 +101,8 @@ Normalerweise gibt es eine Möglichkeit, dieses Zertifikat aus der PK12-Datei zu
 
 Die Lösung dieses Problems war es, schon bei der Zertifikaterstellung eine Option mitzugeben, dass die Zertifikate nicht verpackt werden sollen. 
 
-Um nun alle Zertifikate gleichzeitig zu generieren, kann eine YAML-Datei mitgegeben werden. In dieser werden dann die Details für die Zertifikate, wie zum Beispiel DNS-Name und IP des Servers, mitgegeben. In diesem Fall wurde nur der DNS-Name angegeben \ref{lst:certs-yml}:
+Um nun alle Zertifikate gleichzeitig zu generieren, kann eine YAML-Datei mitgegeben werden. In dieser werden dann die Details für die Zertifikate, wie zum Beispiel DNS-Name und IP des Servers, mitgegeben. In diesem Fall wurde nur der DNS-Name angegeben:
+\newpage
 
 \begin{lstlisting}[language=YAML, frame=single, label={lst:certs-yml}, caption=Auschnitt aus der Konfigurationsdatei für die Zertifikatgenerierung,captionpos=b] 
 instances:
@@ -122,7 +123,7 @@ Um nun eine Abfrage gegen das Elasticsearch-System zu stellen, muss zum einen ei
 curl https://bib55:9200 --cacert ca.crt -uuser:pass
 \end{lstlisting}
 
-Damit Logstash wieder Daten an Elasticsearch senden kann, wird ein Nutzer erstellt, welcher nur auf Indices mit dem Präfix dietrich\_ Zugriff erhält. Die Erstellung von diesem Nutzer erfolgte dabei über die Benutzer-Oberfläche von Kibana \ref{img:kibanaRoles}. 
+Damit Logstash wieder Daten an Elasticsearch senden kann, wird ein Nutzer erstellt, welcher nur auf Indices mit dem Präfix dietrich\_ Zugriff erhält. Die Erstellung von diesem Nutzer erfolgte dabei über die Benutzer-Oberfläche von Kibana: 
 
 \begin{figure}
 	\centering

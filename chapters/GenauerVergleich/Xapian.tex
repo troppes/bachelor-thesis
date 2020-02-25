@@ -12,8 +12,8 @@ Allerdings ist der Server bisher nur lokal ansprechbar. Um dies zu ändern, muss
 \subsection{Indexierung}
 \label{xap:index}
 
-Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, wurde erstmal ein Beispiel zum Import einer CSV-Datei durchgearbeitet. Darin war dann zu sehen, dass der komplette Datenimport manuell geschrieben werden musste. Auf dieser Basis wurde daraufhin ein eigener Importer für MySQL geschrieben \ref{lst:XapPhp}:
-
+Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, wurde erstmal ein Beispiel zum Import einer CSV-Datei durchgearbeitet. Darin war dann zu sehen, dass der komplette Datenimport manuell geschrieben werden musste. Auf dieser Basis wurde daraufhin ein eigener Importer für MySQL geschrieben:
+\newpage
 \begin{lstlisting}[language=php, frame=single, label={lst:XapPhp}, morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}, caption=Skript zur Indexierung der Daten in Xapian,captionpos=b] 
 <?php
 require_once("xapian.php");

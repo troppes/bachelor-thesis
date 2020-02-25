@@ -36,14 +36,7 @@ Im dritten Schritt wird die Dokumentation analysiert. Hierbei wird das Augenmerk
 
 Im letzten Schritt wird eine Abfrage an das System von einem PHP-Skript abgesetzt. Dabei wird die Zeit gemessen, wie lange die Abfrage braucht um die Daten zu liefern.
 
-Die verwendete Abfrage, ist die bisher am längsten laufende Abfrage des DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden, zusammen. Die Tabellen, welche für diese Ansicht gebraucht werden, sind im Diagramm \ref{img:lAdminStructure} zu finden. Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und die zweite baut auf dieser Liste die Daten zusammen. Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn, diese Funktionalität wird direkt mitgeliefert.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\linewidth]{images/structure_lemmaadministration.png}
-	\caption{Tabellenaufbau der Lemma-Administration Übersicht.}
-	\label{img:lAdminStructure}
-\end{figure}
+Die verwendete Abfrage ist die bisher am längsten laufende Abfrage des DietrichOnline-Projektes. Sie ermittelt alle Lemmata vom Buchstaben S und baut alle Daten, die zur Anzeige benötigt werden, zusammen.
 
 \begin{figure}
 	\centering
@@ -51,6 +44,11 @@ Die verwendete Abfrage, ist die bisher am längsten laufende Abfrage des Dietric
 	\caption{Frontend Ansicht der Lemma-Administration mit geladenen Buchstaben S (Ausschnitt).}
 	\label{img:lAdminSample}
 \end{figure}
+
+\newpage
+
+Um genau zu sein, sind es zwei Abfragen. Die erste findet alle IDs der Lemmata und die zweite baut auf dieser Liste die Daten zusammen. 
+Dabei werden für diesen Ersteindruck M-zu-N Beziehungen aus Zeitgründen vernachlässigt, es sei denn, diese Funktionalität wird direkt mitgeliefert.
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single, caption=Abfrage aller Lemmata mit den Buchstaben S (Part 1),captionpos=b] 
@@ -60,7 +58,7 @@ WHERE lemma.bezeichnung LIKE 'S%' AND lemma.ist_geloescht = 0
 ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
 \end{lstlisting}
 
-Im zweiten Schritt werden dann die gerade geholten IDs der Einträge mithilfe von Joins für die Darstellung vorbereitet.
+Im zweiten Schritt werden dann die gerade geholten IDs der Einträge mithilfe von Joins für die Darstellung vorbereitet:
 
 \lstset{language=SQL}
 \begin{lstlisting}[frame=single, label={lst:sqlQuery}, caption=Abfrage aller Lemmata mit den Buchstaben S (Part 2),captionpos=b] 
@@ -74,5 +72,16 @@ LEFT JOIN gnd_ddc gnd_ddc_map ON gnd.id = gnd_ddc_map.fk_gnd
 LEFT JOIN ddc ddc ON gnd_ddc_map.fk_ddc = ddc.id
 WHERE lemma.id IN ([Array of Lemma IDs])
 ORDER BY lemma.bezeichnung ASC, lemma.id ASC;
-
 \end{lstlisting}
+
+Dabei müssen zur Darstellung diverse Tabellen mit SQL-Joins zusammengefügt werden.
+Die Tabellenstruktur dazu sieht wie folgt aus:
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{images/structure_lemmaadministration.png}
+	\caption{Tabellenaufbau der Lemma-Administration Übersicht.}
+	\label{img:lAdminStructure}
+\end{figure}
+
+\newpage
