@@ -29,7 +29,7 @@ Innerhalb des Entity-Elements gibt es entweder weitere Entitys, dazu gleich mehr
 Entitys können unbegrenzt ineinander verschachtelt werden. Damit Änderungen an einer verschachtelten Entity nach oben richtig weitergegeben werden, gibt es Parent-Delta-Querys. Diese geben die betroffenen Werte an die übergeordnete Entity weiter. Dafür führt der Parent-Delta-Query einen Aufruf an die überliegende Entity-Tabelle aus, in der er die betroffenen Zeilen, mithilfe der Fremdschlüssel-IDs herausfindet.
 
 \begin{lstlisting}[language=xml, frame=single, label={lst:dih}, morekeywords={entity,query,deltaQuery,parentDeltaQuery,field,column, name}, 
-  caption=Ausschnitt aus dem DataImportHandler),captionpos=b] 
+  caption=Ausschnitt aus dem DataImportHandler,captionpos=b] 
 <entity name="lemma" 
   query="select * from lemma" 
   deltaQuery="select eid from lemma 

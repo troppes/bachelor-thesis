@@ -6,11 +6,11 @@ In diesem Kapitel wird die Implementation in das DietrichOnline-Projekt genauer 
 
 Um den Elasticsearch-Klienten zu nutzen, muss dieser zuerst einmal per Composer installiert werden. Dies geschieht durch einen Eintrag in der composer.json.
 
-Um für den nun folgenden Vergleich ein faires Spielfeld aufzubauen, wurde eine Datenbank, welche auf demselben Server wie Elasticsearch liegt, verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Parteien gleich ist.
+Um einen möglichst genauen Vergleich liefern zu können, wurde eine Datenbank, welche auf demselben Server wie Elasticsearch liegt, verwendet. So ist sichergestellt, dass die Verbindung zum Server für beide Systeme gleich ist.
 
 Zum Testen wird nun zuerst die Lemma-Abfrage, in einer modifizierten Fassung \ref{lemmaIndexierungEla}, verwendet.
 
-Durch die eben aktivierte X-Security von Elasticsearch braucht der Klient diesmal einen Zugang per API-Key. Dieser kann mithilfe eines curl-Befehls generiert werden \ref{lst:elaApi}. Der API-Key bekommt hierbei lesende Rechte auf alle Dietrich-Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden:
+Durch die aktivierte X-Security von Elasticsearch braucht der Klient einen Zugang per API-Key. Dieser kann mithilfe eines curl-Befehls generiert werden, siehe Listing \ref{lst:elaApi}. Dieser API-Key bekommt hierbei lesende Rechte auf alle Dietrich-Indices. Auch muss die Zertifikats-Autorität bei jeder Anfrage mitgegeben werden:
 
 \begin{lstlisting}[language=JSON, frame=single, label={lst:elaApi}, caption=Code zur Generierung eines API-Keys,captionpos=b] 
 POST /_security/api_key
@@ -32,12 +32,12 @@ POST /_security/api_key
 \subsubsection{Indexierung}
 \label{lemmaIndexierungEla}
 
-Um nun alle Daten in richtiger Form in das Projekt zu laden, muss die Indexierung von damals umgeschrieben werden. 
+Um nun alle Daten in richtiger Form in das Projekt zu laden, muss die Indexierung von dem Ersteindruck \ref{elaVgl:index} umgeschrieben werden. 
 
 Bei den Joins wurden M:N-Beziehungen auf eine flache Ebene gezogen. Dabei wird der Eintrag so oft abgebildet, wie es Objekte in der M:N-Beziehung gibt. 
 
 Zur Verdeutlichung hier ein Beispiel.
-Es gibt eine Tabelle Artikel, welche eine M:N-Beziehung mit der Tabelle DDC bezieht. In der Artikel Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz, verbunden wird. Bei einem Join wird nun alles in eine flache Hierachie gezogen. Deswegen würde die Tabelle der Ergebnisse des Joins nun die Folgenden Einträge enthalten \ref{tbl:join}.
+Es gibt eine Tabelle Artikel, welche eine M:N-Beziehung mit der Tabelle DDC bezieht. In der Artikel Tabelle gibt es den Eintrag Trier mit der ID 1, der mit 2 DDC Einträgen, Trier und Rheinland-Pfalz, verbunden wird. Bei einem Join werden beide referenzierten Beiträge auf eine flache Hierachie gezogen. Deswegen würde die Tabelle der Ergebnisse des Joins nun die folgenden Einträge enthalten \ref{tbl:join}.
 
 \begin{table} %[hbtp]
 	\centering
@@ -51,52 +51,50 @@ Es gibt eine Tabelle Artikel, welche eine M:N-Beziehung mit der Tabelle DDC bezi
     \label{tbl:join}
 \end{table}
 
-Um nun einen solchen Eintrag in Elasticsearch abzubilden, wird ein Array benötigt. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser aggregiert auf Basis der ID die Daten. So ist es nun möglich, Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst.
-
-Dabei ist es wichtig, dass dieser Prozess nicht in mehreren Threads ausgeführt wird. Daher erhält jede Pipeline in diesem Projekt auch maximal einen Thread.
-Hier nun einmal ein Beispiel aus dem Code \ref{lst:fronendConf}:
-
+Um nun einen solchen Eintrag in Elasticsearch abzubilden, wird ein Array benötigt. Für solche Fälle gibt es den Aggregat-Filter in Logstash. Dieser aggregiert auf Basis der ID die Daten. So ist es möglich, Code zu schreiben, der automatisch die Daten in Arrays zusammenfasst:
 
 \begin{lstlisting}[language=Ruby, frame=single, label={lst:fronendConf}, caption=Auschnitt aus dem Aggregat-Filter von Logstash,captionpos=b] 
-[...]
-map['bstatus_beschreibung'] ||= event.get('bstatus_beschreibung')
-
-map['ddc_entries'] ||= []
-if event.get('ddc_notation') != nil
-    duplicate = false
-    map['ddc_entries'].each { |n|
-        if n.value?(event.get('ddc_notation'))
-            duplicate = true
-            break
-        end
-    }
-    if !duplicate
-        map['ddc_entries'] << {
-            'ddc_notation' => event.get('ddc_notation'),
-            'ddc_schlagwort' => event.get('ddc_schlagwort'),
-            'ddc_webdewey_is_checked' => 
-              event.get('ddc_webdewey_is_checked')
+    [...]
+    map['bstatus_beschreibung'] ||= event.get('bstatus_beschreibung')
+    
+    map['ddc_entries'] ||= []
+    if event.get('ddc_notation') != nil
+        duplicate = false
+        map['ddc_entries'].each { |n|
+            if n.value?(event.get('ddc_notation'))
+                duplicate = true
+                break
+            end
         }
+        if !duplicate
+            map['ddc_entries'] << {
+                'ddc_notation' => event.get('ddc_notation'),
+                'ddc_schlagwort' => event.get('ddc_schlagwort'),
+                'ddc_webdewey_is_checked' => 
+                  event.get('ddc_webdewey_is_checked')
+            }
+        end
     end
-end
-[...]
-\end{lstlisting}
+    [...]
+    \end{lstlisting}
 
-Dieser Code wird nun so lange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung wird dabei zum Beispiel bei jedem Durchlauf überschrieben. 
+Dabei ist es wichtig, dass dieser Prozess nicht in mehreren Threads ausgeführt wird. Daher erhält jede Pipeline in diesem Projekt auch maximal einen Thread.
 
-Damit die sich ändernden Wert aggregiert werden, wurde Code geschrieben, welche Einträge in ein Array schreibt. Da bei dieser Abfrage \ref{lst:sqlQuery} nun allerdings mehrere Left-Joins aufeinander ausgeführt werden, kann es dazu kommen, dass sich Zeilen wiederholen. Um dieses Problem zu lösen, werden Duplikate und NULL-Werte erkannt und nicht nochmals in das Array einträgt.
+Dieser Code wird nun so lange in einer Schleife durchlaufen, wie dieselbe ID aus der Datenbank kommt. Der Wert bstatus\_beschreibung in Zeile 2 wird dabei zum Beispiel bei jedem Durchlauf überschrieben. 
+
+Damit die sich ändernden Wert aggregiert werden, werden diese in ein Array geschrieben. Da bei der Abfrage \ref{lst:sqlQuery} mehrere Left-Joins aufeinander ausgeführt werden, kann es dazu kommen, dass sich Zeilen wiederholen. Um dieses Problem zu lösen, werden Duplikate und NULL-Werte erkannt und nicht nochmals in das Array einträgt.
 
 \section{Aufbau der Abfrage}
 
-Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt. Die hier betrachtete Abfrage wurde schon einmal von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den verbleibenden Datensätzen ausgeführt werden.
+Als SQL-Framework wurde Doctrine verwendet. Dieses bietet eine Abstraktion für SQL in Objekte. Im Hintergrund werden diese Objekte dann in SQL übersetzt. Die hier betrachtete Abfrage wurde schon von Hand optimiert, da zuerst alle Ids der anzuzeigenden Lemmata gesucht werden, und erst im zweiten Schritt alle Joins auf den verbleibenden Datensätzen ausgeführt werden.
 
-Die Elasticsearch-Abfrage anderseits besteht nur aus einer Abfrage, da hier alle Daten schon auf einer flachen Ebene existieren.
+Elasticsearch arbeitet mit nur einer Abfrage, da hier alle Daten schon auf einer flachen Ebene existieren.
 
 Verwendet wird hier ein sogenannter Boolean-Query. Dieser enthält vier verschieden Untergruppierungen.
 
 Zuerst einmal der Must-Teil. Alle hier angegeben Parameter müssen in jedem Ergebnis vorhanden sein. Dies ist gleichzustellen mit einem booleschen AND. 
 
-Als Zweites der Must-Not-Teil. Dieser Teil ist den Must-Teil sehr ähnlich, allerdings sind die Parameter negiert.
+Als Zweites der Must-Not-Teil. Dieser Teil ist dem Must-Teil sehr ähnlich, allerdings sind die Parameter negiert.
 
 Danach der Should-Teil. In diesem Teil muss nur einer der Parameter vorhanden sein. Dies ist zu vergleichen mit einem booleschen OR. 
 
@@ -135,7 +133,7 @@ $params['body']['query']['bool']['filter']   = $filters;
 return $client->search($params)['hits']['hits'];
 \end{lstlisting}
 
-In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Abfrage, welcher in der vorherigen Abfrage \ref{lst:phpElastic} verwendet wurde, ein Prefix-Abfrage verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.
+In Zeile 14 ist hier zu sehen, dass anstelle der Wildcard-Abfrage, welcher in der vorherigen Abfrage im Kapitel \ref{lst:phpElastic} verwendet wurde, ein Prefix-Abfrage verwendet wird. Dieser bietet eine sauberere Lösung zum Suchen von Wortanfängen.
 
 \section{Vergleich von der Geschwindigkeit der Abfragen}
 

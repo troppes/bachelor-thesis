@@ -1,6 +1,6 @@
 \chapter{Setup}
 
-Dieses Kapitel behandelt die Installation und Ersteinrichtung der Suchmaschine über Docker. Die Installation erfolgt dabei über Docker mithilfe von Docker-Compose. Es werden 2 Elasticsearch-Instanzen, eine Kibana-Instanz und eine Logstash-Instanz aufgesetzt. Das fertig Setup soll dann wie folgt aussehen \ref{img:dockerNetwork}.
+Dieses Kapitel behandelt die Installation und Ersteinrichtung der Suchmaschine. Die Installation erfolgt dabei über Docker mithilfe von Docker-Compose. Es werden 2 Elasticsearch-Instanzen, eine Kibana-Instanz und eine Logstash-Instanz aufgesetzt. Das fertig Setup soll dann wie folgt aussehen \ref{img:dockerNetwork}.
 
 \begin{figure}
 	\centering
@@ -9,23 +9,23 @@ Dieses Kapitel behandelt die Installation und Ersteinrichtung der Suchmaschine �
 	\label{img:dockerNetwork}
 \end{figure}
 
-Logstash lädt die Daten von einem MySQL-Server herunter und fügt sie in die Elasticsearch Instanzen ein. Auch Kibana bekommt Zugriff auf beide Instanzen, um die Daten zu visualisieren und bei Serverausfällen frühzeitig zu warnen. Die beiden Elasticsearch Instanzen halten sich dabei untereinander synchron. 
+Logstash sammelt die Daten von einem MySQL-Server und lädt sie in die Elasticsearch-Instanzen. Auch Kibana bekommt Zugriff auf beide Instanzen, um die Daten zu visualisieren und bei Serverausfällen frühzeitig zu warnen. Die beiden Elasticsearch-Instanzen halten sich dabei untereinander synchron. 
 
 \section{Docker}
 
 Docker ist eine Software zur Virtualisierung von Anwendungen. Dabei wird allerdings nicht, wie bei virtuellen Maschinen, die gesamte Hardware simuliert, sondern sie laufen im Kontext des Host-Betriebstystems.
 
-Docker-Compose ist ein Tool, mit welchem es erleichtert wird, mehrere Docker-Container zu verwalten. Dafür werden in einer YAML-Datei die gewünschten Docker-Container und Einstellungen, wie der Container-Name, eingetragen \ref{lst:es01}. Mithilfe dieser Datei erstellt Docker-Compose dann die Container und Netzwerke automatisch.
+Docker-Compose ist ein Tool, mit welchem es erleichtert wird, mehrere Docker-Container zu verwalten. Dafür werden in einer YAML-Datei\footnote{Kurz für YAML Ain't Markup Language, eine Konfigurationssprache \url{https://yaml.org/}} die gewünschten Docker-Container und Einstellungen, wie der Container-Name, eingetragen \ref{lst:es01}. Mithilfe dieser Datei erstellt Docker-Compose dann die Container und Netzwerke automatisch.
 
 \subsection{Rechteverwaltung in Docker}
 
-Ein kurzer Exkurs zur Rechteverwaltung in Docker. Will ein Docker-Container auf dem Host-System schreiben, so nutzt dieser die Berechtigungen des Users innerhalb des Docker-Containers. Nun kann es allerdings passieren, dass die Nutzer-ID des Docker-Containers nicht der Nutzer-ID des Hosts entspricht. Werden nun Dateien im Hostsystem abgelegt, welche vom Container gelesen werden, muss dabei auf die Rechte geachtet werden. 
+Ein kurzer Exkurs zur Rechteverwaltung in Docker. Will ein Docker-Container auf dem Host-System schreiben, so nutzt dieser die Berechtigungen des Users innerhalb des Docker-Containers. Es kann allerdings passieren, dass die Nutzer-ID des Docker-Containers nicht der Nutzer-ID des Hosts entspricht. Werden nun Dateien im Hostsystem abgelegt, welche vom Container gelesen werden, muss dabei auf die Rechte geachtet werden. 
 
-Elasticsearch verwendet die UID und GUID von 1000. Auf dem Host-System ist dies jedoch ein komplett anderer Nutzer. Das kann zu Problemen führen, da nun Dateien, welche für Elasticsearch gedacht sind, einem Nutzer, welcher nicht zu diesem Projekt gehört, gehören. Der Nutzer wurde nun auf eine andere UID gesetzt, um Verwirrung zu vermeiden. \cite{JarrodWeaver.2014}
+Elasticsearch verwendet die UID\footnote{Kurz für User identifier, Zahl zur Bestimmung eines Nutzers} und GID\footnote{Kurz für Group identifier, Zahl zur Bestimmung einer Nutzergruppe} von 1000. Auf dem Host-System ist dies jedoch ein anderer Nutzer. Das kann zu Problemen führen, da nun Dateien, welche für Elasticsearch gedacht sind, einem Nutzer, welcher nicht zu diesem Projekt gehört, gehören. Der Nutzer wurde nun auf eine andere UID gesetzt, um Verwirrung zu vermeiden. \cite{JarrodWeaver.2014}
 
 \section{Elasticsearch}
 
-Die beiden Elasticsearch-Instanzen bilden das Kernstück dieses Setups. Sie werden die Daten verwalten und sich untereinander synchronisieren. Dafür werden die beiden Instanzen geclustert.
+Die beiden Elasticsearch-Instanzen bilden das Kernstück dieses Setups. Sie werden die Daten verwalten und sich untereinander synchronisieren. Dafür werden die beiden Instanzen als Cluster betrieben.
 
 \begin{lstlisting}[language=YAML, frame=single, label={lst:es01}, caption=Auschnitt aus der Docker-Compose Datei,captionpos=b] 
 es01:
@@ -45,17 +45,17 @@ networks:
 	- elastic
 \end{lstlisting}
 
-In diesem Auschnitt aus der Docker-Compose werden nun die ersten grundlegenden Einstellungen getroffen.
+Das Listing \ref{lst:es01} zeigt einen Auschnitt aus der Docker-Compose, in welchem die ersten Einstellungen getroffen werden.
 
-Für die beiden Elasticsearch-Instanzen wird der Java-Speicher auf 4 Gigabyte gesetzt. Dies errechnet sich dadurch, dass der Server 16 Gigabyte RAM besitzt und die Elasticsearch-Instanzen niemals mehr als 50 \% des gesamten RAMs verwenden sollten. \cite{ElasticsearchB.V..12172019}
+Für die beiden Elasticsearch-Instanzen wird der Java-Speicher auf 4 Gigabyte gesetzt. Dies errechnet sich dadurch, dass der Server 16 Gigabyte RAM besitzt und die Elasticsearch-Instanzen nicht mehr als 50 \% des gesamten RAMs verwenden sollten. \cite{ElasticsearchB.V..12172019}
 
-Der ulimits Befehl hebt die Begrenzung des Memory-Locks auf, damit Elasticsearch korrekt arbeiten kann. Dadurch wird der RAM von Elasticsearch nicht in den SWAP-Speicher gelegt. Dies würde die Leistung von der Suchmaschine stark beinträchtigen.
+Der ulimits Befehl hebt die Begrenzung des Memory-Locks auf, damit Elasticsearch korrekt arbeiten kann. Dadurch wird der RAM von Elasticsearch nicht in den SWAP-Speicher\footnote{Speicher auf der Festplatte, welcher von Linux genutzt wird, falls der RAM voll ist.} gelegt. Dies würde die Leistung von der Suchmaschine stark beinträchtigen.
 
-Als Volumes ist zum einen die oben genannte YAML-Datei angegeben und zum anderen wird der Datenordner gemountet. Dies dient dazu, dass, falls der Container zerstört wird, die indexierten Daten trotzdem weiterhin gespeichert werden.
+Als Volumes ist zum einen die oben genannte YAML-Datei angegeben und zum anderen wird der Datenordner gemountet. Dies dient dazu, dass, falls der Container zerstört wird, die indexierten Daten trotzdem weiterhin auf dem Host-System verbleiben.
 
 Der Port wird zum Host-System durchgereicht, damit das System auch von außerhalb des Docker-Netwerkes zu erreichen ist. Dabei ist das System trotz blockierter UFW\footnote{UFW ist die uncomplicated Firewall, eine Firewall-Software für Linux} zu erreichen. Dies liegt daran, dass die Docker-Container in der Standardeinstellung die UFW ignorieren.
 
-In der Elasticsearch-Konfigurationsdatei werden nun die Einstellungen, die speziell für das Elasticsearch-System relevant sind, verwaltet \ref{lst:es01-yml}: 
+In der Elasticsearch-Konfigurationsdatei werden nun die Einstellungen, die speziell für das Elasticsearch-System relevant sind, verwaltet: 
 
 \begin{lstlisting}[language=YAML, frame=single, label={lst:es01-yml}, caption=Auschnitt aus der Konfigurationsdatei von Elasticsearch,captionpos=b] 
 cluster.name: dietrich-online-cluster
@@ -67,7 +67,7 @@ cluster.initial_master_nodes: ["es01", "es02"]
 \end{lstlisting}
 
 Darin wird zuerst der Cluster-Name definiert. Dieser dient dazu, dass die Server wissen, dass sie dieselben Daten betreuen. 
-Danach wird der Name des Servers vergeben. Dieser wird für spätere Einstellungen noch wichtig.
+Danach wird der Name des Servers vergeben, welcher der Identifizierung dient.
 
 Das Memory-Lock Setting dient dazu, dass die Anwendung verhindert, dass sie in den SWAP gelegt wird.
 
@@ -80,22 +80,22 @@ Der letzte Eintrag dient dazu, dass bei der ersten Synchronisation das System we
 
 \section{Kibana}
 
-Die Grundkonfiguration von Kibana ist einfacher als die Konfiguration von Elasticsearch. Es muss nur die YAML-Datei gemountet werden und der Port 5601 nach außen durchgereicht werden.
+Die Grundkonfiguration von Kibana ist einfacher als die Konfiguration von Elasticsearch. Es muss nur die YAML-Datei in den Container geladen werden und der Port 5601 nach außen durchgereicht werden.
 
 In der Konfigurationsdatei werden nun die Einstellungen für Kibana gesetzt. Darunter fällt der oben genannte Port, der Server-Host, in diesem Fall auch 0.0.0.0, und die Elasticsearch-Hosts. Dabei werden alle Server-Instanzen mitgegeben, auf denen Kibana arbeiten soll. 
 
 \section{Logstash}
 
-Für die Grundkonfiguration von Logstash muss, wie schon im Ersteindruck, der Treiber in die Core-Bibliothek gelegt werden. Zudem werden die Konfigurationsdateien für die Pipelines\footnote{Eine Konfigurationsdatei, welche Daten von wo geholt werden sollen und wohin diese geschoben werden} gemountet.
+Für die Grundkonfiguration von Logstash muss, wie schon im Ersteindruck, der Treiber in die Core-Bibliothek gelegt werden. Zudem werden die Konfigurationsdateien für die Pipelines gemountet.
 
 In der Konfigurationsdatei für Logstash wird dann der Name, die Pipeline.id und die Pipeline-Worker festgelegt. Die Pipeline-Worker sind die Threads, in denen eine der konfigurierten Pipelines abgearbeitet wird. Generell sollte die Anzahl der Cores auch die maximale Anzahl der Worker sein.
 
 
 \section{X-Security}
 
-X-Security nennt sich das Paket mit den Sicherheitseinstellungen für den ELK-Stack. In diesem Schritt wird hier der komplette Traffic zwischen den einzelnen Komponenten, sowie vom Endnutzer zum Server mit SSL verschlüsselt. 
+X-Security nennt sich das Paket, mit den Sicherheitseinstellungen für den ELK-Stack. In diesem Schritt wird der komplette Datenverkehr zwischen den einzelnen Komponenten, sowie vom Endnutzer zum Server mit SSL verschlüsselt. 
 
-Dazu mussten zuerst einmal die Zertifikate generiert werden. Dafür bietet Elasticsearch ein Tool an, welches eine Zertifikats-Autorität (CA)\footnote{Mithilfe einer CA kann sich ein Klient gegenüber des Servers ausweisen und umgekehrt.} und die einzelnen Zertifikate mit Private- und Public-Key generiert. Allerdings werden diese standardmäßig im PKCS 12-Format abgespeichert. Dieses ist ein Container-Format, welches die Schlüssel und die CA zusammen verpackt. Jedoch benötigt Kibana zum Beispiel nur die Autorität als einzelnes Zertifikat und nicht den Container.
+Dazu werden zuerst die Zertifikate generiert. Dafür bietet Elasticsearch ein Tool an, welches eine Zertifikats-Autorität (CA)\footnote{Mithilfe einer CA kann sich ein Klient gegenüber des Servers ausweisen und umgekehrt.} und die einzelnen Zertifikate mit Private- und Public-Key generiert. Allerdings werden diese standardmäßig im PKCS 12-Format abgespeichert. Dieses ist ein Container-Format, welches die Schlüssel und die CA zusammen verpackt. Jedoch benötigt Kibana zum Beispiel nur die Autorität als einzelnes Zertifikat und nicht den Container.
 
 Normalerweise gibt es eine Möglichkeit, dieses Zertifikat aus der PK12-Datei zu entpacken, jedoch gab es hierbei Probleme, da OpenSSL, das Tool welches zum Entpacken verwendet wird, die CA nicht richtig entpacken kann. \cite{nerophon.2018}
 
@@ -110,19 +110,19 @@ instances:
 [...]
 \end{lstlisting}
 
-Damit diese Zertifikate auch genutzt werden können, musste nun jeder Container das zugehörige Zertifikat mounten. Zudem wurden in den dazugehörigen Konfigurationsdateien die jeweiligen Optionen zur Nutzung der CA und Private-Keys gesetzt.
+Damit diese Zertifikate auch genutzt werden können, muss jeder Container das zugehörige Zertifikat einbinden. Zudem wurden in den dazugehörigen Konfigurationsdateien die jeweiligen Optionen zur Nutzung der CA und Private-Keys gesetzt.
 
-Zusätzlich zu den Zertifikaten muss auch noch eine Passwort-Authentifikation eingebaut werden. Dazu kann auf den Elasticsearch-Containern ein Befehl zur Erstellung der Systempasswörter aufgerufen werden. Dadurch werden alle Benutzer, welche die einzelnen Systeme wie Logstash oder Kibana zum Funktionieren brauchen, generiert.
+Zusätzlich zu den Zertifikaten muss noch eine Passwort-Authentifikation eingebaut werden. Dazu kann auf den Elasticsearch-Containern ein Befehl zur Erstellung der Systempasswörter aufgerufen werden. Dadurch werden alle Benutzer, welche die einzelnen Systeme wie Logstash oder Kibana zum Funktionieren brauchen, generiert.
 
-Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte passiert hierbei rollenbasiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, welche daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelne Systemfunktionen, wie die zum Beispiel die Erstellung von Snapshots, spezifisch freigegeben werden. Hierbei sollte sich an das Minimalprinzip gehalten werden, also nur genau die Rechte vergeben werden, die der Nutzer auch benötigt. Zusätzliche Rechte werden dem Nutzer dabei verwehrt.
+Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte ist hierbei rollenbasiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, welche daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelne Systemfunktionen, wie die Erstellung von Snapshots, spezifisch freigegeben werden. Hierbei sollte sich an das Minimalprinzip gehalten werden, also nur genau die Rechte vergeben werden, welche der Nutzer auch benötigt. Zusätzliche Rechte werden dem Nutzer dabei verwehrt.
 
-Um nun eine Abfrage gegen das Elasticsearch-System zu stellen, muss zum einen eine BasicAuth, sowie die CA mitgegeben werden \ref{lst:curlQuery}:
+Um nun eine Abfrage gegen das Elasticsearch-System zu stellen, muss zum einen eine BasicAuth, sowie die CA mitgegeben werden:
 
 \begin{lstlisting}[language=BASH, frame=single, label={lst:curlQuery}, caption=Curl-Abfrage an das Elasticsearch-System,captionpos=b] 
 curl https://bib55:9200 --cacert ca.crt -uuser:pass
 \end{lstlisting}
 
-Damit nun auch Logstash wieder Daten an Elasticsearch senden kann, wird ein Nutzer erstellt, welcher nur auf Indices mit dem Präfix dietrich\_ Zugriff erhält. Die Erstellung von diesem Nutzer erfolgte dabei über die Benutzer-Oberfläche von Kibana \ref{img:kibanaRoles}. 
+Damit Logstash wieder Daten an Elasticsearch senden kann, wird ein Nutzer erstellt, welcher nur auf Indices mit dem Präfix dietrich\_ Zugriff erhält. Die Erstellung von diesem Nutzer erfolgte dabei über die Benutzer-Oberfläche von Kibana \ref{img:kibanaRoles}. 
 
 \begin{figure}
 	\centering
