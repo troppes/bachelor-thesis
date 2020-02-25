@@ -10,19 +10,19 @@ Für die Auto-Vervollständigung mussten auch neue Felder angelegt werden. Es gi
 
 Der Titel eines Artikels und die dazugehörige Sigle werden in zwei unterschiedlichen Felder gespeichert. Sie sollten allerdings für die Vervollständigung zusammengebaut werden. Dafür wird in dem Aggregationsfilter von Logstash definiert, dass dieses Feld zusammengebaut werden soll:
 
-\begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}, caption=String-Konkatination im Aggregat Filter von Logstash ,captionpos=b] 
+\begin{lstlisting}[language=PHP, frame=single, label={lst:stringConcat}, caption=Zeichenketten-Konkatination im Aggregat Filter von Logstash ,captionpos=b] 
 map['artikel_titel_suggest'] ||= 
     '['+event.get('lemma_bezeichnung').to_s+']'
         +event.get('artikel_titel').to_s
 \end{lstlisting}
     
-Der daraus entstandene String wird in das Suggestions-Feld von Elasticsearch gegeben. Elasticsearch indexiert daraufhin den String so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann, allerdings als Ausgabe immer der komplette String zurückgegeben wird.
+Die daraus entstandene Zeichenkette wird in das Suggestions-Feld von Elasticsearch gegeben. Elasticsearch indexiert daraufhin die Zeichenkette so, dass jedes Wort zur Auto-Vervollständigung benutzt werden kann, allerdings als Ausgabe immer die komplette Zeichenkette zurückgegeben wird.
 
 Sollten aus einem Datensatz mehrere Felder indexiert werden, ist es möglich, auch ein Array von Daten an das Auto-Vervollständigungsfeld von Elasticsearch weiterzugeben.
 
 Der Index ist hierbei der aktuell Größte im DietrichOnline-Projekt mit rund 1.4 Millionen Einträgen. Die aktuelle Größe des Indexes zusammen mit den Feldern zur Auto-Vervollständigung beläuft sich auf rund 4.2 Gigabyte. 
 
-Durch die Definition der Feldtypen wurde die Größe des Index schon ein wenig reduziert. So wurde zum Beispiel die URL nur als String und nicht als Volltext gespeichert. Normalerweise werden Felder, die unter 255 Zeichen lang sind, als Keyword und Volltext gleichzeitig indexiert. Um diese doppelte Indexierung zu verhindern wurde sich für einen Typen entschieden.
+Durch die Definition der Feldtypen wurde die Größe des Index schon ein wenig reduziert. So wurde zum Beispiel die URL nur als Zeichenkette und nicht als Volltext gespeichert. Normalerweise werden Felder, die unter 255 Zeichen lang sind, als Keyword und Volltext gleichzeitig indexiert. Um diese doppelte Indexierung zu verhindern wurde sich für einen Typen entschieden.
 
 Beim ersten Lauf der Pipeline, kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht.
 
