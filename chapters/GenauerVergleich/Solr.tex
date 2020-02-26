@@ -76,7 +76,7 @@ Es gibt mehrere Möglichkeiten diese Einträge auszuweisen. In diesem Ersteindru
 [...]
 \end{lstlisting}
 
-Die Indexierung braucht eine Minute und 34 Sekunden für rund 14 Tausend Einträge \ref{img:solrIndexTime}. Dabei wurde der gegebene Arbeitsspeicher nicht komplett ausgenutzt, was darauf schließen lässt, dass die Datenbank der limitierende Faktor war. Die hohe Anzahl der Abfragen ist darauf zurückzuführen, dass Solr keine SQL-Joins verwendet, sondern bei jeder verschachtelten Entity die gesamten Tabellen wieder und wieder nach passenden Einträgen durchsucht.
+Die Indexierung braucht eine Minute und 34 Sekunden für rund 14 Tausend Einträge, wie in Abb. \ref{img:solrIndexTime} zu sehen. Dabei wurde der gegebene Arbeitsspeicher nicht komplett ausgenutzt, was darauf schließen lässt, dass die Datenbank der limitierende Faktor war. Die hohe Anzahl der Abfragen ist darauf zurückzuführen, dass Solr keine SQL-Joins verwendet, sondern bei jeder verschachtelten Entity die gesamten Tabellen wieder und wieder nach passenden Einträgen durchsucht.
 
 \begin{figure}
 	\centering
@@ -87,7 +87,7 @@ Die Indexierung braucht eine Minute und 34 Sekunden für rund 14 Tausend Einträ
 
 \subsection{Oberfläche}
 
-Die Startseite des Solr-Systems bietet direkten Einblick auf die Auslastung des Systems \ref{img:solrInterface}. Der Fehler-Log ist auch sehr einfach mit einem Klick zu erreichen. Um an die Statistiken des aktuellen Cores zu kommen, kann dieser aus einem Drop-Down-Menu ausgewählt werden. Positiv anzumerken ist, dass es möglich ist, Schema-Einträge direkt in der Weboberfläche anzulegen und zu löschen. Es ist jedoch nicht möglich, den DataImportHandler direkt zu verändern, ohne weitere Einstellungen im System vorzunehmen. Es gibt eine Möglichkeit, Abfragen direkt über die Web-Oberfläche zu senden, was das Testen der Abfragen erleichtert. Auch bei der Indexierung kann ein Debug-Modus dazugeschaltet werden \ref{img:solrIndexTime}. Zudem besteht die Möglichkeit, die Konfigurationsdateien des Cores auf der Weboberfläche einzusehen. Die Dateien dort direkt zu editieren, ist jedoch nicht möglich.
+Die Startseite des Solr-Systems bietet direkten Einblick auf die Auslastung des Systems, wie in Abb. \ref{img:solrInterface} zu sehen. Der Fehler-Log ist auch sehr einfach mit einem Klick zu erreichen. Um an die Statistiken des aktuellen Cores zu kommen, kann dieser aus einem Drop-Down-Menu ausgewählt werden. Positiv anzumerken ist, dass es möglich ist, Schema-Einträge direkt in der Weboberfläche anzulegen und zu löschen. Es ist jedoch nicht möglich, den DataImportHandler direkt zu verändern, ohne weitere Einstellungen im System vorzunehmen. Es gibt eine Möglichkeit, Abfragen direkt über die Web-Oberfläche zu senden, was das Testen der Abfragen erleichtert. Auch bei der Indexierung kann ein Debug-Modus dazugeschaltet werden, wie in Abb. \ref{img:solrIndexTime} zu sehen. Zudem besteht die Möglichkeit, die Konfigurationsdateien des Cores auf der Weboberfläche einzusehen. Die Dateien dort direkt zu editieren, ist jedoch nicht möglich.
 Es können keine Updates direkt über die Weboberfläche eingespielt werden. Auch ist diese Seite nicht responsive geschrieben. 
 \begin{figure}
 	\centering
