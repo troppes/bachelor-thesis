@@ -12,7 +12,7 @@ Allerdings ist der Server bisher nur lokal ansprechbar. Um dies zu ändern, muss
 \subsection{Indexierung}
 \label{xap:index}
 
-Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, wurde erstmal ein Beispiel zum Import einer CSV-Datei durchgearbeitet. Darin war dann zu sehen, dass der komplette Datenimport manuell geschrieben werden musste. Auf dieser Basis wurde daraufhin ein eigener Importer für MySQL geschrieben:
+Durch die fehlende Dokumentation zur Indexierung von MySQL-Datenbanken, wurde erstmal ein Beispiel zum Import einer CSV-Datei durchgearbeitet. Darin war zu sehen, dass der komplette Datenimport manuell geschrieben werden musste. Auf dieser Basis wurde daraufhin ein eigener Importer für MySQL geschrieben:
 \newpage
 \begin{lstlisting}[language=php, frame=single, label={lst:XapPhp}, morekeywords={type,uninvertible,indexed,stored,field,multiValued, name}, caption=Skript zur Indexierung der Daten in Xapian,captionpos=b] 
 <?php
@@ -73,7 +73,7 @@ Xapian besitzt keine Oberfläche zur Verwaltung. Allerdings kann sich ein Such-F
 
 \subsection{Dokumentation}
 
-Bei dem letzten Versionsupgrade wurde die Dokumentation von Xapian komplett umgeschrieben. Diese neue Dokumentation hat bisher noch viele Lücken und Todo-Boxen \ref{img:xapianDoku}.
+Bei dem letzten Versionsupgrade wurde die Dokumentation von Xapian komplett umgeschrieben. Diese neue Dokumentation hat bisher noch viele Lücken und Todo-Boxen, wie in Abbildung \ref{img:xapianDoku} zu sehen.
 
 Zu der Installation von dem TCP-Server war auch nichts in der neuen Dokumentation zu finden. Beim Durchsuchen des Internets, wie der Server extern ansprechbar gemacht werden kann, konnte eine Seite der alten Dokumentation gefunden werden, welche den Befehl zum Starten vermerkt hatte. Nachdem dieser Befehl ausgeführt wurde, wurde gemeldet, dass für diesen Befehl ein weiteres Paket installiert werden musste. Dieses Paket wurde in der Dokumentation nicht vermerkt. 
 

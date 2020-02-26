@@ -15,7 +15,7 @@ Logstash sammelt die Daten von einem MySQL-Server und lädt sie in die Elasticse
 
 Docker ist eine Software zur Virtualisierung von Anwendungen. Dabei wird allerdings nicht, wie bei virtuellen Maschinen, die gesamte Hardware simuliert, sondern sie laufen im Kontext des Host-Betriebstystems.
 
-Docker-Compose ist ein Tool, mit welchem es erleichtert wird, mehrere Docker-Container zu verwalten. Dafür werden in einer YAML-Datei\footnote{Kurz für YAML Ain't Markup Language, eine Konfigurationssprache \url{https://yaml.org/}} die gewünschten Docker-Container und Einstellungen, wie der Container-Name, eingetragen \ref{lst:es01}. Mithilfe dieser Datei erstellt Docker-Compose dann die Container und Netzwerke automatisch.
+Docker-Compose ist ein Tool, mit welchem es erleichtert wird, mehrere Docker-Container zu verwalten. Dafür werden in einer YAML-Datei\footnote{Kurz für YAML Ain't Markup Language, eine Konfigurationssprache \url{https://yaml.org/}} die gewünschten Docker-Container und Einstellungen, wie der Container-Name, eingetragen. Dies ist in Abbildung \ref{lst:es01} zu sehen. Mithilfe dieser Datei erstellt Docker-Compose dann die Container und Netzwerke automatisch.
 
 \subsection{Rechteverwaltung in Docker}
 
@@ -75,7 +75,7 @@ Der Network Host wird hier auf alle Interfaces der Maschine gesetzt, damit sich 
 
 Das Seed-Host Setting sagt aus, an welchen Nodes\footnote{Hier: Elasticsearch-Instanzen} die Daten synchronisiert werden sollen.
 
-Der letzte Eintrag dient dazu, dass bei der ersten Synchronisation das System weiß, welche Nodes alle Daten enthalten, also mit welchen Server sich synchronisiert werden soll. Da hier beide Systeme beim ersten Start noch keine Daten besitzen, sind alle Nodes zu beginnt Master. \cite{ElasticsearchB.V..13.2.2020}
+Der letzte Eintrag dient dazu, dass bei der ersten Synchronisation das System weiß, welche Nodes alle Daten enthalten, also mit welchen Server sich synchronisiert werden soll. Da hier beide Systeme beim ersten Start noch keine Daten besitzen, sind alle Nodes zu beginn Master. \cite{ElasticsearchB.V..13.2.2020}
 
 
 \section{Kibana}
@@ -115,7 +115,7 @@ Damit diese Zertifikate auch genutzt werden können, muss jeder Container das zu
 
 Zusätzlich zu den Zertifikaten muss noch eine Passwort-Authentifikation eingebaut werden. Dazu kann auf den Elasticsearch-Containern ein Befehl zur Erstellung der Systempasswörter aufgerufen werden. Dadurch werden alle Benutzer, welche die einzelnen Systeme wie Logstash oder Kibana zum Funktionieren brauchen, generiert.
 
-Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte ist hierbei rollenbasiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, welche daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelne Systemfunktionen, wie die Erstellung von Snapshots, spezifisch freigegeben werden. Hierbei sollte sich an das Minimalprinzip gehalten werden, also nur genau die Rechte vergeben werden, welche der Nutzer auch benötigt. Zusätzliche Rechte werden dem Nutzer dabei verwehrt. \cite{ElasticsearchB.V..13.2.2020}
+Auch diese müssen in den Konfigurationsdateien vermerkt werden. Weitere Nutzer können von nun an per API oder Kibana erstellt werden. Die Verteilung der Rechte ist hierbei rollenbasiert. Es wird zuerst eine Rolle erstellt, welche die gewünschten Rechte enthält, die daraufhin an den Nutzer weitergegeben wird. Dabei können die Rollen sehr spezifisch angepasst werden. Es können einzelne Systemfunktionen, wie die Erstellung von Snapshots, spezifisch freigegeben werden. Hierbei sollte sich an das Minimalprinzip gehalten werden, also nur genau die Rechte vergeben werden, welche der Nutzer auch benötigt. Zusätzliche Rechte werden dem Nutzer dabei verwehrt. \cite{ElasticsearchB.V..13.2.2020}
 
 Um nun eine Abfrage gegen das Elasticsearch-System zu stellen, muss zum einen eine BasicAuth, sowie die CA mitgegeben werden:
 

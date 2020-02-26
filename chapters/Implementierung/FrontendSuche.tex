@@ -1,12 +1,12 @@
 \chapter{Frontend-Suche}
 
-Dieses Kapitel handelt von der Implementierung der Frontend-Suche des Projektes in Elasticsearch. Im ersten Schritt wird die Suche und die automatische Vervollständigung übertragen. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben.
+Dieses Kapitel handelt von der Implementierung der Frontend-Suche des Projektes in Elasticsearch. Im ersten Schritt wird die Suche und die automatische Vervollständigung übertragen. Danach sollen noch eine neue Suchart, welche mehr Felder umfasst, sowie eine Anzeige der Autoren, welche bei der aktuellen Suche die meisten Artikel verfasst haben, folgen.
 
 \section{Indexierung}
 
 Um die Daten zu indexieren, wurde eine statische Code-Analyse durchgeführt, welche Daten aktuell als Suchergebnis angezeigt werden. Dafür wird der gesamte Code zur Suche untersucht und alle Werte aufgeschrieben. Aufgrund dieser Basis wurde eine Abfrage konstruiert, welche alle Daten an den Aggregat-Filter weiterreicht. Dann werden diese aggregiert, wie schon im letzten Kapitel beschrieben, und auch transformiert. So wird zum Beispiel eine URL, welche vorher immer zur Laufzeit zusammengesetzt wurde direkt schon zusammengebaut in die Suchmaschine eingepflegt. 
 
-Für die Auto-Vervollständigung mussten auch neue Felder angelegt werden. Es gibt im Projekt für jede Suchart eine eigene Vervollständigung. Um dies auch im Index abzubilden, wurden diverse Vervollständigungs-Felder angelegt, welche zum Teil einzelne Felder oder Feldmengen durchsuchen. Diese Felder wurden dann mithilfe des Aggregat-Filters befüllt. Ein Beispiel:
+Für die Auto-Vervollständigung mussten neue Felder angelegt werden. Es gibt im Projekt für jede Suchart eine eigene Vervollständigung. Um dies auch im Index abzubilden, wurden diverse Vervollständigungs-Felder angelegt, welche zum Teil einzelne Felder oder Feldmengen durchsuchen. Diese Felder wurden dann mithilfe des Aggregat-Filters befüllt. Ein Beispiel:
 
 Der Titel eines Artikels und die dazugehörige Sigle werden in zwei unterschiedlichen Felder gespeichert. Sie sollten allerdings für die Vervollständigung zusammengebaut werden. Dafür wird in dem Aggregationsfilter von Logstash definiert, dass dieses Feld zusammengebaut werden soll:
 
@@ -24,7 +24,7 @@ Der Index ist hierbei der aktuell Größte im DietrichOnline-Projekt mit rund 1.
 
 Durch die Definition der Feldtypen wurde die Größe des Index schon ein wenig reduziert. So wurde zum Beispiel die URL nur als Zeichenkette und nicht als Volltext gespeichert. Normalerweise werden Felder, die unter 255 Zeichen lang sind, als Keyword und Volltext gleichzeitig indexiert. Um diese doppelte Indexierung zu verhindern wurde sich für einen Typen entschieden.
 
-Beim ersten Lauf der Pipeline, kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht. \cite{ElasticsearchB.V..13.2.2020}
+Beim ersten Lauf der Pipeline kam es zu einem Absturz von Logstash. Dies lag daran, dass Logstash nicht genügend Speicher hatte, um diese Abfrage abzuarbeiten. Um weitere Probleme von dieser Seite zu verhindern, wurde der RAM für Logstash auf 4 Gigabyte erhöht. \cite{ElasticsearchB.V..13.2.2020}
 
 \section{Integration}
 
@@ -67,7 +67,7 @@ Ein Augenmerk muss auch noch auf die Lenient-Option gelegt werden. Ist dieser We
 
 \subsection{Boolesche Logik}
 
-Es ist möglich eine boolesche Logik bei der Frontend-Suche im DietrichOnline zu verwenden. Um diese umzusetzen, werden die Teile der Abfrage ineinander verschachtelt \ref{lst:booleanEla}:
+Es ist möglich eine boolesche Logik bei der Frontend-Suche im DietrichOnline zu verwenden. Um diese umzusetzen, werden die Teile der Abfrage ineinander verschachtelt:
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:booleanEla}, caption=Auschnitt aus der boolischen Logik für das DietrichOnline-Projekt,captionpos=b] 
 switch ($userSearchItem->getJunktor()) {
@@ -123,7 +123,7 @@ Nach einer Besprechung mit einem Mitarbeiter wurde eine Liste mit relevanten Spa
 
 \subsection{Autoren}
 
-Bei jeder Suche soll mit einer Auswertung angereichert werden, welche Autoren in der aktuellen Suche die meisten Artikel verfasst haben. Dazu wird eine Aggregation bei jeder Suche auf dem Autoren-Feld durchgeführt. Die Abfrage wird dafür um einen Parameter erweitert \ref{lst:bestAuthors}:
+Jede Suche soll mit einer Auswertung angereichert werden, welche Autoren in der aktuellen Suche die meisten Artikel verfasst haben. Dazu wird eine Aggregation bei jeder Suche auf dem Autoren-Feld durchgeführt. Die Abfrage wird dafür um einen Parameter erweitert \ref{lst:bestAuthors}:
 
 \begin{lstlisting}[language=PHP, frame=single, label={lst:bestAuthors}, caption=Auschnitt aus der Abfrage zur Aggregation der Autoren,captionpos=b] 
 'aggs' => [
